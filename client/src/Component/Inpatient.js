@@ -13,6 +13,7 @@ function Inpatient( {site }   ) {
     // Detail List
     const [showDetail, setShowDetail] = useState(false);
     const [detailType, setDetailType] = useState(0);
+    const [dutruData, setDutruData] = useState([]);
 
     const handleChange = (e) => {
         setPIDSearch(e.target.value);
@@ -30,9 +31,21 @@ function Inpatient( {site }   ) {
     }
 
 
-    const handleThuoc = () => {
-        setShowDetail(!showDetail)
-        setDetailType(1);
+    const handleThuoc = async () => {
+
+        if (selectedID !== '') {
+            try {
+                const response = await fetch(apiURL + "/hien_dien/dutru_benhnhan/" + site + "/" + selectedID);
+                const data = await response.json();
+                setDutruData(data);
+    
+                setShowDetail(!showDetail)
+                setDetailType(1);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        // /hien_dien/dutru_benhnhan/<site>/<hiendien_id>
 
     }
 
@@ -130,10 +143,11 @@ function Inpatient( {site }   ) {
                     >
                         Thuốc
                     </button>
+
                 </div>
                 <div>
                     {detailType===1 && showDetail &&
-                    <Dutru />
+                    <Dutru  data={dutruData}/>
 
                     
                     }

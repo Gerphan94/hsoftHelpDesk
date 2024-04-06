@@ -88,10 +88,10 @@ def hien_dien_dutru_benhnhan(site , hiendien_id):
     hiendien = cursor.execute(hiendien_stm).fetchall()[0]
     hiendien_mavv = hiendien[0]
     # hiendien_ngayvv = hiendien[1]
-    hiendien_ngayvv = 'HSOFTTAMANH0424'
+    schema = 'HSOFTTAMANH0424'
     
     stm = f'''
-        SELECT ID, IDDUYET FROM {hiendien_ngayvv}.D_DUTRULL A
+        SELECT ID, IDDUYET FROM {schema}.D_DUTRULL A
         WHERE MAVAOVIEN = '{hiendien_mavv}'
     '''
     print(stm)
@@ -100,14 +100,19 @@ def hien_dien_dutru_benhnhan(site , hiendien_id):
     
     for dutru in dutrus:
         obj = {}
+        idPhieu = dutru[0]
         idDuyet = dutru[1]
         stm = f'''
-            SELECT DD.id, to_char(DD.NGAY, 'dd/MM/yyyy HH24:MI:SS') as NGAY, DP.TEN, 
+            SELECT DD.id, to_char(DD.NGAY, 'dd/MM/yyyy HH24:MI:SS') as NGAY, DLP.TEN, 
             to_char(DD.NGAYTAO, 'dd/MM/yyyy HH24:MI:SS') as NGAYTAO, 
-            to_char(DD.NGAYUD, 'dd/MM/yyyy HH24:MI:SS') AS NGAYUD, 
-            DD.DONE
-            FROM HSOFTTAMANH0424.D_DUYET DD
-            INNER JOIN HSOFTTAMANH.D_DMPHIEU DP ON DP.ID = DD.PHIEU
+            to_char(DD.NGAYUD, 'dd/MM/yyyy HH24:MI:SS') AS NGAYUD,
+            CASE
+                WHEN DD.DONE = 0 THEN 'Mới'
+                WHEN DD.DONE = 1 THEN 'Đã chuyển'
+                ELSE 'UnKnown'
+            END AS TRANGTHAI
+            FROM {schema}.D_DUYET DD
+            INNER JOIN HSOFTTAMANH.D_LOAIPHIEU DLP ON DLP.id = DD.PHIEU
             WHERE DD.id = '{idDuyet}'
         '''
         phieu = cursor.execute(stm).fetchall()[0]
@@ -117,11 +122,34 @@ def hien_dien_dutru_benhnhan(site , hiendien_id):
             "ngay": phieu[1],
             "ten": phieu[2],
             "ngaytao": phieu[3],
-            "ngayud": phieu[4]
+            "ngayud": phieu[4],
+            "trangthai": phieu[5]
         }
-        obj['chitiet'] = []
+        chitiet_ar = []
+        
+        stm2 = f'''
+        SELECT A.STT,D.MA, D.TEN,A.DUONGDUNG, B.DOITUONG,A.DONGIA, A.SLYEUCAU, C.TEN AS TENKHO
+        FROM {schema}.D_DUTRUCT A
+        INNER JOIN HSOFTTAMANH.D_DOITUONG B ON A.MADOITUONG = B.MADOITUONG 
+        INNER JOIN HSOFTTAMANH.D_DMKHO C ON A.MAKHO = C.ID
+        INNER JOIN HSOFTTAMANH.D_DMBD D ON A.MABD = D.ID
+        WHERE A.id = '{idPhieu}'
+        '''
+        chitiets = cursor.execute(stm2).fetchall()
+        for chitiet in chitiets:
+            chitiet_ar.append({
+                'stt': chitiet[0],
+                'mathuoc': chitiet[1],
+                'tenthuoc': chitiet[2],
+                'duongdung': chitiet[3],
+                'doituong': chitiet[4],
+                'dongia': chitiet[5],
+                'slyeucau': chitiet[6],
+                'kho': chitiet[7]
+            })
+        obj['chitiet'] = chitiet_ar
+        
         result.append(obj)
-    
     return jsonify(result)
 
 if __name__=='__main__':
