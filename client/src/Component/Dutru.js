@@ -1,63 +1,100 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import DutruCT from "./DutruCT";
+import DutruDuyetModal from "./DutruDuyetModal";
 
-function Dutru({ data }) {
+function Dutru({ site, data }) {
+
+    const apiURL = process.env.REACT_APP_API_URL;
+
+    const [dutruCTData, setDutruCTData] = useState([]);
+
+    const [selectedDutruID, setSelectedDutruID] = useState('');
+    const [isShowDuyetModal, setIsShowDuyetModal] = useState(false);
+
+
+    const handleClickDutru = async (id) => {
+        setSelectedDutruID(id);
+        try {
+
+            const fecthURL = apiURL + "hien_dien/dutru_ct/" + site + "/" + id;
+            console.log(fecthURL);
+            const response = await fetch(fecthURL);
+
+
+            const data = await response.json();
+            setDutruCTData(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+
+    };
+
+    const handleShowDuyetModal = (trangthai) => {
+        if (trangthai === 'Đã duyệt') {
+            setIsShowDuyetModal(true);
+        }
+    };
+    const [selectedOption, setSelectedOption] = useState('phieu');
+
+    // Function to handle changes in the radio buttons
+    const handleOptionChange = (event) => {
+        setSelectedOption(event.target.value);
+    };
+
 
     return (
 
         <>
-
-            <div className="grid grid-cols-2 p-4">
-                <div className="">
-                    <table className="w-full">
-                        <thead>
-                            <tr className="bg-gray-300">
-                                <th className="w-10">STT</th>
-                                <th className="w-20">ID</th>
-                                <th className="text-left">Tên phiếu</th>
-                                <th>Ngày tạo</th>
-                                <th>Tình trạng</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {data.map((ele, index) => (
-                                <tr className="hover:bg-slate-100">
-                                    <td><div className="px-2 py-1 border-r">{index + 1}</div></td>
-                                    <td><div className="px-2 py-1 border-r">{ele.phieu.id}</div></td>
-                                    <td><div className="px-2 py-1 text-left border-r">{ele.phieu.ten}</div></td>
-                                    <td></td>
-                                    <td><div>{ele.phieu.trangthai}</div></td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-
-                <div>
-                    <table className="w-full">
-                        <thead>
-                            <tr>
-                                <th>STT</th>
-                                <th>STT</th>
-                                <th>STT</th>
-
-                                <th>STT</th>
-                                <th>STT</th>
-
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-
-                            </tr>
-                        </tbody>
-
-
-                    </table>
-
-                </div>
-
-
+        <div className="flex gap-4 py-4">
+        <div class="flex items-center border px-2 py-1 rounded-xl cursor-pointer">
+                <input checked id="default-radio-1" type="radio" value="" name="default-radio" className="w-4 h-4 bg-gray-100 border-gray-300 cursor-pointer"  />
+                <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer">Phiếu</label>
             </div>
+            <div class="flex items-center border px-2 py-1 rounded-xl cursor-pointer">
+                <input  id="default-radio-2" type="radio" value="" name="default-radio" className="w-4 h-4 bg-gray-100 border-gray-300 cursor-pointer" />
+                <label for="default-radio-2" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer">Thuốc</label>
+            </div>
+        </div>
+            <div className="grid grid-cols-2">
+                <div>
+                    {data.map((ele, index) =>
+                        <div className="p-2">
+                            <div
+                                className={`border rounded-3xl p-4 cursor-pointer ${selectedDutruID === ele.id ? "bg-slate-200" : ""} hover:bg-slate-200`}
+                                onClick={() => handleClickDutru(ele.id)}
+                            >
+                                <div className="flex justify-between">
+                                    <div className="flex gap-3">
+                                        <div>{ele.id}</div>
+                                        <div className="font-bold">{ele.ten}</div>
+                                    </div>
+
+                                    <div
+                                        className={`w-24 border rounded-2xl select-none py-1 ${ele.trangthai === 'Mới' ? 'bg-white' : ele.trangthai === 'Chuyển đi' ? "bg-blue-300" : ele.trangthai === 'Đã duyệt' ? "bg-green-400" : "bg-red-400"}`}
+                                        onClick={() => handleShowDuyetModal(ele.trangthai)}
+                                    >
+                                        {ele.trangthai}
+                                    </div>
+
+                                </div>
+                                <div className="flex gap-3">
+                                    <div className="italic">Tạo ngày: {ele.ngaytao}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                </div>
+                <div>
+                    <DutruCT data={dutruCTData} />
+                </div>
+            </div>
+
+            {isShowDuyetModal &&
+                <DutruDuyetModal setModalShow={setIsShowDuyetModal} />
+
+            }
 
 
 

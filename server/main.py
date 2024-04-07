@@ -73,8 +73,8 @@ def hien_dien(site ,pid):
         obj_person['ngaysinh'] = person_info[2]
         obj_person['phai'] = person_info[3]
     
-    result['hien_dien'] = obj_hd
-    result['person_info'] = obj_person
+    result['hiendien'] = obj_hd
+    result['personinfo'] = obj_person
     return jsonify(result)
 
 @app.route('/hien_dien/dutru_benhnhan/<site>/<hiendien_id>', methods=['GET'])
@@ -151,6 +151,7 @@ def hien_dien_dutru_benhnhan(site , hiendien_id):
         
         result.append(obj)
     return jsonify(result)
+
 
 if __name__=='__main__':
     app.run(debug=True)

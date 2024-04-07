@@ -3,7 +3,10 @@ import Dutru from "./Dutru";
 
 function Inpatient( {site }   ) {
 
-    const apiURL = 'http://127.0.0.1:5000/'
+    // const apiURL = 'http://127.0.0.1:5000/'
+
+    const apiURL = process.env.REACT_APP_API_URL;
+    console.log(apiURL)
 
     const [pidSearch, setPIDSearch] = useState('')
     const [presentData, setPresentData] = useState([]);
@@ -22,9 +25,10 @@ function Inpatient( {site }   ) {
     const hanldeSearch = async (e) => {
         try {
             const response = await fetch(apiURL + "hien_dien/" + site + "/" + pidSearch);
+            console.log(apiURL + "hien_dien/" + site + "/" + pidSearch)
             const data = await response.json();
-            setPresentData(data['hien_dien']);
-            setPersonData(data['person_info']);
+            setPresentData(data['hiendien']);
+            setPersonData(data['personinfo']);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -35,8 +39,10 @@ function Inpatient( {site }   ) {
 
         if (selectedID !== '') {
             try {
-                const response = await fetch(apiURL + "/hien_dien/dutru_benhnhan/" + site + "/" + selectedID);
+                const response = await fetch(apiURL + "hien_dien/dutru_benhnhan/" + site + "/" + selectedID);
+                console.log(apiURL + "/hien_dien/dutru_benhnhan/" + site + "/" + selectedID)
                 const data = await response.json();
+                console.log(data);
                 setDutruData(data);
     
                 setShowDetail(!showDetail)
@@ -138,16 +144,30 @@ function Inpatient( {site }   ) {
 
                 <div className="mt-4 text-left text-white">
                     <button
-                        className="border bg-blue-400 px-2 py-1 rounded-md"
+                        className="border bg-blue-400 px-2 py-1"
                         onClick={() => handleThuoc()}
                     >
                         Thuốc
                     </button>
+                    <button
+                        className="border bg-blue-400 px-2 py-1 "
+                        // onClick={() => handleThuoc()}
+                    >
+                        Dịch vụ
+                    </button>
+                    <button
+                        className="border bg-blue-400 px-2 py-1"
+                        // onClick={() => handleThuoc()}
+                    >
+                        Chi phí
+                    </button>
+
 
                 </div>
                 <div>
-                    {detailType===1 && showDetail &&
-                    <Dutru  data={dutruData}/>
+                    {/* {detailType===1 && showDetail && */}
+                    {showDetail &&
+                    <Dutru site={site}  data={dutruData}/>
 
                     
                     }

@@ -42,8 +42,8 @@ function MainPage() {
 
             <div className="flex">
                 <div className="w-40 h-screen mt-4 border-r-2">
-                    {funcs.map((func) => (
-                        <button className="block py-2 w-full  border-b">{func.name}</button>
+                    {funcs.map((func, index) => (
+                        <button key={index} className="block py-2 w-full  border-b">{func.name}</button>
                     )
                     )}
 
