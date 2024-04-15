@@ -13,6 +13,8 @@
     "react-router-dom": "^6.21.1",
     "react-scripts": "5.0.1",
     "react-select": "^5.8.0",
+    "remark": "^15.0.1",
+    "remark-react": "^9.0.1",
     "styled-components": "^6.1.6",
     "web-vitals": "^3.0.4"
   },

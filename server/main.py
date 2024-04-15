@@ -42,7 +42,7 @@ def hien_dien(site ,pid):
     noitrus = cursor.execute(stm).fetchall()
     # RETURN EMPTY IF DONT EXIST
     if (len(noitrus) == 0):
-        return jsonify({'hien_dien': [], 'person_info': {}})
+        return jsonify({'hiendien': [], 'personinfo': {}})
     obj_hd = []
     for noitru in noitrus:
         obj_hd.append({
@@ -79,7 +79,7 @@ def hien_dien(site ,pid):
 
 @app.route('/hien_dien/dutru_benhnhan/<site>/<hiendien_id>', methods=['GET'])
 def hien_dien_dutru_benhnhan(site , hiendien_id):
-    
+
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
@@ -91,67 +91,115 @@ def hien_dien_dutru_benhnhan(site , hiendien_id):
     schema = 'HSOFTTAMANH0424'
     
     stm = f'''
-        SELECT ID, IDDUYET FROM {schema}.D_DUTRULL A
+        SELECT IDDUYET FROM {schema}.D_DUTRULL A
         WHERE MAVAOVIEN = '{hiendien_mavv}'
     '''
-    print(stm)
+
     result = []
-    dutrus = cursor.execute(stm).fetchall()
+    phieus = cursor.execute(stm).fetchall()
     
-    for dutru in dutrus:
+    for phieuId in phieus:
         obj = {}
-        idPhieu = dutru[0]
-        idDuyet = dutru[1]
         stm = f'''
             SELECT DD.id, to_char(DD.NGAY, 'dd/MM/yyyy HH24:MI:SS') as NGAY, DLP.TEN, 
             to_char(DD.NGAYTAO, 'dd/MM/yyyy HH24:MI:SS') as NGAYTAO, 
             to_char(DD.NGAYUD, 'dd/MM/yyyy HH24:MI:SS') AS NGAYUD,
             CASE
                 WHEN DD.DONE = 0 THEN 'Mới'
-                WHEN DD.DONE = 1 THEN 'Đã chuyển'
-                ELSE 'UnKnown'
+                WHEN DD.DONE = 1 THEN 'Chuyển đi'
+                ELSE to_char(DD.DONE)
             END AS TRANGTHAI
             FROM {schema}.D_DUYET DD
             INNER JOIN HSOFTTAMANH.D_LOAIPHIEU DLP ON DLP.id = DD.PHIEU
-            WHERE DD.id = '{idDuyet}'
+            WHERE DD.id = '{phieuId[0]}'
         '''
         phieu = cursor.execute(stm).fetchall()[0]
         
-        obj['phieu'] = {
-            "id": phieu[0],
+        obj = {
+            "id": str(phieu[0]),
             "ngay": phieu[1],
             "ten": phieu[2],
             "ngaytao": phieu[3],
             "ngayud": phieu[4],
             "trangthai": phieu[5]
         }
-        chitiet_ar = []
-        
-        stm2 = f'''
-        SELECT A.STT,D.MA, D.TEN,A.DUONGDUNG, B.DOITUONG,A.DONGIA, A.SLYEUCAU, C.TEN AS TENKHO
-        FROM {schema}.D_DUTRUCT A
-        INNER JOIN HSOFTTAMANH.D_DOITUONG B ON A.MADOITUONG = B.MADOITUONG 
-        INNER JOIN HSOFTTAMANH.D_DMKHO C ON A.MAKHO = C.ID
-        INNER JOIN HSOFTTAMANH.D_DMBD D ON A.MABD = D.ID
-        WHERE A.id = '{idPhieu}'
-        '''
-        chitiets = cursor.execute(stm2).fetchall()
-        for chitiet in chitiets:
-            chitiet_ar.append({
-                'stt': chitiet[0],
-                'mathuoc': chitiet[1],
-                'tenthuoc': chitiet[2],
-                'duongdung': chitiet[3],
-                'doituong': chitiet[4],
-                'dongia': chitiet[5],
-                'slyeucau': chitiet[6],
-                'kho': chitiet[7]
-            })
-        obj['chitiet'] = chitiet_ar
-        
         result.append(obj)
+    return jsonify(result)
+
+
+@app.route('/hien_dien/dutruCT/<site>/<id>', methods=['GET'])
+def dutruCT(site , id):
+    schema = 'HSOFTTAMANH0424'
+ 
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    
+    result = []
+    
+    stm = f'''
+        SELECT A.ID, A.MABN, B.HOTEN  FROM {schema}.D_DUTRULL A 
+        INNER JOIN HSOFTTAMANH.BTDBN B ON A.MABN = B.MABN
+        WHERE A.IDDUYET  =  {id}
+    '''
+    dutrull = cursor.execute(stm).fetchall()
+    
+    for dutru in dutrull:
+        dutru_id = dutru[0]
+        pid = dutru[1]
+        hoten = dutru[2]
+        stm2 = f'''
+            SELECT A.STT,D.MA, D.TEN,A.DUONGDUNG, B.DOITUONG,A.DONGIA, A.SLYEUCAU, C.TEN
+            FROM {schema}.D_DUTRUCT A
+            INNER JOIN HSOFTTAMANH.D_DOITUONG B ON A.MADOITUONG = B.MADOITUONG 
+            INNER JOIN HSOFTTAMANH.D_DMKHO C ON A.MAKHO = C.ID
+            INNER JOIN HSOFTTAMANH.D_DMBD D ON A.MABD = D.ID
+            WHERE A.ID = '{dutru_id}'
+        '''
+        thuocs = cursor.execute(stm2).fetchall()
+        
+        thuoc_ar = []
+        for thuoc in thuocs:
+            thuoc_ar.append({
+                "stt": thuoc[0],
+                "mathuoc": thuoc[1],
+                "tenthuoc": thuoc[2],
+                "duongdung": thuoc[3],
+                "doituong": thuoc[4],
+                "dongia": thuoc[5],
+                "slyc": thuoc[6],
+                "tenkho": thuoc[7]
+            })
+        result.append({
+            'mabn': pid,
+            "hoten": hoten,
+            "thuoc": thuoc_ar
+        })
+    print(list(result))
     return jsonify(result)
 
 
 if __name__=='__main__':
     app.run(debug=True)
+    
+    
+    # stm2 = f'''
+    #     SELECT A.STT,D.MA, D.TEN,A.DUONGDUNG, B.DOITUONG,A.DONGIA, A.SLYEUCAU, C.TEN AS TENKHO
+    #     FROM {schema}.D_DUTRUCT A
+    #     INNER JOIN HSOFTTAMANH.D_DOITUONG B ON A.MADOITUONG = B.MADOITUONG 
+    #     INNER JOIN HSOFTTAMANH.D_DMKHO C ON A.MAKHO = C.ID
+    #     INNER JOIN HSOFTTAMANH.D_DMBD D ON A.MABD = D.ID
+    #     WHERE A.id = '{idPhieu}'
+    #     '''
+    #     chitiets = cursor.execute(stm2).fetchall()
+    #     for chitiet in chitiets:
+    #         chitiet_ar.append({
+    #             'stt': chitiet[0],
+    #             'mathuoc': chitiet[1],
+    #             'tenthuoc': chitiet[2],
+    #             'duongdung': chitiet[3],
+    #             'doituong': chitiet[4],
+    #             'dongia': chitiet[5],
+    #             'slyeucau': chitiet[6],
+    #             'kho': chitiet[7]
+    #         })

@@ -26,14 +26,15 @@ function Inpatient( {site }   ) {
         try {
             const response = await fetch(apiURL + "hien_dien/" + site + "/" + pidSearch);
             console.log(apiURL + "hien_dien/" + site + "/" + pidSearch)
+
             const data = await response.json();
+            console.log(data);
             setPresentData(data['hiendien']);
             setPersonData(data['personinfo']);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     }
-
 
     const handleThuoc = async () => {
 

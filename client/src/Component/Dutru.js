@@ -16,12 +16,11 @@ function Dutru({ site, data }) {
         setSelectedDutruID(id);
         try {
 
-            const fecthURL = apiURL + "hien_dien/dutru_ct/" + site + "/" + id;
-            console.log(fecthURL);
+            const fecthURL = apiURL + "hien_dien/dutruCT/" + site + "/" + id;
+
             const response = await fetch(fecthURL);
-
-
             const data = await response.json();
+            console.log("checking ----------", data)
             setDutruCTData(data);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -45,16 +44,16 @@ function Dutru({ site, data }) {
     return (
 
         <>
-        <div className="flex gap-4 py-4">
-        <div class="flex items-center border px-2 py-1 rounded-xl cursor-pointer">
-                <input checked id="default-radio-1" type="radio" value="" name="default-radio" className="w-4 h-4 bg-gray-100 border-gray-300 cursor-pointer"  />
-                <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer">Phiếu</label>
+            <div className="flex gap-4 py-4">
+                <div class="flex items-center border px-2 py-1 rounded-xl cursor-pointer">
+                    <input checked id="default-radio-1" type="radio" value="" name="default-radio" className="w-4 h-4 bg-gray-100 border-gray-300 cursor-pointer" />
+                    <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer">Phiếu</label>
+                </div>
+                <div class="flex items-center border px-2 py-1 rounded-xl cursor-pointer">
+                    <input id="default-radio-2" type="radio" value="" name="default-radio" className="w-4 h-4 bg-gray-100 border-gray-300 cursor-pointer" />
+                    <label for="default-radio-2" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer">Thuốc</label>
+                </div>
             </div>
-            <div class="flex items-center border px-2 py-1 rounded-xl cursor-pointer">
-                <input  id="default-radio-2" type="radio" value="" name="default-radio" className="w-4 h-4 bg-gray-100 border-gray-300 cursor-pointer" />
-                <label for="default-radio-2" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300 cursor-pointer">Thuốc</label>
-            </div>
-        </div>
             <div className="grid grid-cols-2">
                 <div>
                     {data.map((ele, index) =>
@@ -65,7 +64,7 @@ function Dutru({ site, data }) {
                             >
                                 <div className="flex justify-between">
                                     <div className="flex gap-3">
-                                        <div>{ele.id}</div>
+                                        <div className="cursor-text">{ele.id}</div>
                                         <div className="font-bold">{ele.ten}</div>
                                     </div>
 
@@ -87,7 +86,10 @@ function Dutru({ site, data }) {
 
                 </div>
                 <div>
-                    <DutruCT data={dutruCTData} />
+                    {dutruCTData.length > 0 && dutruCTData.map((ele) => {
+                        return <DutruCT data={ele} />;
+                    })}
+
                 </div>
             </div>
 
