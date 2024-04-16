@@ -17,8 +17,6 @@ const MarkdownReader = ({ filename }) => {
         }
         )
        
-
-
     return (
         <div>
             <Markdown >
