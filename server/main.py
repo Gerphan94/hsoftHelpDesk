@@ -99,19 +99,23 @@ def hien_dien_dutru_benhnhan(site , hiendien_id):
     phieus = cursor.execute(stm).fetchall()
     
     for phieuId in phieus:
+        id_duyet = phieuId[0]
         obj = {}
         stm = f'''
-            SELECT DD.id, to_char(DD.NGAY, 'dd/MM/yyyy HH24:MI:SS') as NGAY, DLP.TEN, 
-            to_char(DD.NGAYTAO, 'dd/MM/yyyy HH24:MI:SS') as NGAYTAO, 
-            to_char(DD.NGAYUD, 'dd/MM/yyyy HH24:MI:SS') AS NGAYUD,
+            SELECT A.id, to_char(A.NGAY, 'dd/MM/yyyy HH24:MI:SS') as NGAY, B.TEN, C.TEN AS DUOCKP,
+            to_char(A.NGAYTAO, 'dd/MM/yyyy HH24:MI:SS') as NGAYTAO, 
+            to_char(A.NGAYUD, 'dd/MM/yyyy HH24:MI:SS') AS NGAYUD,
             CASE
-                WHEN DD.DONE = 0 THEN 'Mới'
-                WHEN DD.DONE = 1 THEN 'Chuyển đi'
-                ELSE to_char(DD.DONE)
+                WHEN A.DONE = 0 THEN 'Mới'
+                WHEN A.DONE = 1 THEN 'Chuyển đi'
+                WHEN A.DONE = 2 THEN 'Duyệt'
+                WHEN A.DONE = 3 THEN 'Lấy số liệu'
+                ELSE to_char(A.DONE)
             END AS TRANGTHAI
-            FROM {schema}.D_DUYET DD
-            INNER JOIN HSOFTTAMANH.D_LOAIPHIEU DLP ON DLP.id = DD.PHIEU
-            WHERE DD.id = '{phieuId[0]}'
+            FROM {schema}.D_DUYET A
+            INNER JOIN HSOFTTAMANH.D_LOAIPHIEU B ON B.id = A.PHIEU
+            INNER JOIN HSOFTTAMANH.D_DUOCKP C ON A.MAKP = C.ID 
+            WHERE A.id = '{id_duyet}'
         '''
         phieu = cursor.execute(stm).fetchall()[0]
         
@@ -119,9 +123,10 @@ def hien_dien_dutru_benhnhan(site , hiendien_id):
             "id": str(phieu[0]),
             "ngay": phieu[1],
             "ten": phieu[2],
-            "ngaytao": phieu[3],
-            "ngayud": phieu[4],
-            "trangthai": phieu[5]
+            'duockp': phieu[3],
+            "ngaytao": phieu[4],
+            "ngayud": phieu[5],
+            "trangthai": phieu[6]
         }
         result.append(obj)
     return jsonify(result)
@@ -149,7 +154,7 @@ def dutruCT(site , id):
         pid = dutru[1]
         hoten = dutru[2]
         stm2 = f'''
-            SELECT A.STT,D.MA, D.TEN,A.DUONGDUNG, B.DOITUONG,A.DONGIA, A.SLYEUCAU, C.TEN
+            SELECT A.STT, D.MA, D.TEN, A.DUONGDUNG, B.DOITUONG, A.DONGIA, A.SLYEUCAU, C.TEN, A.DALIEU
             FROM {schema}.D_DUTRUCT A
             INNER JOIN HSOFTTAMANH.D_DOITUONG B ON A.MADOITUONG = B.MADOITUONG 
             INNER JOIN HSOFTTAMANH.D_DMKHO C ON A.MAKHO = C.ID
@@ -168,7 +173,8 @@ def dutruCT(site , id):
                 "doituong": thuoc[4],
                 "dongia": thuoc[5],
                 "slyc": thuoc[6],
-                "tenkho": thuoc[7]
+                "tenkho": thuoc[7],
+                "dalieu": thuoc[8]
             })
         result.append({
             'mabn': pid,

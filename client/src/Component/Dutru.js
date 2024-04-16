@@ -69,16 +69,17 @@ function Dutru({ site, data }) {
                                     </div>
 
                                     <div
-                                        className={`w-24 border rounded-2xl select-none py-1 ${ele.trangthai === 'Mới' ? 'bg-white' : ele.trangthai === 'Chuyển đi' ? "bg-blue-300" : ele.trangthai === 'Đã duyệt' ? "bg-green-400" : "bg-red-400"}`}
+                                        className={`w-24 border rounded-2xl text-sm select-none py-0.5 ${ele.trangthai === 'Mới' ? 'bg-white' : ele.trangthai === 'Chuyển đi' ? "bg-blue-300" : ele.trangthai === 'Duyệt' ? "bg-green-400" : "bg-red-400"}`}
                                         onClick={() => handleShowDuyetModal(ele.trangthai)}
                                     >
                                         {ele.trangthai}
                                     </div>
 
                                 </div>
-                                <div className="flex gap-3">
+                                <div className="flex justify-between">
                                     <div className="italic">Tạo ngày: {ele.ngaytao}
                                     </div>
+                                    <div>{ele.duockp}</div>
                                 </div>
                             </div>
                         </div>

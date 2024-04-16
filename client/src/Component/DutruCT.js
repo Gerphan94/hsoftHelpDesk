@@ -23,6 +23,10 @@ function DutruCT({ data }) {
                                     <div>{ele.stt}</div>
                                     <div> {ele.mathuoc}</div>
                                     <div className="font-bold"> {ele.tenthuoc}</div>
+                                    {ele.dalieu === 1 &&
+                                    <div className="italic text-red-500 font-bold">Đa liều</div>
+                                    }
+                                    
                                 </div>
                                 <div className="text-sm rounded-xl bg-green-600 px-2 py-0.5 text-white"> {ele.doituong}</div>
                             </div>
