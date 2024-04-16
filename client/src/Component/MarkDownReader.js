@@ -1,37 +1,29 @@
 import React, { useState, useEffect } from 'react';
-import { remark } from 'remark';
-import remarkReact from 'remark-react';
 
-const MarkdownReader = ({ filePath }) => {
+import Markdown from 'markdown-to-jsx'
+import "./markdown.css"
 
-    console.log(filePath);
-
-
-    const [markdownContent, setMarkdownContent] = useState('');
-
+const MarkdownReader = ({ filename }) => {
+    console.log(filename);
+    const [content, setContent] = useState('');
     useEffect(() => {
-        // Function to fetch and read Markdown file
-        const fetchMarkdownFile = async () => {
-            try {
-                const response = await fetch(filePath);
-                const markdownText = await response.text();
-                console.log(markdownText);
-                setMarkdownContent(markdownText);
-            } catch (error) {
-                console.error('Error fetching Markdown file:', error);
-            }
-        };
+        import(`../markdown/${filename}`)
+            .then(res => {
+                fetch(res.default)
+                    .then(res => res.text())
+                    .then(res => setContent(res))
+            
+            }) 
+        }
+        )
+       
 
-        fetchMarkdownFile();
-    }, [filePath]);
 
     return (
         <div>
-            {/* Pass createElement function to remarkReact */}
-            {remark().use(remarkReact, {
-                // Ensure to pass createElement function
-                createElement: React.createElement
-            }).processSync(markdownContent).result}
+            <Markdown >
+                {content}
+            </Markdown>
         </div>
     );
 };

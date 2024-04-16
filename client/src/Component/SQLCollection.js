@@ -3,15 +3,20 @@ import MarkdownReader from './MarkDownReader';
 
 function SQLCol() {
 
-   
+
 
     return (
         <>
             <div>SQL</div>
+            <div className='px-4'>
+                <div className='border text-left'>
+                    <MarkdownReader filename="dutru.md" />
+                </div>
+            </div>
 
-            <MarkdownReader filePath="/client/src/SQL/dutru.md" />
-            
-        
+
+
+
         </>
     )
 
