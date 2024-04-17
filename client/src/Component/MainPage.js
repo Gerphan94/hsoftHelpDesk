@@ -2,7 +2,11 @@ import React, { useState } from "react";
 
 import Inpatient from "./Inpatient";
 import MedicalCheckUp from "./KhamBenh";
+import DatKham from "./DatKham/DatKham";
+
 import SQLCol from "./SQLCollection";
+import DanhMuc from "./DanhMuc/DanhMuc";
+
 
 import styles from "./styles.module.css"
 import Select from 'react-select'
@@ -14,6 +18,8 @@ function MainPage() {
     const funcs = [
         { id: 1, name: 'Hiện diện BN' },
         { id: 2, name: 'Khám bệnh' },
+        { id: 3, name: "Đặt khám" },
+        { id: 98, name: "Danh mục" },
         { id: 99, name: 'SQL' }
     ];
 
@@ -29,7 +35,6 @@ function MainPage() {
 
     return (
         <>
-            
             {site === 'HCM_DEV' ?
                 <div className="w-full h-4 bg-red-500"></div> :
                 <div className="w-full h-4 bg-green-600"></div>
@@ -48,7 +53,7 @@ function MainPage() {
                     {funcs.map((func, index) => (
                         <button
                             key={index}
-                            className={`block py-2 w-full  border-b ${func.id === selectedFunc ? 'bg-blue-200' : ''}`}
+                            className={`block py-2 w-full text-left px-4 border-b ${func.id === selectedFunc ? 'bg-blue-200' : ''}`}
                             onClick={() => setSelectedFunc(func.id)}
 
                         >{func.name}</button>
@@ -64,6 +69,13 @@ function MainPage() {
                     {selectedFunc === 2 &&
                         <MedicalCheckUp />
 
+                    }
+                    {selectedFunc === 3 &&
+                        <DatKham site={site} />
+                    }
+
+                    {selectedFunc === 98 &&
+                        <DanhMuc />
                     }
 
                     {selectedFunc === 99 &&

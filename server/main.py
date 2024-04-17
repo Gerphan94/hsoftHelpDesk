@@ -135,7 +135,7 @@ def hien_dien_dutru_benhnhan(site , hiendien_id):
 @app.route('/hien_dien/dutruCT/<site>/<id>', methods=['GET'])
 def dutruCT(site , id):
     schema = 'HSOFTTAMANH0424'
- 
+
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
@@ -184,6 +184,43 @@ def dutruCT(site , id):
     print(list(result))
     return jsonify(result)
 
+@app.route('/datkham/error_datkham/<site>/<ngay>/<upper>', methods=['GET'])
+def error_datkham(site , ngay, upper):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    if (upper):
+        stm = '''
+            SELECT A.MABN, C.HOTEN , A.KHAM , A.MAKP, B.TENKP, to_char(A.DEN, 'dd/MM/yyyy HH24:MI:SS') as NGAY 
+            FROM HSOFTTAMANH.DATKHAM  A
+            INNER JOIN HSOFTTAMANH.BTDKP_BV B ON A.MAKP = B.MAKP
+            INNER JOIN HSOFTTAMANH.BTDBN C ON A.MABN = C.MABN
+            WHERE to_char(A.DEN,'yyMMdd') = 240417 AND UPPER(TRIM(A.KHAM)) <> UPPER(TRIM(B.TENKP))
+        '''
+    else:
+        stm = '''
+            SELECT A.MABN, C.HOTEN , A.KHAM , A.MAKP, B.TENKP, to_char(A.DEN, 'dd/MM/yyyy HH24:MI:SS') as NGAY 
+            FROM HSOFTTAMANH.DATKHAM  A
+            INNER JOIN HSOFTTAMANH.BTDKP_BV B ON A.MAKP = B.MAKP
+            INNER JOIN HSOFTTAMANH.BTDBN C ON A.MABN = C.MABN
+            WHERE to_char(A.DEN,'yyMMdd') = 240417 AND (A.KHAM) <> (B.TENKP)
+        '''
+    ds = cursor.execute(stm).fetchall()
+    for bn in ds:
+        result.append(
+            {
+                "mabn": bn[0],
+                "hoten": bn[1],
+                "khamhen": bn[2],
+                "makp": bn[3],
+                "tenkp": bn[4],
+                "ngay": bn[5]
+            }
+        )
+    return jsonify(result)
+    
 
 if __name__=='__main__':
     app.run(debug=True)
