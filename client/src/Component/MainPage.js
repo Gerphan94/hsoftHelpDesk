@@ -3,10 +3,8 @@ import React, { useState } from "react";
 import Inpatient from "./Inpatient";
 import MedicalCheckUp from "./KhamBenh";
 import DatKham from "./DatKham/DatKham";
-
-import SQLCol from "./SQLCollection";
+import SQLCol from "./SQL/SQLCollection";
 import DanhMuc from "./DanhMuc/DanhMuc";
-
 
 import styles from "./styles.module.css"
 import Select from 'react-select'
