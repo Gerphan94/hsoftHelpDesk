@@ -184,6 +184,54 @@ def dutruCT(site , id):
     print(list(result))
     return jsonify(result)
 
+@app.route('/khambenh/<site>/<ngay>', methods=['GET'])
+def khambenh(site , ngay):
+    imonth = ngay[4:6]
+    iyear = ngay[2:4]
+    schema = "HSOFTTAMANH" + imonth + iyear
+  
+    result = []
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    
+    stm = f'''
+        SELECT A.MABN, C.HOTEN,
+        CASE
+            WHEN C.PHAI = 0 THEN 'Nam'
+            ELSE 'Nữ'
+        END AS PHAI,
+        TO_CHAR(C.NGAYSINH, 'dd/MM/yyyy') as NGAYSINH  , B.TENKP, D.DOITUONG, TO_CHAR(A.NGAY, 'dd/MM/yyyy HH24:MI:SS') as NGAYTN,
+        TO_CHAR(E.NGAY, 'dd/MM/yyyy HH24:MI:SS') as NGAYKB, A.DONE 
+        FROM {schema}.TIEPDON A
+        INNER JOIN HSOFTTAMANH.BTDKP_BV B ON A.MAKP = B.MAKP
+        INNER JOIN HSOFTTAMANH.BTDBN C ON A.MABN  = C.MABN
+        INNER JOIN HSOFTTAMANH.DOITUONG D ON A.MADOITUONG = D.MADOITUONG
+        LEFT  JOIN {schema}.BENHANPK E ON A.MAQL = E.MAQL
+        WHERE  TO_CHAR(A.NGAY, 'yyyyMMdd') = '{ngay}'
+        ORDER BY A.NGAY ASC
+    '''
+    
+    khambenhs = cursor.execute(stm).fetchall()
+    for kb in khambenhs:
+        result.append({
+            "mabn": kb[0],
+            "hoten": kb[1],
+            "phai": kb[2],
+            "ngaysinh": kb[3],
+            "tenkp": kb[4],
+            "doituong": kb[5],
+            "ngaytn": kb[6],
+            "ngaykb": kb[7],
+            "done": kb[8]
+            
+        })
+    
+    
+    return jsonify(result)
+    
+    
+
 @app.route('/datkham/error_datkham/<site>/<ngay>/<upper>', methods=['GET'])
 def error_datkham(site , ngay, upper):
     cn = conn_info(site)

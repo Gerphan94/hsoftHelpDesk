@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
 import Inpatient from "./Inpatient";
-import MedicalCheckUp from "./KhamBenh";
+import KhamBenh from "./KhamBenh/KhamBenh";
 import DatKham from "./DatKham/DatKham";
 import SQLCol from "./SQL/SQLCollection";
 import DanhMuc from "./DanhMuc/DanhMuc";
-
+import KPI from "./KPI/KPI";
 import styles from "./styles.module.css"
 import Select from 'react-select'
 
@@ -18,7 +18,8 @@ function MainPage() {
         { id: 2, name: 'Khám bệnh' },
         { id: 3, name: "Đặt khám" },
         { id: 98, name: "Danh mục" },
-        { id: 99, name: 'SQL' }
+        { id: 99, name: 'SQL' },
+        { id: 999, name: "KPI"}
     ];
 
     const [site, setSite] = useState('HCM_DEV')
@@ -65,7 +66,7 @@ function MainPage() {
 
                     }
                     {selectedFunc === 2 &&
-                        <MedicalCheckUp />
+                        <KhamBenh site={site}/>
 
                     }
                     {selectedFunc === 3 &&
@@ -78,6 +79,10 @@ function MainPage() {
 
                     {selectedFunc === 99 &&
                         <SQLCol />
+                    }
+
+                    {selectedFunc === 999 &&
+                        <KPI />
                     }
                 </div>
 
