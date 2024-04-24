@@ -1,8 +1,11 @@
 import React, { useState } from "react";
+import { MdDelete } from "react-icons/md";
+import { IoMdAddCircle } from "react-icons/io";
 
-function DKDat({ number }) {
 
-    const opts = ["<", "<=", "=", ">=", ">"]
+function DKDat({ dkData, setDkData }) {
+
+    const opts = ["", "<", "<=", "=", ">=", ">"]
 
     const [formData, setFormData] = useState({
         name: '',
@@ -10,8 +13,7 @@ function DKDat({ number }) {
         value: ''
     });
 
-    const [dkData, setDkData] = useState([]);
-
+    // const [dkData, setDkData] = useState([]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -22,32 +24,32 @@ function DKDat({ number }) {
     };
 
     const handleAdd = () => {
+        console.log(formData.selectedOption)
+        const newData = {
+            name: formData.name,
+            selectedOption: formData.selectedOption,
+            value: formData.value
+        }
+        setDkData(prevData => [...prevData, newData]);
 
-
-        console.log('Name:', formData.name);
-        console.log('Selected Option:', formData.selectedOption);
-        console.log('Value:', formData.value);
-        
-
+        setFormData({
+            name: '',
+            selectedOption: '',
+            value: ''
+        })
         // Perform further actions with the data as needed
     };
 
     return (
         <>
-            {dkData.map((ele) =>
-                <div>
-                    <div>{ele[0]}</div>
-                    <div>{ele[2]}</div>
-                    <div>{ele[3]}</div>
-                </div>
-            )}
-            <div className="flex gap-4">
+            <div className="flex gap-4 mb-4">
                 <input
                     name='name'
                     type="text"
-                    className="w-40 border outline-none px-2 py-1 ml-2"
+                    className="w-56 border outline-none px-2 py-1 ml-2"
                     value={formData.name}
                     onChange={handleChange}
+                    autoComplete="off"
                 />
                 <select
                     name="selectedOption"
@@ -62,17 +64,55 @@ function DKDat({ number }) {
                 <input
                     name="value"
                     type="number"
-                    className="w-40 border outline-none px-2 py-1 ml-2"
+                    className="w-24 border outline-none px-2 py-1 ml-2"
                     value={formData.value}
                     onChange={handleChange}
                 />
                 <button
-                    className="border bg-green-400 w-10"
+                    className="border rounded-sm w-10 text-green-600 flex justify-center items-center text-xl hover:bg-gray-100"
                     onClick={handleAdd}
                 >
-                    +
+                    <IoMdAddCircle />
                 </button>
             </div>
+            {dkData.map((ele) =>
+                <div className="flex gap-4 mb-2">
+                    <input
+                        name='name'
+                        type="text"
+                        className="w-56 border outline-none px-2 py-1 ml-2"
+                        value={ele.name}
+                        disabled={true}
+                        autoComplete="off"
+                    />
+                    <select
+                        name="selectedOption"
+                        className="border px-2 py-1 rounded-md"
+                        value={ele.selectedOption}
+                        disabled={true}
+                    >
+                        {opts.map((opt, index) => (
+                            <option key={index} value={opt}>{opt}</option>
+                        ))}
+                    </select>
+                    <input
+                        name="value"
+                        type="number"
+                        className="w-24 border outline-none px-2 py-1 ml-2"
+                        value={ele.value}
+                        disabled={true}
+                    />
+                    <button
+                        className="border rounded-sm w-10 text-red-600 flex justify-center items-center text-xl hover:bg-gray-100"
+                        onClick={handleAdd}
+                    >
+                        <MdDelete />
+                    </button>
+                </div>
+            )}
+
+
+
 
         </>
     )
