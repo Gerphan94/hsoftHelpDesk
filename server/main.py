@@ -240,20 +240,20 @@ def error_datkham(site , ngay, upper):
     result = []
     
     if (upper):
-        stm = '''
-            SELECT A.MABN, C.HOTEN , A.KHAM , A.MAKP, B.TENKP, to_char(A.DEN, 'dd/MM/yyyy HH24:MI:SS') as NGAY 
+        stm = f'''
+            SELECT A.MABN, C.HOTEN , A.KHAM , A.MAKP, B.TENKP, to_char(A.DEN, 'dd/MM/yyyy HH24:MI:SS') as NGAY, A.DONE
             FROM HSOFTTAMANH.DATKHAM  A
             INNER JOIN HSOFTTAMANH.BTDKP_BV B ON A.MAKP = B.MAKP
             INNER JOIN HSOFTTAMANH.BTDBN C ON A.MABN = C.MABN
-            WHERE to_char(A.DEN,'yyMMdd') = 240417 AND UPPER(TRIM(A.KHAM)) <> UPPER(TRIM(B.TENKP))
+            WHERE to_char(A.DEN,'yyyyMMdd') = '{ngay}' AND UPPER(TRIM(A.KHAM)) <> UPPER(TRIM(B.TENKP))
         '''
     else:
-        stm = '''
-            SELECT A.MABN, C.HOTEN , A.KHAM , A.MAKP, B.TENKP, to_char(A.DEN, 'dd/MM/yyyy HH24:MI:SS') as NGAY 
+        stm = f'''
+            SELECT A.MABN, C.HOTEN , A.KHAM , A.MAKP, B.TENKP, to_char(A.DEN, 'dd/MM/yyyy HH24:MI:SS') as NGAY, A.DONE
             FROM HSOFTTAMANH.DATKHAM  A
             INNER JOIN HSOFTTAMANH.BTDKP_BV B ON A.MAKP = B.MAKP
             INNER JOIN HSOFTTAMANH.BTDBN C ON A.MABN = C.MABN
-            WHERE to_char(A.DEN,'yyMMdd') = 240417 AND (A.KHAM) <> (B.TENKP)
+            WHERE to_char(A.DEN,'yyyyMMdd') = '{ngay}' AND (A.KHAM) <> (B.TENKP)
         '''
     ds = cursor.execute(stm).fetchall()
     for bn in ds:
@@ -264,10 +264,40 @@ def error_datkham(site , ngay, upper):
                 "khamhen": bn[2],
                 "makp": bn[3],
                 "tenkp": bn[4],
-                "ngay": bn[5]
+                "ngay": bn[5],
+                "done": bn[6]
             }
         )
     return jsonify(result)
+
+@app.route('/duoc/tonbhyt/<site>', methods=['GET'])
+def tonbhyt(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm = '''
+        SELECT A.MA, A.TEN, A.SLTHAUBH AS TONBH_BD, 
+        (A.SLTHAUBH - A.SLTHAUBH_SUDUNG) AS TONBH_THUC,
+        A.SLTHAUBH_YEUCAU AS TONBH_TREO,
+        (A.SLTHAUBH - A.SLTHAUBH_SUDUNG - A.SLTHAUBH_YEUCAU) AS TONBH_KD
+        FROM HSOFTTAMANH.D_DMBD A
+        WHERE A.SLTHAUBH <> 0
+    '''
+    datas = cursor.execute(stm).fetchall()
+    for data in datas:
+        result.append({
+            "ma": data[0],
+            "ten": data[1],
+            "tonbd": data[2],
+            "tonthuc": data[3],
+            "tontreo": data[4],
+            "tonkd": data[5]
+        })
+
+    return jsonify(result)
+
     
 
 if __name__=='__main__':

@@ -5,6 +5,8 @@ import KhamBenh from "./KhamBenh/KhamBenh";
 import DatKham from "./DatKham/DatKham";
 import SQLCol from "./SQL/SQLCollection";
 import DanhMuc from "./DanhMuc/DanhMuc";
+import Duoc from "./Duoc/Duoc";
+
 import KPI from "./KPI/KPI";
 import styles from "./styles.module.css"
 import Select from 'react-select'
@@ -17,9 +19,10 @@ function MainPage() {
         { id: 1, name: 'Hiện diện BN' },
         { id: 2, name: 'Khám bệnh' },
         { id: 3, name: "Đặt khám" },
+        { id: 4, name: "Dược" },
         { id: 98, name: "Danh mục" },
         { id: 99, name: 'SQL' },
-        { id: 999, name: "KPI"}
+        { id: 999, name: "KPI" }
     ];
 
     const [site, setSite] = useState('HCM_DEV')
@@ -66,11 +69,15 @@ function MainPage() {
 
                     }
                     {selectedFunc === 2 &&
-                        <KhamBenh site={site}/>
+                        <KhamBenh site={site} />
 
                     }
                     {selectedFunc === 3 &&
                         <DatKham site={site} />
+                    }
+
+                    {selectedFunc === 4 &&
+                        <Duoc site={site} />
                     }
 
                     {selectedFunc === 98 &&

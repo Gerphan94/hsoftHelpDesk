@@ -19,10 +19,7 @@ function KhamBenh( { site }  ) {
     ));
 
     const handleView = async () => {
-
-
         let formatDate = moment(viewDate).format('YYYYMMDD');
-        console.log(viewDate);
         try {
             const fecthURL = apiURL + "/khambenh/" + site + "/" + formatDate;
 
@@ -87,7 +84,6 @@ function KhamBenh( { site }  ) {
                             <th className="w-20">Đối tượng</th>
                             <th className="w-40">Ngày tiếp đón</th>
                             <th className="w-40">Ngày khám</th>
-
                             <th className="">Done</th>
                         </tr>
                     </thead>
