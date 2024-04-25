@@ -5,21 +5,29 @@ function KPI() {
 
     const [kpis, setKpis] = useState([
         {
-            "nd": "abv",
-            "ct": "xxxx",
+            "nd": "Đạt số lượng tổng Khách hàng khám trung bình một ngày \ntheo quy định bệnh viện (A)",
+            "ct": "Tử số: Tổng số lượng khách hàng đến khám tại \nKhoa Khám Bệnh trong 1 tháng của BS \nMẫu số: Tổng số ngày làm việc của BS trong tháng",
             "dk": [{
-                name: 'a',
-                selectedOption: '=',
-                value: '2'
-            }]
-
+                name: 'Khám ngày Thường',
+                selectedOption: '>=',
+                value: '20'
+            },
+            {
+                name: 'Ngày chủ nhật',
+                selectedOption: '>=',
+                value: '14'
+            },
+            {
+                name: 'Ngoài giờ',
+                selectedOption: '>=',
+                value: '15'
+            }
+        
+        ]
         }
-
     ]);
 
     useEffect(() => {
-
-
 
     });
 
@@ -55,7 +63,7 @@ function KPI() {
                 <div>
                     <table className="w-full">
                         <thead>
-                            <tr>
+                            <tr className="bg-gray-300">
                                 <th className="w-8">#</th>
                                 <th>Nội dung đánh giá</th>
                                 <th>Cách thức đo lường</th>
@@ -66,31 +74,49 @@ function KPI() {
                         </thead>
                         <tbody>
                             {kpis.map((kpi) =>
-                                <tr>
+                                <tr className="border-b py-2">
                                     <td>
 
                                     </td>
 
                                     <td>
-                                        <textarea className="w-full border px-2 py-1 min-h-20">{kpi.nd}</textarea>
+                                        <textarea 
+                                        className="w-full border px-2 py-1 min-h-20 outline-none"
+                                        readOnly={true}
+                                        >{kpi.nd}</textarea>
                                     </td>
                                     <td>
-                                        <textarea className="w-full border px-2 py-1 min-h-20">{kpi.ct}</textarea>
+                                        <textarea className="w-full h-full border px-2 py-1 min-h-24 outline-none">{kpi.ct}</textarea>
                                     </td>
                                     <td>
-                                        <div className="p-4">
+                                        <div className="p-4 border">
                                             {kpi.dk.map((ele) =>
-                                                <div className="flex gap-4">
+                                                <div className="flex gap-2">
                                                     <div>{ele.name}</div>
                                                     <div>{ele.selectedOption}</div>
                                                     <div>{ele.value}</div>
-                                                  
-
                                                 </div>
                                             )}
                                         </div>
-
                                     </td>
+                                    <td>
+                                    <div className="p-4 border">
+                                            {kpi.dk.map((ele) =>
+                                                <div className="flex gap-2">
+                                                    <div>{ele.name}</div>
+                                                    <div>=</div>
+                                                    <input type="number" className="border w-14 px-2 py-0.5 outline-none"></input>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <select className="border px-2 py-1 bg-blue-200 rounded-md">
+                                            <option>Đạt</option>
+                                            <option>Không Đạt</option>
+                                        </select>
+                                    </td>
+
 
 
                                 </tr>

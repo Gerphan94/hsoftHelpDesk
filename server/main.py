@@ -280,6 +280,7 @@ def tonbhyt(site):
     stm = '''
         SELECT A.MA, A.TEN, A.SLTHAUBH AS TONBH_BD, 
         (A.SLTHAUBH - A.SLTHAUBH_SUDUNG) AS TONBH_THUC,
+        SLTHAUBH_SUDUNG AS DADUNG,
         A.SLTHAUBH_YEUCAU AS TONBH_TREO,
         (A.SLTHAUBH - A.SLTHAUBH_SUDUNG - A.SLTHAUBH_YEUCAU) AS TONBH_KD
         FROM HSOFTTAMANH.D_DMBD A
@@ -292,8 +293,9 @@ def tonbhyt(site):
             "ten": data[1],
             "tonbd": data[2],
             "tonthuc": data[3],
-            "tontreo": data[4],
-            "tonkd": data[5]
+            "dadung": data[4],
+            "tontreo": data[5],
+            "tonkd": data[6]
         })
 
     return jsonify(result)
