@@ -37,7 +37,7 @@ function MainPage() {
 
     return (
         <>
-            {site === 'HCM_DEV' ?
+            {site === 'HCM_DEV' || site === 'HN_DEV'?
                 <div className="w-full h-4 bg-red-500"></div> :
                 <div className="w-full h-4 bg-green-600"></div>
             }
@@ -45,6 +45,7 @@ function MainPage() {
                 <div className="text-left">
                     <select className="border w-40 px-2 py-1 rounded-md" value={site} onChange={handleChangeEnv}>
                         <option value="HCM_DEV">HCM - DEV</option>
+                        <option value="HN_DEV">HN - Dev</option>
                         <option value="HN_LIVE">HN - Live</option>
                     </select>
                 </div>

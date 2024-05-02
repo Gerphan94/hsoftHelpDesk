@@ -20,6 +20,12 @@ def conn_info(env):
             'password':'hsofttamanh',
             'dsn':"hsoft-primary.bvta.vn/hsoft.quang"
         }
+    elif (env == 'HN_DEV'):
+        return {
+            'user':"hsofttamanh",
+            'password':'hsofttamanh',
+            'dsn':"192.168.8.5/hndev"
+        }  
     else:
         return {
             'user':"hsofttamanh",
@@ -270,6 +276,16 @@ def error_datkham(site , ngay, upper):
         )
     return jsonify(result)
 
+# DƯỢC
+@app.route('/duoc/danhmuc/<site>', methods=['GET'])
+def duoc_danhmuc(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    return jsonify(result)
+
 @app.route('/duoc/tonbhyt/<site>', methods=['GET'])
 def tonbhyt(site):
     cn = conn_info(site)
@@ -301,7 +317,6 @@ def tonbhyt(site):
     return jsonify(result)
 
     
-
 if __name__=='__main__':
     app.run(debug=True)
     

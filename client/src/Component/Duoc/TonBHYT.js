@@ -19,8 +19,6 @@ function TonBHYT( { site }) {
         }
     }
 
-    
-
     return (
         <>
         <div className="text-left px-4">
