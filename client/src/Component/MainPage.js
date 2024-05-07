@@ -36,7 +36,7 @@ function MainPage() {
     }
 
     return (
-        <>
+        <div className=" h-screen">
             {site === 'HCM_DEV' || site === 'HN_DEV'?
                 <div className="w-full h-4 bg-red-500"></div> :
                 <div className="w-full h-4 bg-green-600"></div>
@@ -106,7 +106,7 @@ function MainPage() {
 
 
 
-        </>
+        </div>
     )
 }
 export default MainPage;
