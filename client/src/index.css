@@ -12,6 +12,16 @@ code {
     monospace;
 }
 
+.table-wrp  {
+  max-height: 75vh;
+  overflow-y: auto;
+  display:block;
+}
+thead{
+  position:sticky;
+  top:0
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
