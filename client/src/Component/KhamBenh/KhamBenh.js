@@ -7,6 +7,8 @@ import { FiCircle } from "react-icons/fi";
 
 function KhamBenh({ site }) {
 
+    const tableHeight = '80vh';
+
     const apiURL = process.env.REACT_APP_API_URL;
 
     const [searchTerm, setSearchTerm] = useState('');
@@ -42,7 +44,7 @@ function KhamBenh({ site }) {
         }
         else {
             const filedata = initData.filter((item) =>
-                item.hoten.toLowerCase().includes(searchTerm.toLowerCase())
+                item.mabn.toLowerCase().includes(searchTerm.toLowerCase()) || item.hoten.toLowerCase().includes(searchTerm.toLowerCase())
             );
             setViewData(filedata);
         }
@@ -53,7 +55,7 @@ function KhamBenh({ site }) {
     return (
         <>
 
-            <div className="flex gap-10 w-full border-b p-2">
+            <div className="flex gap-10 w-full h-12 border-b p-2">
                 <div className="font-bold text-xl">DANH SÁCH KHÁM BỆNH</div>
                 <div>
                     <label>Ngày: </label>
@@ -64,7 +66,6 @@ function KhamBenh({ site }) {
                         dateFormat="P"
                     />
                 </div>
-
                 <div>
                     <button
                         className={styles.buttonSubmit}
@@ -74,7 +75,7 @@ function KhamBenh({ site }) {
                 </div>
 
             </div>
-            <div className="px-4 py-2 flex">
+            <div className=" h-12 px-4 py-2 flex">
                 <div className="flex gap-4">
                     <input
                         className="border px-2 py-1 outline-none"
@@ -87,11 +88,13 @@ function KhamBenh({ site }) {
                         onClick={() => handleSearch()}
                     >Tìm</button>
                 </div>
+
+
             </div>
 
             {/* TABLE */}
-            <div className="">
-                <table className="w-full ">
+            <div className="" >
+                <table className="w-full">
                     <thead>
                         <tr className="bg-gray-200">
                             <th className="w-10 py-1"></th>
@@ -107,9 +110,9 @@ function KhamBenh({ site }) {
                             <th className="">Done</th>
                         </tr>
                     </thead>
-                    <tbody className="">
+                    <tbody className="overflow-y-auto h-[600xp]" >
                         {viewData.map((data, index) =>
-                            <tr className="hover:bg-blue-50 cursor-pointer max-h-5">
+                            <tr className="hover:bg-blue-50 cursor-pointer even:bg-gray-100 odd:bg-white">
                                 <td><div className="flex justify-center"><FiCircle className="" /></div></td>
                                 <td>{index + 1}</td>
                                 <td><div className="text-left px-2">{data.mabn}</div></td>
@@ -121,7 +124,6 @@ function KhamBenh({ site }) {
                                 <td><div className="text-left px-2">{data.ngaytn}</div></td>
                                 <td><div className="text-left px-2">{data.ngaykb}</div></td>
                                 <td><div className="text-left px-2">{data.done}</div></td>
-
                             </tr>
                         )}
                     </tbody>
