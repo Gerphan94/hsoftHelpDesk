@@ -93,9 +93,9 @@ function KhamBenh({ site }) {
             </div>
 
             {/* TABLE */}
-            <div className="" >
-                <table className="w-full">
-                    <thead>
+            <div className="max-h-[400px]" >
+                <table >
+                    <thead className="sticky top-0">
                         <tr className="bg-gray-200">
                             <th className="w-10 py-1"></th>
                             <th className="w-10 py-1">STT</th>
@@ -110,7 +110,7 @@ function KhamBenh({ site }) {
                             <th className="">Done</th>
                         </tr>
                     </thead>
-                    <tbody className="overflow-y-auto h-[600xp]" >
+                    <tbody className="overflow-y-auto h-[400px]" >
                         {viewData.map((data, index) =>
                             <tr className="hover:bg-blue-50 cursor-pointer even:bg-gray-100 odd:bg-white">
                                 <td><div className="flex justify-center"><FiCircle className="" /></div></td>
