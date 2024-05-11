@@ -3,19 +3,35 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import styles from "../styles.module.css"
 import moment from 'moment';
-import { FiCircle } from "react-icons/fi";
+import DichVuModal from "./DichvuModal";
+import ThuocModal from "./ThuocModal";
+
+
+import { BsCalendarDateFill } from "react-icons/bs";
+
 
 function KhamBenh({ site }) {
-
-    const tableHeight = '80vh';
-
     const apiURL = process.env.REACT_APP_API_URL;
+
+    const btns = [
+        { id: "thuoc", name: "Thuốc" },
+        { id: "dichvu", name: "Dịch vụ" }
+
+    ]
 
     const [searchTerm, setSearchTerm] = useState('');
 
     const [viewDate, setViewDate] = useState(new Date());
     const [initData, setInitData] = useState([]);
     const [viewData, setViewData] = useState([]);
+
+    const [curMAQL, setCurMAQL] = useState('');
+
+    const [dichvuShow, setDichvuShow] = useState(false);
+    const [thuocShow, setThuocShow] = useState(false);
+
+
+
 
     const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
         <button className="bg-blue-300 w-32 px-2 py-1 rounded-md" onClick={onClick} ref={ref}>
@@ -30,6 +46,7 @@ function KhamBenh({ site }) {
 
             const response = await fetch(fecthURL);
             const data = await response.json();
+            console.log(data);
             setViewData(data);
             setInitData(data);
         } catch (error) {
@@ -49,6 +66,21 @@ function KhamBenh({ site }) {
             setViewData(filedata);
         }
     };
+
+    const handleClick = (maql) => {
+        if (maql !== null) {
+            setCurMAQL(maql);
+        }
+    }
+
+    const handleClickShow = (id) => {
+        if (id === 'dichvu') {
+            setDichvuShow(true);
+        }
+        else if (id === 'thuoc') {
+            setThuocShow(true);
+        }
+    }
 
 
 
@@ -70,7 +102,6 @@ function KhamBenh({ site }) {
                     <button
                         className={styles.buttonSubmit}
                         onClick={() => handleView()}
-
                     >Xem</button>
                 </div>
 
@@ -89,12 +120,18 @@ function KhamBenh({ site }) {
                     >Tìm</button>
                 </div>
 
+                <div className="flex items-center justify-center gap-2 w-full">
+                    {btns.map((btn) =>
+                        <button className="border px-2 py-1" onClick={() => handleClickShow(btn.id)}>{btn.name}</button>
+                    )}
+                </div>
+
 
             </div>
 
             {/* TABLE */}
-            <div className="max-h-[400px]" >
-                <table >
+            <div className="mt-0 px-4 w-full h-[780px] overflow-y-auto" >
+                <table className="w-full">
                     <thead className="sticky top-0">
                         <tr className="bg-gray-200">
                             <th className="w-10 py-1"></th>
@@ -110,10 +147,15 @@ function KhamBenh({ site }) {
                             <th className="">Done</th>
                         </tr>
                     </thead>
-                    <tbody className="overflow-y-auto h-[400px]" >
+                    <tbody className="">
                         {viewData.map((data, index) =>
-                            <tr className="hover:bg-blue-50 cursor-pointer even:bg-gray-100 odd:bg-white">
-                                <td><div className="flex justify-center"><FiCircle className="" /></div></td>
+                            <tr
+                                className={` ${data.maqlkb === null ? "text-gray-300 cursor-not-allowed " : curMAQL === data.maqlkb ? "bg-blue-300" : "hover:bg-blue-300 cursor-pointer"}`}
+                                onClick={() => handleClick(data.maqlkb)}
+                            >
+                                <td><div className="flex justify-center p-2">
+                                    <span className={`${data.maqlkb === null ? "" : "bg-blue-400"} w-4 h-4 rounded-md`}  ></span>
+                                </div></td>
                                 <td>{index + 1}</td>
                                 <td><div className="text-left px-2">{data.mabn}</div></td>
                                 <td className=""><div className="text-left px-4 py-1">{data.hoten}</div></td>
@@ -129,6 +171,13 @@ function KhamBenh({ site }) {
                     </tbody>
                 </table>
             </div>
+
+            {dichvuShow &&
+                <DichVuModal setModalShow={setDichvuShow} />
+            }
+            {thuocShow &&
+                <ThuocModal setModalShow={setThuocShow} />
+            }
 
         </>
     )
