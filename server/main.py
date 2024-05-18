@@ -3,6 +3,7 @@ import oracledb
 from flask import Flask, jsonify
 from flask_cors import CORS
 import datetime as dt
+import numpy as np
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -190,6 +191,8 @@ def dutruCT(site , id):
     print(list(result))
     return jsonify(result)
 
+
+
 @app.route('/khambenh/<site>/<ngay>', methods=['GET'])
 def khambenh(site , ngay):
     imonth = ngay[4:6]
@@ -214,13 +217,20 @@ def khambenh(site , ngay):
         INNER JOIN HSOFTTAMANH.BTDKP_BV B ON A.MAKP = B.MAKP
         INNER JOIN HSOFTTAMANH.BTDBN C ON A.MABN  = C.MABN
         INNER JOIN HSOFTTAMANH.DOITUONG D ON A.MADOITUONG = D.MADOITUONG
-        LEFT  JOIN {schema}.BENHANPK E ON A.MAVAOVIEN = E.MAVAOVIEN AND A.MAKP = E.MAKP 
+        LEFT  JOIN {schema}.BENHANPK E ON A.MAVAOVIEN = E.MAVAOVIEN AND A.MAKP = E.MAKP
+        
+        
         WHERE  TO_CHAR(A.NGAY, 'yyyyMMdd') = '{ngay}'
         ORDER BY A.NGAY ASC
     '''
     
     khambenhs = cursor.execute(stm).fetchall()
     for kb in khambenhs:
+        
+        kb_maql = kb[10]
+        
+        
+        
         result.append({
             "mabn": kb[0],
             "hoten": kb[1],
@@ -237,6 +247,20 @@ def khambenh(site , ngay):
         })
 
     return jsonify(result)
+
+@app.route('/khambenh/xuattt/<site>/<maql>', methods=['GET'])
+def khambenh_xuattutruc(site , maql):
+    result = []
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    
+    stm = f'''
+        
+    '''
+    
+    return jsonify(result)
+    
     
     
 

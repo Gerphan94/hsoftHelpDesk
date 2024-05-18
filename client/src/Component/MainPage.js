@@ -17,11 +17,11 @@ function MainPage() {
 
     const funcs = [
         { id: 1, name: 'Hiện diện BN' },
-        { id: 2, name: 'Khám bệnh' },
-        { id: 3, name: "Đặt khám" },
-        { id: 4, name: "Dược" },
-        { id: 98, name: "Danh mục" },
-        { id: 99, name: 'SQL' },
+        { id: 'khambenh', name: 'Khám bệnh' },
+        { id: 'datkham', name: "Đặt khám" },
+        { id: 'duoc', name: "Dược" },
+        { id: 'danhmuc', name: "Danh mục" },
+        { id: 'sql', name: 'SQL' },
         { id: 999, name: "KPI" }
     ];
 
@@ -41,7 +41,7 @@ function MainPage() {
                 <div className="flex">
                     <div className="w-40 mt-4 border-r-2">
                         <div className="text-left p-2">
-                            <select className="border w-full px-2 py-1 rounded-md" value={site} onChange={handleChangeEnv}>
+                            <select className="bg-gray-300 border w-full px-2 py-1 rounded-md" value={site} onChange={handleChangeEnv}>
                                 <option value="HCM_DEV">HCM - DEV</option>
                                 <option value="HN_DEV">HN - Dev</option>
                                 <option value="HN_LIVE">HN - Live</option>
@@ -63,19 +63,19 @@ function MainPage() {
                             <Inpatient site={site} />
 
                         }
-                        {selectedFunc === 2 &&
+                        {selectedFunc === 'khambenh' &&
                             <KhamBenh site={site} />
 
                         }
-                        {selectedFunc === 3 &&
+                        {selectedFunc === 'datkham' &&
                             <DatKham site={site} />
                         }
 
-                        {selectedFunc === 4 &&
+                        {selectedFunc === 'duoc' &&
                             <Duoc site={site} />
                         }
 
-                        {selectedFunc === 98 &&
+                        {selectedFunc === 'danhmuc' &&
                             <DanhMuc />
                         }
 

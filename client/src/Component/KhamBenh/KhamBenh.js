@@ -6,10 +6,6 @@ import moment from 'moment';
 import DichVuModal from "./DichvuModal";
 import ThuocModal from "./ThuocModal";
 
-
-import { BsCalendarDateFill } from "react-icons/bs";
-
-
 function KhamBenh({ site }) {
     const apiURL = process.env.REACT_APP_API_URL;
 
@@ -29,9 +25,6 @@ function KhamBenh({ site }) {
 
     const [dichvuShow, setDichvuShow] = useState(false);
     const [thuocShow, setThuocShow] = useState(false);
-
-
-
 
     const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
         <button className="bg-blue-300 w-32 px-2 py-1 rounded-md" onClick={onClick} ref={ref}>
