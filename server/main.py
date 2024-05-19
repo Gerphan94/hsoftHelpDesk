@@ -39,7 +39,7 @@ def person_info(site ,pid):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
-    result = []
+    result = {}
     
     stm = f'''
             SELECT MABN, HOTEN, to_char(NGAYSINH, 'dd/MM/yyyy') AS NGAYSINH, 
@@ -52,6 +52,8 @@ def person_info(site ,pid):
         '''
     info = cursor.execute(stm).fetchall()
     print(info)
+    if (len(info) > 0):
+        result['pid'] = info[0]
     
     
     
