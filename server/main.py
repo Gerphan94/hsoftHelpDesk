@@ -33,6 +33,31 @@ def conn_info(env):
             'password':'hsofttamanh',
             'dsn':"hsoft-dev.vdc.tahcm.vn/dev3"
         }
+        
+@app.route('/thongtin_benhnhan/<site>/<pid>', methods=['GET'])
+def person_info(site ,pid):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm = f'''
+            SELECT MABN, HOTEN, to_char(NGAYSINH, 'dd/MM/yyyy') AS NGAYSINH, 
+            CASE
+                WHEN PHAI = 0 THEN 'Nam'
+                ELSE 'Nữ'
+            END AS PHAI
+            FROM hsofttamanh.BTDBN 
+            WHERE MABN = '{pid}'
+        '''
+    info = cursor.execute(stm).fetchall()
+    print(info)
+    
+    
+    
+    
+    return jsonify(result)
+    
     
 @app.route('/hien_dien/<site>/<pid>', methods=['GET'])
 def hien_dien(site ,pid):

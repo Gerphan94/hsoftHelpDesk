@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import Inpatient from "./Inpatient";
+import HoSoBA from "./HoSo/HoSoBA";
 import KhamBenh from "./KhamBenh/KhamBenh";
 import DatKham from "./DatKham/DatKham";
 import SQLCol from "./SQL/SQLCollection";
@@ -16,6 +17,7 @@ import Navbar from "./navBar";
 function MainPage() {
 
     const funcs = [
+        { id: 'hosobenhan', name: 'Hồ sơ bệnh án' },
         { id: 1, name: 'Hiện diện BN' },
         { id: 'khambenh', name: 'Khám bệnh' },
         { id: 'datkham', name: "Đặt khám" },
@@ -59,6 +61,11 @@ function MainPage() {
 
                     </div>
                     <div className={styles.MainPage}>
+                        {selectedFunc === 'hosobenhan' &&
+                            <HoSoBA site={site} />
+                        }
+
+
                         {selectedFunc === 1 &&
                             <Inpatient site={site} />
 
@@ -99,9 +106,9 @@ function MainPage() {
                 </div>
 
 
-               
+
             </div>
-             {/* FOOTER */}
+            {/* FOOTER */}
             <div className={`w-full h-4 ${site === 'HCM_DEV' || site === 'HN_DEV' ? "bg-red-500" : "bg-green-500"}  `} ></div>
 
 
