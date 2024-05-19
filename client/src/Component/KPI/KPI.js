@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DKDat from "./Dieukiendat";
 import { MdDelete } from "react-icons/md";
-import { NumericFormat } from 'react-number-format';
+// import { NumericFormat } from 'react-number-format';
 import { IoMdAddCircle } from "react-icons/io";
 
 function KPI() {

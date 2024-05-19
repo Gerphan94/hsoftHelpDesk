@@ -107,10 +107,7 @@ function KhamBenh({ site }) {
                         onChange={handleSearch}
 
                     />
-                    <button
-                        className={styles.buttonSubmit}
-                        onClick={() => handleSearch()}
-                    >Tìm</button>
+                   
                 </div>
 
                 <div className="flex items-center justify-center gap-2 w-full">

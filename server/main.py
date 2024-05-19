@@ -312,6 +312,7 @@ def duoc_danhmuc(site):
     
     return jsonify(result)
 
+
 @app.route('/duoc/tonbhyt/<site>', methods=['GET'])
 def tonbhyt(site):
     cn = conn_info(site)
@@ -320,24 +321,37 @@ def tonbhyt(site):
     result = []
     
     stm = '''
-        SELECT A.MA, A.TEN, A.SLTHAUBH AS TONBH_BD, 
+        SELECT A.ID, A.MA, A.TEN, A.DANG, to_Char(B.DENNGAY_AX, 'dd/MM/yyyy') , A.SLTHAUBH AS TONBH_BD, 
         (A.SLTHAUBH - A.SLTHAUBH_SUDUNG) AS TONBH_THUC,
         SLTHAUBH_SUDUNG AS DADUNG,
         A.SLTHAUBH_YEUCAU AS TONBH_TREO,
         (A.SLTHAUBH - A.SLTHAUBH_SUDUNG - A.SLTHAUBH_YEUCAU) AS TONBH_KD
         FROM HSOFTTAMANH.D_DMBD A
+        INNER JOIN HSOFTTAMANH.D_DMBDTHONGTU B ON A.ID = B.ID
         WHERE A.SLTHAUBH <> 0
+        
     '''
     datas = cursor.execute(stm).fetchall()
     for data in datas:
+        id_bd = data[0]
+        theodois = cursor.execute(f"SELECT LOSX, HANDUNG FROM HSOFTTAMANH0524.D_THEODOI WHERE MABD = {id_bd}").fetchall()
+        losx = []
+        for theodoi in theodois:
+            losx.append({"losx": theodoi[0], 'hsd': theodoi[1]})
+        
         result.append({
-            "ma": data[0],
-            "ten": data[1],
-            "tonbd": data[2],
-            "tonthuc": data[3],
-            "dadung": data[4],
-            "tontreo": data[5],
-            "tonkd": data[6]
+            'id': data[0],
+            "ma": data[1],
+            "ten": data[2],
+            "dvt": data[3],
+            'hieulucthau': data[4],
+            'losx': losx,
+            
+            "tonbd": data[5],
+            "tonthuc": data[6],
+            "dadung": data[7],
+            "tontreo": data[8],
+            "tonkd": data[9]
         })
 
     return jsonify(result)
