@@ -53,11 +53,12 @@ def person_info(site ,pid):
     info = cursor.execute(stm).fetchall()
     print(info)
     if (len(info) > 0):
-        result['pid'] = info[0]
-    
-    
-    
-    
+        result['pid'] = info[0][0]
+        result['hoten'] = info[0][1]
+        result['ngaysinh'] = info[0][2]
+        result['phai'] = info[0][3]
+    else:
+        result['err'] = 'Không thấy thông tin!'
     return jsonify(result)
     
     
@@ -80,7 +81,8 @@ def hien_dien(site ,pid):
     obj_hd = []
     for noitru in noitrus:
         obj_hd.append({
-            'id': str(noitru[0]),
+            'id': str(noitru[0])
+            ,
             'pid': str(noitru[1]),
             'ngayvv': noitru[2],
             'ngaynk': noitru[3],
@@ -217,8 +219,6 @@ def dutruCT(site , id):
         })
     print(list(result))
     return jsonify(result)
-
-
 
 @app.route('/khambenh/<site>/<ngay>', methods=['GET'])
 def khambenh(site , ngay):
