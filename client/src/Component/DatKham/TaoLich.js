@@ -9,7 +9,7 @@ function TaoLichHen({ site }) {
 
     return (
         <>
-            <div className="font-bold text-left text-lg">TẠO LỊCH HẸN</div>
+            <div className="font-bold text-left text-lg">TẠO LỊCH HẸN TODAY</div>
             <div className="text-left p-4 flex gap-10">
                 <div >
                     <label htmlFor="CreateDate" >Ngày tạo</label>
