@@ -1,8 +1,25 @@
-import React from "react";
+import React, { useState} from "react";
 import styles from "../styles.module.css"
 
 
-function HoSoBA() {
+function HoSoBA( { site }  ) {
+    const apiURL = process.env.REACT_APP_API_URL;
+
+
+    const [personInfo, setPersonInfo] = useState({})
+
+
+    const handleClick = async (pid) => {
+        try {
+            const fecthURL = apiURL + "/thongtin_benhnhan/" + site +"/" + pid;
+
+            const response = await fetch(fecthURL);
+            const data = await response.json();
+            setPersonInfo(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
 
 
     return(
@@ -12,7 +29,7 @@ function HoSoBA() {
         <div className="flex gap-4 items-center">
             <label>PID:</label>
             <input type="number" className="border outline-none px-2 py-1"/>
-            <button className={styles.buttonSubmit} >Tìm</button>
+            <button className={styles.buttonSubmit} onClick={() => handleClick()} >Tìm</button>
         </div>
         <div >
         
@@ -21,6 +38,7 @@ function HoSoBA() {
         </div>
         {/* THÔNG TIN BỆNH NHÂN */}
         <div>
+            <div>{personInfo.hoten}</div>
 
         </div>
 
