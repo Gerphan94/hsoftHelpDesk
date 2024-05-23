@@ -3,3 +3,4 @@ oracledb
 gunicorn==20.1.0
 flask_cors
 numpy==1.26.4
+pandas

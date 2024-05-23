@@ -2,8 +2,10 @@ import getpass
 import oracledb
 from flask import Flask, jsonify
 from flask_cors import CORS
-import datetime as dt
-import numpy as np
+from datetime import datetime, timedelta
+import pandas as pd
+import json
+
 
 app = Flask(__name__)
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
@@ -42,25 +44,56 @@ def person_info(site ,pid):
     result = {}
     
     stm = f'''
-            SELECT MABN, HOTEN, to_char(NGAYSINH, 'dd/MM/yyyy') AS NGAYSINH, 
-            CASE
-                WHEN PHAI = 0 THEN 'Nam'
-                ELSE 'Nữ'
-            END AS PHAI
+            SELECT MABN, HOTEN, to_char(NGAYSINH, 'ddMMyyyy') AS NGAYSINH, PHAI
             FROM hsofttamanh.BTDBN 
             WHERE MABN = '{pid}'
         '''
-    info = cursor.execute(stm).fetchall()
-    print(info)
-    if (len(info) > 0):
-        result['pid'] = info[0][0]
-        result['hoten'] = info[0][1]
-        result['ngaysinh'] = info[0][2]
-        result['phai'] = info[0][3]
+    df = pd.read_sql_query(stm, connection)
+    json_data = df.to_json(orient='records', force_ascii=False)
+
+    # Print or use the JSON data
+    first_record_json = json.loads(json_data)[0]
+
+    if json_data:
+        return jsonify(first_record_json), 200
     else:
-        result['err'] = 'Không thấy thông tin!'
-    return jsonify(result)
+        return jsonify({'error': 'Không thấy thông tin!'}), 404
+# ĐẶT KHÁM
+@app.route('/taolichkham/<site>/<pid>', methods=['POST'])
+def taolichkham(site ,pid):
+    if (site == 'HN_LIVE'):
+        return jsonify({'message':'Site không được tạo'}), 400
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
     
+    result = []
+    
+    stm1 = f'''
+        SELECT A.MABN, A.HOTEN, to_char(A.NGAYSINH, 'ddMMyyyy') AS NGAYSINH, A.NAMSINH, A.PHAI, A.THON AS DIACHI, A.MAPHUONGXA ,  B.DIDONG
+        FROM hsofttamanh.BTDBN A
+        INNER JOIN DIENTHOAI B ON A.MABN = B.MABN
+        WHERE A.MABN = '{pid}'   
+    '''
+    BN = cursor.execute(stm1).fetchall()
+    print(BN)
+    den = datetime.now()
+    ngay = den -  timedelta(days=2)
+    userid = 5258 # Tổng đầi TA
+    print(ngay, den)
+    
+    
+
+    # smt =f'''
+    #     INSERT INTO DATKHAM (MABN , NGAY, DEN, DIENTHOAI , DIDONG , KHAM, ID, TTLUCRV)
+    #     VALUES ('21065331', {ngay}, {den}, '0987888888', 0987888888, 'Phòng Khám Sản - phụ khoa 3);
+    # '''
+    
+    
+    return jsonify(result), 200
+    
+    
+ 
     
 @app.route('/hien_dien/<site>/<pid>', methods=['GET'])
 def hien_dien(site ,pid):

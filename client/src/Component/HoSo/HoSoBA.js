@@ -28,7 +28,7 @@ function HoSoBA( { site }  ) {
         <div className="p-2">
         <div className="flex gap-4 items-center">
             <label>PID:</label>
-            <input type="number" className="border outline-none px-2 py-1"/>
+            <input name="pid" type="number" className="border outline-none px-2 py-1"/>
             <button className={styles.buttonSubmit} onClick={() => handleClick()} >Tìm</button>
         </div>
         <div >
