@@ -1,6 +1,6 @@
 import getpass
 import oracledb
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from datetime import datetime, timedelta
 import pandas as pd
@@ -59,9 +59,9 @@ def person_info(site ,pid):
     else:
         return jsonify({'error': 'Không thấy thông tin!'}), 404
 # ĐẶT KHÁM
-@app.route('/taolichkham/<site>/<pid>', methods=['POST'])
-def taolichkham(site ,pid):
-    if (site == 'HN_LIVE'):
+@app.route('/taolichkham/<site>', methods=['POST'])
+def taolichkham(site):
+    if (site != 'HCM_DEV'):
         return jsonify({'message':'Site không được tạo'}), 400
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
@@ -69,18 +69,36 @@ def taolichkham(site ,pid):
     
     result = []
     
+    data = request.get_json()
+    pid = data['pid']
+    makp = data['makp']
+    tenkp = data['tenkp']
+    print("-----------------------------", pid)
+    
     stm1 = f'''
         SELECT A.MABN, A.HOTEN, to_char(A.NGAYSINH, 'ddMMyyyy') AS NGAYSINH, A.NAMSINH, A.PHAI, A.THON AS DIACHI, A.MAPHUONGXA ,  B.DIDONG
         FROM hsofttamanh.BTDBN A
         INNER JOIN DIENTHOAI B ON A.MABN = B.MABN
         WHERE A.MABN = '{pid}'   
     '''
-    BN = cursor.execute(stm1).fetchall()
+    df = pd.read_sql_query(stm1, connection)
+    json_data = df.to_json(orient='records', force_ascii=False)
+    BN = json.loads(json_data)[0]
+    # BN = cursor.execute(stm1).fetchall()
     print(BN)
     den = datetime.now()
     ngay = den -  timedelta(days=2)
-    userid = 5258 # Tổng đầi TA
-    print(ngay, den)
+    id = ngay.strftime("%y%m%d%H%M%S%f")
+    userid = '5258' # Tổng đầi TA
+    mabs = '0155'
+    # 210914100519872735
+    # 240523084655583762
+    insert_stm = f'''
+        INSERT INTO DATKHAM (MABN , NGAY, DEN, DIENTHOAI, DIDONG , KHAM, MABS, USERID, NGAYUD, HOTEN, NAMSINH, NGAYSINH,  PHAI, DIACHI, MAKP, TUOIVAO, ID, MAPHUONGXA)
+        VALUES ({pid}, {ngay}, {den}, {BN['DIDONG']},  {BN['DIDONG']}, {tenkp}, {mabs}, {userid}, {ngay}, {BN['HOTEN']}, {BN['NGAYSINH']}, {BN['PHAI']}, {BN['DIACHI']}, {makp} , '010', {id}, );
+    '''
+    
+    print(insert_stm)
     
     
 

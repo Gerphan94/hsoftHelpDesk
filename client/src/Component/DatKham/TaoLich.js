@@ -8,16 +8,20 @@ function TaoLichHen({ site }) {
     const apiURL = process.env.REACT_APP_API_URL;
 
 
-
     const [pid, SetPid] = useState('');
-    const [curKP, setCurKP] = useState('011');
+    const [curKP, setCurKP] = useState( {makp: '011', tenkp: 'Phòng Khám Sản - phụ khoa 1'});
     const [avalablePID, setAvalablePID] = useState(false);
     const [personInfo, setPersonInfo] = useState({});
 
+    const benhnhans_hcm = [
+        { pid: '2410069060', name : 'TRỊNH THỊ THÙY DUNG'},
+        {pid: '2410069059', name : 'NGUYỄN THANH NHẬT TUỆ'}
+
+    ]
 
     const phongkham = [
-        {'makp': '011', 'tenkp': 'Phòng Khám Sản - phụ khoa 1'},
-        {'makp': '012', 'tenkp': 'Phòng Khám Sản - phụ khoa 2'}
+        {makp: '011', tenkp: 'Phòng Khám Sản - phụ khoa 1'},
+        {makp: '012', tenkp: 'Phòng Khám Sản - phụ khoa 2'}
 
     ]
 
@@ -49,37 +53,34 @@ function TaoLichHen({ site }) {
     };
 
     const handleChangeKP = (event) => {
-        setCurKP(event.target.value);
+        setCurKP({makp: event.target.value, tenkp: event.target.name} );
     }
 
-    
-
-    const handleTaoLich = async () => {
-        if (curKP === '') {
-            console.log("Chưa chọn phòng khám");
-            return
-        }
-
-        if (avalablePID) {
-            console.log("tạo lịch");
-            console.log(pid, curKP)
-
-            try {
-                const fecthURL = apiURL + "taolichkham/" + site + "/" + pid;
-                const response = await fetch(fecthURL);
-                const data = await response.json();
-                
-               
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-            
-
-        }
-    }
-
-
-
+    const handleTaoLich = (e) => {
+        e.preventDefault();
+        const fecthURL = apiURL + "taolichkham/" + site
+        
+        fetch(fecthURL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            pid: pid,
+            makp: curKP.makp,
+            tenkp: curKP.tenkp
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Handle the response data
+          console.log(data);
+        })
+        .catch(error => {
+          // Handle errors
+          console.error('Error:', error);
+        });
+      };
 
     return (
         <>
@@ -103,15 +104,14 @@ function TaoLichHen({ site }) {
                 </div>
                 
                 <div>
-                    <div >{personInfo.HOTEN}</div>
+                    <div className="font-bold text-lg" >{personInfo.HOTEN}</div>
                 </div>
                 
                
-
-
             </div>
             <div className="text-left p-4 flex gap-4">
-                <div>
+                <div className="flex gap-4 items-center">
+                <label>Phòng khám:</label>
                     <select className="border outline-none px-2 py-1" value={curKP} onChange={handleChangeKP}>
                         {phongkham.map((pk) => 
                             <option value= {pk.makp}>{pk.tenkp}</option>
@@ -121,7 +121,7 @@ function TaoLichHen({ site }) {
             <div>
                     <button
                         className={styles.buttonSubmit}
-                        onClick={() => handleTaoLich()}
+                        onClick={(e) => handleTaoLich(e)}
                     >Tạo lịch</button>
                 </div>
             </div>
