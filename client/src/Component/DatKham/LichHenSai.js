@@ -37,7 +37,6 @@ function LichHenSai( { site } ) {
     return (
         <>
             <div className="">
-                <div className="text-xl font-bold text-left">ĐẶT KHÁM</div>
                 <div className="mt-2">
                     <div className='flex p-4 gap-3 items-center'>
                         <label>Ngày: </label>
