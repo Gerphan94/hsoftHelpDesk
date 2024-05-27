@@ -26,10 +26,6 @@ function DatKham({ site }) {
         </div>
         
         <LichHenSai site={site} />
-        <TaoLichHen site={site} />
-       
-
-
         {modalShow &&
         <AppointmentCreateModal site={site} setModalShow={setModalShow}/>
         }

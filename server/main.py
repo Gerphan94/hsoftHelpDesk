@@ -48,16 +48,16 @@ def person_info(site ,pid):
             FROM hsofttamanh.BTDBN 
             WHERE MABN = '{pid}'
         '''
-    df = pd.read_sql_query(stm, connection)
-    json_data = df.to_json(orient='records', force_ascii=False)
-
-    # Print or use the JSON data
-    first_record_json = json.loads(json_data)[0]
-
-    if json_data:
-        return jsonify(first_record_json), 200
-    else:
-        return jsonify({'error': 'Không thấy thông tin!'}), 404
+    person  = cursor.execute(stm).fetchall()
+    if (len(person) == 0):
+        return jsonify({'msg': 'Không thấy thông tin!'}), 404
+    person = person[0]
+    col_name = ['pid', 'hoten', 'ngaysinh', 'phai']
+    for idx, col in  enumerate(col_name):
+        result[col] = person[idx]
+    return  jsonify(result), 200
+    
+   
 # ĐẶT KHÁM
 @app.route('/taolichkham/<site>', methods=['POST'])
 def taolichkham(site):
@@ -73,16 +73,18 @@ def taolichkham(site):
     pid = data['pid']
     makp = data['makp']
     tenkp = data['tenkp']
-    print("-----------------------------", pid)
     
     stm1 = f'''
         SELECT A.MABN, A.HOTEN, to_char(A.NGAYSINH, 'ddMMyyyy') AS NGAYSINH, A.NAMSINH, A.PHAI, A.THON AS DIACHI, A.MAPHUONGXA ,  B.DIDONG
         FROM hsofttamanh.BTDBN A
-        INNER JOIN DIENTHOAI B ON A.MABN = B.MABN
+        LEFT JOIN DIENTHOAI B ON A.MABN = B.MABN
         WHERE A.MABN = '{pid}'   
     '''
+    col_name = ['pid', 'hoten', 'ngaysinh', 'namsinh', 'phai', 'diachi', 'maphuongxa', 'didong']
     df = pd.read_sql_query(stm1, connection)
     json_data = df.to_json(orient='records', force_ascii=False)
+    
+    print("Json data is", type(json_data) )
     BN = json.loads(json_data)[0]
     # BN = cursor.execute(stm1).fetchall()
     print(BN)
