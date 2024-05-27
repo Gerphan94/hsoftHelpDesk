@@ -3,7 +3,6 @@ import oracledb
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from datetime import datetime, timedelta
-import pandas as pd
 import json
 
 
@@ -56,7 +55,33 @@ def person_info(site ,pid):
     for idx, col in  enumerate(col_name):
         result[col] = person[idx]
     return  jsonify(result), 200
+
+
+@app.route('/goikham/<site>/<pid>' , methods=['GET'])
+def goitkham(site, pid):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
     
+    stm = f'''
+        SELECT A.ID, TO_CHAR(A.NGAY, 'dd/MM/yyyy HH:mm')  , A.IDGOI, B.TEN, A.SOTIEN, A.IDTTRV 
+        FROM V_THEODOIGOILL A
+        INNER JOIN V_GIAVP B ON A.IDGOI = B.ID
+        WHERE A.MABN = {pid}
+    '''
+    col_name = ['id', 'ngay', 'idgoi', 'tengoi', 'sotien', 'idtt' ]
+    
+    gois = cursor.execute(stm).fetchall()
+    for goi in gois:
+        obj = {}
+        for idx, col in  enumerate(col_name):
+
+            obj[col] = goi[idx]
+        result.append(obj)
+    
+    
+    return jsonify(result), 200   
    
 # ĐẶT KHÁM
 @app.route('/taolichkham/<site>', methods=['POST'])
