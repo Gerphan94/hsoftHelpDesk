@@ -35,6 +35,9 @@ def conn_info(env):
             'dsn':"hsoft-dev.vdc.tahcm.vn/dev3"
         }
         
+def arrays_equal(arr1, arr2):
+    return set(arr1) == set(arr2)
+        
 @app.route('/thongtin_benhnhan/<site>/<pid>', methods=['GET'])
 def person_info(site ,pid):
     cn = conn_info(site)
@@ -56,7 +59,6 @@ def person_info(site ,pid):
         result[col] = person[idx]
     return  jsonify(result), 200
 
-
 @app.route('/goikham/<site>/<pid>' , methods=['GET'])
 def goitkham(site, pid):
     cn = conn_info(site)
@@ -77,12 +79,63 @@ def goitkham(site, pid):
         obj = {}
         for idx, col in  enumerate(col_name):
 
-            obj[col] = goi[idx]
+            obj[col] = str(goi[idx])
         result.append(obj)
-    
-    
     return jsonify(result), 200   
-   
+
+@app.route('/goikham_chitiet/<site>/<idgoi>' , methods=['GET'])
+def goikham_chitiet(site, idgoi):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm = f'''
+        SELECT A.MAVP, C.MA, C.TEN , A.SOLUONG , A.SLSUDUNG, B.STT, B.DONGIA , B.DONGIAGOI
+        FROM V_THEODOIGOICT A
+        INNER JOIN V_TRONGOI B ON A.FID = B.FID
+        INNER JOIN V_GIAVP C ON A.MAVP = C.ID
+        WHERE  A.ID = '{idgoi}'
+        ORDER BY B.STT ASC
+    '''
+    col_name = ['id', 'mavp', 'ten', 'sl', 'slsudung', 'stt', 'dongia', 'dongiagoi']
+    
+    details = cursor.execute(stm).fetchall()
+    for detail in details:
+        obj = {}
+        for idx, col in  enumerate(col_name):
+            obj[col] = detail[idx]
+        result.append(obj)
+    return jsonify(result), 200
+
+@app.route('/goikham_check/<site>' , methods=['GET'])
+def goikham_check(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm = f'''
+        SELECT ID, IDGOI  FROM V_THEODOIGOILL 
+        WHERE TUNGAY > TO_DATE('01-01-2024', 'DD-MM-YYYY')
+    '''
+    
+    myList = cursor.execute(stm).fetchall()
+    
+    for ele in myList:
+        id = ele[0]
+        idgoi = ele[1]
+        stm1 =f"SELECT FID FROM V_THEODOIGOICT WHERE id = '{id}'"
+        FID1 = [row[0] for row in cursor.execute(stm1).fetchall()]
+        stm2 = f"SELECT FID FROM V_TRONGOI WHERE id = {idgoi}"
+        FID2 = [row[0] for row in cursor.execute(stm2).fetchall()]
+        icheck = arrays_equal(FID1, FID2)
+        if (icheck is False):
+            print(id)
+    return jsonify(result), 200
+    
+    
+    
 # ĐẶT KHÁM
 @app.route('/taolichkham/<site>', methods=['POST'])
 def taolichkham(site):
