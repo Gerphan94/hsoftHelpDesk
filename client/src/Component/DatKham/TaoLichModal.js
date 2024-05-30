@@ -10,15 +10,25 @@ function AppointmentCreateModal({ site, setModalShow }) {
 
     const [appointDate, setAppointDate] = useState(new Date());
     const [pid, SetPid] = useState('');
+    const [pidSelected, SetPidSelected] = useState('');
+
+
     const [department, setDepartment] = useState({ makp: '011', tenkp: 'Phòng Khám Sản - phụ khoa 1' });
     const [avalablePID, setAvalablePID] = useState(false);
     const [personInfo, setPersonInfo] = useState({});
 
+
     const phongkham = [
         { makp: '011', tenkp: 'Phòng Khám Sản - phụ khoa 1' },
         { makp: '012', tenkp: 'Phòng Khám Sản - phụ khoa 2' }
-
     ]
+
+    const benhnhan_hcm = ['21023228']
+
+    const [partients, setPartients] = useState(benhnhan_hcm);
+
+
+
 
     const handleChangePID = (event) => {
         event.preventDefault();
@@ -104,17 +114,6 @@ function AppointmentCreateModal({ site, setModalShow }) {
 
                             {/* BODY */}
                             <div className="min-h-40 p-4 text-left">
-
-                                {/* <div className="block mb-2">
-                                        <label className="w-full block mb-1 font-bold">Ngày: </label>
-                                        <DatePicker
-                                            selected={appointDate}
-                                            className="border px-2 py-1 outline-none w-full"
-                                            onChange={(date) => setAppointDate(date)}
-                                            dateFormat="dd/MM/yyyy"
-
-                                        />
-                                    </div> */}
                                 <div className="block mb-2 ">
                                     <label className="w-full block font-bold mb-1">Phòng khám:</label>
                                     <select
@@ -125,6 +124,20 @@ function AppointmentCreateModal({ site, setModalShow }) {
                                         {phongkham.map((pk) =>
                                             <option value={pk.makp}>{pk.tenkp}</option>
                                         )}
+                                    </select>
+                                </div>
+                                <div className=" block mb-2">
+                                    <label htmlFor="inputPID" className="w-full block mb-1 font-bold">Chọn BN: </label>
+                                    <select 
+                                    className="border px-2 py-1 w-full" 
+                                    onChange={() => handleChangePID() }
+                                    value={pidSelected}
+                                    
+                                    >
+                                        <option value={''}>---Chọn bệnh nhân</option>
+                                        {partients.map((partient) =>
+                                            <option value={partient}>{partient}</option>
+                                        ) }
                                     </select>
                                 </div>
                                 <div className=" block mb-2">

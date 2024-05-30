@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { RiSearch2Line } from "react-icons/ri";
+import { RiSearch2Line, RiAlignJustify  } from "react-icons/ri";
+import DSgoi from "./GoiKhamDSModal";
 
 function GoiKham({ site }) {
 
@@ -9,6 +10,11 @@ function GoiKham({ site }) {
     const [pid, setPid] = useState(null);
     const [goiList, setGoiList] = useState([]);
     const [goiChitiet, setGoiChitiet] = useState([]);
+
+    const [isSLSD, setIsSLSD] = useState(false);
+
+    const [modalShow, setModalShow] = useState(false);
+
 
 
     const handleChange = (e) => {
@@ -25,6 +31,7 @@ function GoiKham({ site }) {
             const response = await fetch(fecthURL);
             const data = await response.json();
             setGoiList(data);
+            setGoiChitiet([]);
 
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -33,6 +40,7 @@ function GoiKham({ site }) {
 
     const handleDetailView = async (idgoi) => {
         console.log(idgoi);
+        setGoiChitiet([]);
         try {
             const fecthURL = apiURL + "goikham_chitiet/" + site + "/" + idgoi;
             console.log(fecthURL);
@@ -44,7 +52,10 @@ function GoiKham({ site }) {
         } catch (error) {
             console.error('Error fetching data:', error);
         }
+    }
 
+    const handleLabelClick = () => {
+        setIsSLSD(!isSLSD);
     }
 
 
@@ -53,6 +64,11 @@ function GoiKham({ site }) {
             <div className="p-4">
                 <div className="text-left font-bold text-xl py-4">GÓI KHÁM</div>
                 <div className="text-left flex gap-4 items-center">
+                    <button 
+                    className="w-8 h-8 text-2xl flex items-center justify-center"
+                    onClick={() => setModalShow(true)}
+                    
+                    ><RiAlignJustify /></button>
                     <label>Mã BN:</label>
                     <div className="flex">
                         <input
@@ -70,26 +86,37 @@ function GoiKham({ site }) {
 
                     <div className="text-lg font-bold">Họ và tên</div>
 
+                    <div className="flex gap-2">
+                        <input id="cdSLSD" name="cbSLSD" type="checkbox" checked={isSLSD}/>
+                        <label htmlFor="cbSLSD" className="select-none cursor-pointer" onClick={handleLabelClick} >Số lượng sử dụng</label>
+                    </div>
+
                 </div>
             </div>
+            
             <div className="flex p-4">
+            {modalShow && 
+                        <DSgoi setModalShow={setModalShow} />
+
+            }
                 <div className="w-1/4">
+                    <div className="px-2 py-1.5 bg-gray-200 mb-2 text-left font-bold">Danh sách gói</div>
                     {goiList.map((goi) =>
                         <div
                             key={goi.id}
-                            className="border rounded-lg bg-gray-200 px-2 py-1 cursor-pointer select-none text-left mb-4"
+                            className="border rounded-lg bg-gray-200 px-2 py-1 cursor-pointer text-left mb-4"
                             onClick={() => handleDetailView(goi.id)}
                         >
                             <div className="text-sm italic">{goi.ngay} - {goi.id}
                             </div>
                             <div className="font-bold">
-                                {goi.tengoi}
+                                {goi.idgoi} - {goi.tengoi}
                             </div>
                             <div className="flex gap-10">
                                 <div className="text-red-600 font-bold">
                                     {Number(goi.sotien).toLocaleString()}
                                 </div>
-                                {goi.idtt ?
+                                {goi.idtt !== '0' ?
                                     <div>Đã tạm ứng</div> : <div>Chưa tạm ứng</div>
                                 }
                             </div>
@@ -115,7 +142,7 @@ function GoiKham({ site }) {
                         </thead>
                         <tbody>
                             {goiChitiet.map((chitiet) =>
-                                <tr key={chitiet.id} className="even:bg-gray-200"  >
+                                <tr key={chitiet.stt} className="even:bg-gray-200"  >
                                     <td><div>{chitiet.stt}</div></td>
                                     <td><div>{chitiet.mavp}</div></td>
                                     <td><div className="text-left">{chitiet.ten}</div></td>
@@ -133,6 +160,9 @@ function GoiKham({ site }) {
                 </div>
 
             </div>
+            
+            
+
 
 
         </>

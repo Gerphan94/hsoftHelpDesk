@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-import TaoLichHen from './TaoLich';
 import LichHenSai from './LichHenSai';
 import AppointmentCreateModal from './TaoLichModal'
 import styles from "../styles.module.css"

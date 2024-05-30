@@ -117,7 +117,7 @@ def goikham_check(site):
     
     stm = f'''
         SELECT ID, IDGOI  FROM V_THEODOIGOILL 
-        WHERE TUNGAY > TO_DATE('01-01-2024', 'DD-MM-YYYY')
+        WHERE NGAY = TO_DATE('29-05-2024', 'DD-MM-YYYY')
     '''
     
     myList = cursor.execute(stm).fetchall()
