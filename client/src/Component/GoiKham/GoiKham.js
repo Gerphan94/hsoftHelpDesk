@@ -125,7 +125,7 @@ function GoiKham({ site }) {
 
 
                 </div>
-                <div className="mt-0 px-4 w-full h-[720px] overflow-y-auto" >
+                <div className="mt-0 px-4 w-full lg:h-[720px] overflow-y-auto" >
                     <table className="w-full">
                         <thead className="sticky top-0">
                             <tr className="bg-gray-200 ">
@@ -146,11 +146,10 @@ function GoiKham({ site }) {
                                     <td><div>{chitiet.stt}</div></td>
                                     <td><div>{chitiet.mavp}</div></td>
                                     <td><div className="text-left">{chitiet.ten}</div></td>
-                                    <td><div className="text-right">{chitiet.dongia}</div></td>
-                                    <td><div className="text-right">{chitiet.dongiagoi}</div></td>
+                                    <td><div className="text-right">{Number(chitiet.dongia).toLocaleString()}</div></td>
+                                    <td><div className="text-right">{Number(chitiet.dongiagoi).toLocaleString()  }</div></td>
                                     <td><div className="text-center">{chitiet.sl}</div></td>
                                     <td><div className="text-center">{chitiet.slsudung}</div></td>
-
                                 </tr>
                             )}
                         </tbody>

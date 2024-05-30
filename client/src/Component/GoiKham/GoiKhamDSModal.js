@@ -1,31 +1,47 @@
 import React from "react";
+import styles from "../styles.module.css"
 
-function DSgoi({ setModalShow }) {
+function DSGoi({ setModalShow }) {
+
+
+    const title = 'Danh sách bệnh nhân có gói khám';
 
     return (
         <>
             <div>
                 <div className="fixed inset-0 z-50 outline-none focus:outline-none">
-                    <div className="relative w-56 h-96 my-6  left-40 top-24 max-w-3xl bg-white p-4">
-                        <div className="min-h-20 text-left text-lg font-bold border-b-black w-full">
-                        Thuốc
+                    <div className="relative flex flex-col justify-between lg:w-1/3 md:w-2/3 top-1/6 w-full my-6 mx-auto max-w-3xl bg-white h-3/4">
+                        {/* HEADER */}
+                        <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
+                            {title}
                         </div>
-                        <div className="w-full flex items-center justify-end p-1 bg-[#f5f5f5]">
+
+                        {/* BODY */}
+                        <div className="">
+                            <div>
+
+                            </div>
+                            <div>
+                                
+                            </div>
+                        </div>
+                        {/* FOOTER  */}
+                        <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative  bottom-0">
                             <button
-                                className="text-red-500 background-transparent font-bold px-2 py-1 text-sm outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150 border-red-500 border opacity-80 hover:opacity-100"
+                                className={`${styles.btn} ${styles.btnClose}`}
                                 type="button"
                                 onClick={() => setModalShow(false)}
                             >
-                                Cancel
+                                Đóng
                             </button>
                         </div>
                     </div>
                 </div>
-                <div className="opacity-fixed inset-0 z-40 bg-black"></div>
+                <div className="opacity-75 fixed inset-0 z-40 bg-black"></div>
             </div>
         </>
     )
 }
 
-export default DSgoi;
+export default DSGoi;
 

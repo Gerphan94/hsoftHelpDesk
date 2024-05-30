@@ -15,6 +15,9 @@ import Select from 'react-select'
 
 import Navbar from "./navBar";
 
+import { GiEarbuds } from "react-icons/gi";
+
+
 function MainPage() {
 
     const funcs = [
@@ -43,7 +46,7 @@ function MainPage() {
         <>
             <div className={styles.bodyPage}>
                 <div className="flex">
-                    <div className="w-40 mt-4 border-r-2">
+                    <div className="w-56 mt-4 h-screen border-r-2 bg-[#031C30]">
                         <div className="text-left p-2">
                             <select className="bg-gray-300 border w-full px-2 py-1 rounded-md" value={site} onChange={handleChangeEnv}>
                                 <option value="HCM_DEV">HCM - DEV</option>
@@ -52,12 +55,20 @@ function MainPage() {
                             </select>
                         </div>
                         {funcs.map((func, index) => (
-                            <button
-                                key={index}
-                                className={`block py-2 w-full text-left px-4 border-b ${func.id === selectedFunc ? 'bg-blue-200' : ''}`}
-                                onClick={() => setSelectedFunc(func.id)}
+                            <div className={`px-2 flex gap-1 text-white text-lg items-center hover:opacity-100  ${func.id === selectedFunc ? 'opacity-100' : 'opacity-50'} ` }>
+                                <GiEarbuds />
 
-                            >{func.name}</button>
+
+                                <button
+                                    key={index}
+                                    className={`block py-2 w-full text-left px-2 `}
+                                    onClick={() => setSelectedFunc(func.id)}
+
+                                >{func.name}</button>
+
+
+                            </div>
+
                         )
                         )}
 
