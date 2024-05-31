@@ -11,31 +11,15 @@ import Duoc from "./Duoc/Duoc";
 
 import KPI from "./KPI/KPI";
 import styles from "./styles.module.css"
-import Select from 'react-select'
 
-import Navbar from "./navBar";
+import SideMenu from "./SideMenu";
 
-import { GiEarbuds } from "react-icons/gi";
 
 
 function MainPage() {
 
-    const funcs = [
-        { id: 'hosobenhan', name: 'Hồ sơ bệnh án' },
-        { id: 1, name: 'Hiện diện BN' },
-        { id: 'goikham', name: 'Gói khám' },
-        { id: 'khambenh', name: 'Khám bệnh' },
-        { id: 'datkham', name: "Đặt khám" },
-        { id: 'duoc', name: "Dược" },
-        { id: 'danhmuc', name: "Danh mục" },
-        { id: 'sql', name: 'SQL' },
-        { id: 999, name: "KPI" }
-    ];
-
     const [site, setSite] = useState('HCM_DEV')
     const [selectedFunc, setSelectedFunc] = useState(1);
-
-    const [module, setModule] = useState();
 
     const handleChangeEnv = (event) => {
         console.log(event.target.value);
@@ -54,24 +38,8 @@ function MainPage() {
                                 <option value="HN_LIVE">HN - Live</option>
                             </select>
                         </div>
-                        {funcs.map((func, index) => (
-                            <div className={`px-2 flex gap-1 text-white text-lg items-center hover:opacity-100  ${func.id === selectedFunc ? 'opacity-100' : 'opacity-50'} ` }>
-                                <GiEarbuds />
 
-
-                                <button
-                                    key={index}
-                                    className={`block py-2 w-full text-left px-2 `}
-                                    onClick={() => setSelectedFunc(func.id)}
-
-                                >{func.name}</button>
-
-
-                            </div>
-
-                        )
-                        )}
-
+                        <SideMenu selectedFunc={selectedFunc} setSelectedFunc={setSelectedFunc}   />
                     </div>
                     <div className={styles.MainPage}>
                         {selectedFunc === 'hosobenhan' &&
