@@ -59,6 +59,20 @@ def person_info(site ,pid):
         result[col] = person[idx]
     return  jsonify(result), 200
 
+
+@app.route('/goikham_list/<site>/<viewDate>' , methods=['GET'])
+def goikham_list(site, viewDate):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    
+    print(viewDate)
+    
+    
+    return jsonify(result), 200
+
 @app.route('/goikham/<site>/<pid>' , methods=['GET'])
 def goitkham(site, pid):
     cn = conn_info(site)

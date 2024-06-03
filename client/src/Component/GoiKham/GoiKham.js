@@ -14,7 +14,6 @@ function GoiKham({ site }) {
     const [goiList, setGoiList] = useState([]);
     const [goiChitiet, setGoiChitiet] = useState([]);
 
-    const [isSLSD, setIsSLSD] = useState(false);
     const [isGoiList, setIsGoiList] = useState(false);
 
     const [modalShow, setModalShow] = useState(false);
@@ -58,9 +57,6 @@ function GoiKham({ site }) {
 
     
 
-    const handleLabelClick = () => {
-        setIsSLSD(!isSLSD);
-    }
 
 
     return (
@@ -90,10 +86,7 @@ function GoiKham({ site }) {
 
                     <div className="text-lg font-bold">{person.hoten}</div>
 
-                    <div className="flex gap-2">
-                        <input id="cdSLSD" name="cbSLSD" type="checkbox" checked={isSLSD} />
-                        <label htmlFor="cbSLSD" className="select-none cursor-pointer" onClick={handleLabelClick} >Số lượng sử dụng</label>
-                    </div>
+                  
 
                 </div>
             </div>
@@ -122,7 +115,7 @@ function GoiKham({ site }) {
                     {isGoiList ?
                         <GoiList site={site} goiList={goiList}  setGoiChitiet={setGoiChitiet}  />
                     :
-                        <GoiBNList />
+                        <GoiBNList site={site} />
                     }
                 </div>
 
