@@ -9,6 +9,8 @@ function GoiKham({ site }) {
     const apiURL = process.env.REACT_APP_API_URL;
 
     const [pid, setPid] = useState(null);
+    const [person, setPerson] = useState({});
+
     const [goiList, setGoiList] = useState([]);
     const [goiChitiet, setGoiChitiet] = useState([]);
 
@@ -21,22 +23,37 @@ function GoiKham({ site }) {
         e.preventDefault();
         const numericValue = e.target.value.replace(/[^0-9]/g, "");
         setPid(numericValue);
+    }
+
+    const fetchPersonInfo = async () => {
+        
+        try {
+            const fecthURLPerson = apiURL + "thongtin_benhnhan/" + site + "/" + pid; 
+            const response = await fetch(fecthURLPerson);
+            const data = await response.json();
+            setPerson(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
 
     }
 
-    const handleView = async () => {
+    const fetchPacket = async () => {
         try {
             const fecthURL = apiURL + "goikham/" + site + "/" + pid;
-
             const response = await fetch(fecthURL);
             const data = await response.json();
             setGoiList(data);
             setGoiChitiet([]);
             setIsGoiList(true);
-
         } catch (error) {
             console.error('Error fetching data:', error);
         }
+    }
+
+    const handleView = () => {
+        fetchPersonInfo();
+        fetchPacket();
     }
 
     
@@ -71,7 +88,7 @@ function GoiKham({ site }) {
                         </button>
                     </div>
 
-                    <div className="text-lg font-bold">Họ và tên</div>
+                    <div className="text-lg font-bold">{person.hoten}</div>
 
                     <div className="flex gap-2">
                         <input id="cdSLSD" name="cbSLSD" type="checkbox" checked={isSLSD} />
