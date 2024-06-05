@@ -1,34 +1,32 @@
 import React, { useState, useEffect } from "react";
 import TonBHYT from "./TonBHYT";
+import TonKho from "./TonKho";
 
+function Duoc({ site }) {
 
-function Duoc(  { site }) {
+    const [curNar, setCurNar] = useState('')
 
-    const [curNar, setCurNar] = useState(0)
 
     const narbar = [
-        {id: 1, name:"Tồn BHYT"},
-        {id: 2, name:"Khác"}
+        { id: 'tonkho', name: 'Tồn kho' },
+        { id: 'tonbhyt', name: "Tồn BHYT" },
+        { id: 'khac', name: "Khác" }
     ]
-
-    return(
+    return (
         <>
-        <div className="text-left font-2xl font-bold p-4">DƯỢC</div>
+            <div className="flex p-2 bg-white">
+                {narbar.map((nar) =>
+                    <button
+                        className={`border px-2 py-1 w-32 hover:bg-[#7E8EF1] ${curNar === nar.id ? 'bg-[#7E8EF1]' : ''}  `}
+                        onClick={() => setCurNar(nar.id)}
+                    >{nar.name}</button>
+                )}
 
-        <div className="flex p-2 bg-white">
-            {narbar.map((nar) => 
-            <button 
-            className="border px-2 py-1"
-            onClick={() => setCurNar(nar.id)}
-            >{nar.name}</button>
-        )}
-
-        </div>
-        <div>
-            {curNar === 1 &&
-                <TonBHYT site={site} />
-            }
-        </div>
+            </div>
+            <div>
+                {curNar === 'tonkho' && <TonKho site={site} />}
+                {curNar === 'tonbhyt' && <TonBHYT site={site} />}
+            </div>
 
 
 

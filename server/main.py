@@ -484,6 +484,22 @@ def duoc_danhmuc(site):
     
     return jsonify(result)
 
+@app.route('/duoc/tonkho/<site>/<id_nhom>', methods=['GET'])
+def duoc_tonkho(site, id_nhom):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm = f'SELECT ID, TEN FROM D_DMKHO WHERE nhom = {id_nhom} AND ID > 0'
+    
+    khos = cursor.execute(stm).fetchall()
+    
+    print(khos)
+    return jsonify(result)
+    
+    
+
 
 @app.route('/duoc/tonbhyt/<site>', methods=['GET'])
 def tonbhyt(site):
