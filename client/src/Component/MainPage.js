@@ -8,12 +8,10 @@ import DatKham from "./DatKham/DatKham";
 import SQLCol from "./SQL/SQLCollection";
 import DanhMuc from "./DanhMuc/DanhMuc";
 import Duoc from "./Duoc/Duoc";
-
 import KPI from "./KPI/KPI";
 import styles from "./styles.module.css"
 
 import SideMenu from "./SideMenu";
-
 
 
 function MainPage() {
@@ -45,8 +43,6 @@ function MainPage() {
                     <div className={styles.MainPage}>
                         <div className="p-2 w-full border-b">
                             <div className="text-left text-2xl font-bold">{pageTitle}</div>
-
-
 
                         </div>
                         <div>
