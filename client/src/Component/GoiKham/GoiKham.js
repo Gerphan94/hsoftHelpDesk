@@ -62,7 +62,6 @@ function GoiKham({ site }) {
     return (
         <>
             <div className="p-4">
-                <div className="text-left font-bold text-xl py-4">GÓI KHÁM</div>
                 <div className="text-left flex gap-4 items-center">
                     <button
                         className="w-8 h-8 text-2xl flex items-center justify-center"

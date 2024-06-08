@@ -6,6 +6,9 @@ import moment from 'moment';
 import DichVuModal from "./DichvuModal";
 import ThuocModal from "./ThuocModal";
 
+import Notice from "../Message/Notice";
+
+
 function KhamBenh({ site }) {
     const apiURL = process.env.REACT_APP_API_URL;
 
@@ -75,11 +78,9 @@ function KhamBenh({ site }) {
         }
     }
 
-
-
     return (
         <>
-
+            <Notice children="Danh sách kham benh"/>
             <div className="flex gap-10 w-full h-12 border-b p-2">
                 <div className="font-bold text-xl">DANH SÁCH KHÁM BỆNH</div>
                 <div>
@@ -97,9 +98,6 @@ function KhamBenh({ site }) {
                         onClick={() => handleView()}
                     >Xem</button>
                 </div>
-
-            </div>
-            <div className=" h-12 px-4 py-2 flex">
                 <div className="flex gap-4">
                     <input
                         className="border px-2 py-1 outline-none"
@@ -109,6 +107,10 @@ function KhamBenh({ site }) {
                     />
                    
                 </div>
+
+            </div>
+            <div className=" h-12 px-4 py-2 flex">
+                
 
                 <div className="flex items-center justify-center gap-2 w-full">
                     {btns.map((btn) =>
@@ -120,7 +122,7 @@ function KhamBenh({ site }) {
             </div>
 
             {/* TABLE */}
-            <div className="mt-0 px-4 w-full h-[780px] overflow-y-auto" >
+            <div className="mt-0 px-4 w-full h-[740px] overflow-y-auto" >
                 <table className="w-full">
                     <thead className="sticky top-0">
                         <tr className="bg-gray-200">

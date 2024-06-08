@@ -484,6 +484,44 @@ def duoc_danhmuc(site):
     
     return jsonify(result)
 
+@app.route('/duoc/tonkho_ketoa_pk/<site>/<type>', methods=['GET'])
+def tonkho_ketoa_pk(site, type):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    if (site == 'HCM_DEV'):
+        khoBHYT_ids = "4, 90, 91, 89"
+        khoNT_ids = "16, 86, 87"
+    else:
+        khoBHYT_ids = "4, 90, 91, 89"
+        khoNT_ids = "16,86,87"
+    
+    if(type == 'BHYT'):
+        kho_ids = khoBHYT_ids
+    else:
+        kho_ids = khoNT_ids    
+
+    stm =f'''
+        SELECT C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT ,sum(a.TONDAU) AS TONTHUC, sum(A.SLYEUCAU) AS BOOKING ,  (sum(a.TONDAU) - sum(A.SLYEUCAU)) AS TONKHADUNG
+        FROM HSOFTTAMANH0624.D_TONKHOTH A
+        INNER JOIN D_DMKHO B ON A.MAKHO = B.ID
+        INNER JOIN D_DMBD C ON A.MABD = C.ID
+        WHERE A.MAKHO IN ({kho_ids})
+        GROUP BY C.MA, C.TEN || ' ' || C.HAMLUONG, C.DUONGDUNG, C.DANG, C.DONVIDUNG, C.BHYT
+    '''
+    col_name = ['mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tonthuc', 'booking', 'tonkhadung']
+  
+    datas = cursor.execute(stm).fetchall()
+    for data in datas:
+        obj = {}
+        for idx, col in  enumerate(col_name):
+            obj[col] = data[idx]
+        result.append(obj)
+    return jsonify(result), 200
+    
+
+
 @app.route('/duoc/tonkho/<site>/<id_nhom>', methods=['GET'])
 def duoc_tonkho(site, id_nhom):
     cn = conn_info(site)
@@ -548,24 +586,3 @@ def tonbhyt(site):
 if __name__=='__main__':
     app.run(debug=True)
     
-    
-    # stm2 = f'''
-    #     SELECT A.STT,D.MA, D.TEN,A.DUONGDUNG, B.DOITUONG,A.DONGIA, A.SLYEUCAU, C.TEN AS TENKHO
-    #     FROM {schema}.D_DUTRUCT A
-    #     INNER JOIN HSOFTTAMANH.D_DOITUONG B ON A.MADOITUONG = B.MADOITUONG 
-    #     INNER JOIN HSOFTTAMANH.D_DMKHO C ON A.MAKHO = C.ID
-    #     INNER JOIN HSOFTTAMANH.D_DMBD D ON A.MABD = D.ID
-    #     WHERE A.id = '{idPhieu}'
-    #     '''
-    #     chitiets = cursor.execute(stm2).fetchall()
-    #     for chitiet in chitiets:
-    #         chitiet_ar.append({
-    #             'stt': chitiet[0],
-    #             'mathuoc': chitiet[1],
-    #             'tenthuoc': chitiet[2],
-    #             'duongdung': chitiet[3],
-    #             'doituong': chitiet[4],
-    #             'dongia': chitiet[5],
-    #             'slyeucau': chitiet[6],
-    #             'kho': chitiet[7]
-    #         })
