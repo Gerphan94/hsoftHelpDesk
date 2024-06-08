@@ -20,7 +20,7 @@ function SideMenu({ selectedFunc, setSelectedFunc, setPageTitle }) {
         { id: 'duoc', name: "Dược" , icon: CiPill },
         { id: 'danhmuc', name: "Danh mục"  , icon: TbCategoryFilled},
         { id: 'sql', name: 'SQL', icon: PiFileSqlDuotone  },
-        { id: 999, name: "KPI" , icon: GiEarbuds},
+        // { id: 999, name: "KPI" , icon: GiEarbuds},
         { id: 'document', name: "Documents" , icon: FaBook}
     ];
 
