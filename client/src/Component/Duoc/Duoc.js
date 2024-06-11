@@ -16,18 +16,10 @@ function Duoc({ site }) {
                 <Dropdown setSelectedOption={setSelectedOption} />
                 <div className="font-bold text-xl">{selectedOption.name}</div>
             </div>
-
-
             <div>
-
-
-
-                {selectedOption.id === 1 && <TonKhoKeToa site={site} type={'BHYT'} />}
+                {selectedOption.id === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
+                {selectedOption.id === 'tonkho_tonbhyt' && <TonBHYT site={site}/>}
             </div>
-
-
-
-
         </>
     )
 }

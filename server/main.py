@@ -582,6 +582,55 @@ def tonbhyt(site):
 
     return jsonify(result)
 
+# DANH MỤC
+
+@app.route('/danhmuc/nhomnhanvien/<site>', methods=['GET'])
+def danhmuc_nhomnhanvien(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm = '''
+        SELECT DISTINCT(B.ID) AS MA, (B.TEN) 
+        FROM DMBS A
+        INNER JOIN NHOMNHANVIEN B ON A.NHOM = B.ID
+        ORDER BY B.ID ASC
+    '''
+    
+    nhomnvs = cursor.execute(stm).fetchall()
+    for nhomnv in nhomnvs:
+        result.append({
+            'id': nhomnv[0],
+            'name': nhomnv[1]
+        })
+    
+    
+    return jsonify(result), 200
+
+@app.route('/danhmuc/nhanvien/<site>', methods=['GET'])
+def danhmuc_nhanvien(site): 
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm = "SELECT A.MA, A.HOTEN, A.NHOM, B.TEN , A.VIETTAT , A.DUYETKHAMBHYT, A.SOCHUNGCHI FROM DMBS A INNER JOIN NHOMNHANVIEN B ON A.NHOM = B.ID"
+    
+    nhanviens = cursor.execute(stm).fetchall()
+    for nhanvien in nhanviens:
+        result.append({
+            'ma': nhanvien[0],
+            'hoten': nhanvien[1],
+            'nhom': nhanvien[2],
+            'tennhom': nhanvien[3],
+            'viettat': nhanvien[4],
+            'duyetkhambhyt': nhanvien[5],
+            'sochungchi': nhanvien[6]
+        })      
+    
+    return jsonify(result), 200
+    
     
 if __name__=='__main__':
     app.run(debug=True)

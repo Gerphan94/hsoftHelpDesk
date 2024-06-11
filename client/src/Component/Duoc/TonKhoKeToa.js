@@ -72,13 +72,13 @@ function TonKhoKeToa({ site, type }) {
                                 <th className="text-center"><div className="w-6 py-1 text-center">STT</div></th>
                                 <th className="w-24"><div className="">Mã BD</div></th>
                                 <th className="w-[600px]"><div>Tên BD</div></th>
-                                <th><div>DVT</div></th>
-                                <th><div>DVD</div></th>
+                                <th><div className="text-left w-20">DVT-DVD</div></th>
                                 <th><div>Đường dùng</div></th>
-                                <th><div>BHYT</div></th>
-                                <th><div>Tồn thực</div></th>
+                                <th><div className="text-right">BHYT</div></th>
+                                <th><div className="text-right">Tồn thực</div></th>
                                 <th><div>SL YC</div></th>
                                 <th><div className="w-10 text-center">SLKD</div></th>
+                                <th><div className="w-10 text-center">TồnBH</div></th>
                                 <th><div className="w-10 text-center">...</div></th>
                             </tr>
 
@@ -89,13 +89,14 @@ function TonKhoKeToa({ site, type }) {
                                     <td className="py-1 text-center">{index + 1}</td>
                                     <td className="">{item.mabd}</td>
                                     <td className="text-left">{item.tenbd}</td>
-                                    <td className="">{item.dvt}</td>
-                                    <td className="">{item.dvd}</td>
+                                    <td className="text-left">{item.dvt} - {item.dvd}</td>
                                     <td className="">{item.duongdung}</td>
                                     <td className="">{item.bhyt}</td>
-                                    <td className="tex">{item.tonthuc}</td>
-                                    <td className="text-center">{item.booking}</td>
-                                    <td className="text-center">{item.tonkhadung}</td>
+                                    <td className="text-right">{item.tonthuc}</td>
+                                    <td className="text-right">{item.booking}</td>
+                                    <td className="text-right">{item.tonkhadung}</td>
+                                    <td className="text-right">{item.tonbhyt}</td>
+
                                     <td>
                                         <div className="flex justify-center">
                                             <button

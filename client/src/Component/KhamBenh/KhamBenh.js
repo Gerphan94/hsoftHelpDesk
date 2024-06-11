@@ -29,6 +29,11 @@ function KhamBenh({ site }) {
     const [dichvuShow, setDichvuShow] = useState(false);
     const [thuocShow, setThuocShow] = useState(false);
 
+    const [noticeshow, setNoticeShow] = useState(false);
+    const [noticeMessage, setNoticeMessage] = useState('');
+    const [noticeType, setNoticeType] = useState('');
+
+
     const ExampleCustomInput = forwardRef(({ value, onClick }, ref) => (
         <button className="bg-blue-300 w-32 px-2 py-1 rounded-md" onClick={onClick} ref={ref}>
             {value}
@@ -78,9 +83,19 @@ function KhamBenh({ site }) {
         }
     }
 
+    const handleClickPID = (pid) => {
+        setNoticeShow(true);
+        setNoticeMessage('Đã copy ' + pid);
+        setNoticeType('success');
+
+    }   
+
     return (
         <>
-            <Notice children="Danh sách kham benh"/>
+            {noticeshow &&
+                <Notice message={noticeMessage} setModalshow={setNoticeShow} type={noticeType}/>
+
+            }
             <div className="flex gap-10 w-full h-12 border-b p-2">
                 <div className="font-bold text-xl">DANH SÁCH KHÁM BỆNH</div>
                 <div>
@@ -105,16 +120,16 @@ function KhamBenh({ site }) {
                         onChange={handleSearch}
 
                     />
-                   
+
                 </div>
 
             </div>
             <div className=" h-12 px-4 py-2 flex">
-                
+
 
                 <div className="flex items-center justify-center gap-2 w-full">
                     {btns.map((btn) =>
-                        <button className="border px-2 py-1" onClick={() => handleClickShow(btn.id)}>{btn.name}</button>
+                        <button className="border px-2 py-1" onClick={() => handleClickPID(btn.id)}>{btn.name}</button>
                     )}
                 </div>
 
@@ -149,7 +164,7 @@ function KhamBenh({ site }) {
                                     <span className={`${data.maqlkb === null ? "" : "bg-blue-400"} w-4 h-4 rounded-md`}  ></span>
                                 </div></td>
                                 <td>{index + 1}</td>
-                                <td><div className="text-left px-2">{data.mabn}</div></td>
+                                <td><div className="text-left px-2" onClick={() => handleClickPID(data.mabn)}>{data.mabn}</div></td>
                                 <td className=""><div className="text-left px-4 py-1">{data.hoten}</div></td>
                                 <td><div>{data.phai}</div></td>
                                 <td>{data.ngaysinh}</td>

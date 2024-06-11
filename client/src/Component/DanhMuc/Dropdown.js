@@ -3,12 +3,8 @@ import { RiSearch2Line, RiAlignJustify } from "react-icons/ri";
 
 const Dropdown = ({ setSelectedOption }) => {
 
-
     const menuData = [
-        { id: 'tonkho_ketoa_bhyt', name: 'Tồn kho - kê toa BHYT' },
-        { id: 'tonkho_ketoa_nhathuoc', name: 'Tồn kho - kê toa NT' },
-        { id: 'tonkho_tonbhyt', name: 'Tồn BHYT' },
-        { id: 4, name: 'Khác' }
+        { id: 'nhanvien', name: 'Nhân viên' }
     ]
 
     const [isOpen, setIsOpen] = useState(false);
