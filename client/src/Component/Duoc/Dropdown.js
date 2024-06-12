@@ -8,6 +8,7 @@ const Dropdown = ({ setSelectedOption }) => {
         { id: 'tonkho_ketoa_bhyt', name: 'Tồn kho - kê toa BHYT' },
         { id: 'tonkho_ketoa_nhathuoc', name: 'Tồn kho - kê toa NT' },
         { id: 'tonkho_tonbhyt', name: 'Tồn BHYT' },
+        { id: 'tonkho_theokho', name: 'Tồn Theo kho' },
         { id: 4, name: 'Khác' }
     ]
 

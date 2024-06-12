@@ -68,6 +68,8 @@ const Dropdown = ({ data, setSelectedOption }) => {
                     onClick={toggleDropdown}
                     onChange={handleChange}
                     placeholder="Search..."
+                    autoComplete='off'
+                    spellCheck={false}
                 />
                 <button
                     className="h-full px-2 py-1  border border-l-0 "

@@ -591,13 +591,64 @@ def duoc_tonkho(site, id_nhom):
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
-    
     stm = f'SELECT ID, TEN FROM D_DMKHO WHERE nhom = {id_nhom} AND ID > 0'
-    
     khos = cursor.execute(stm).fetchall()
-    
-    print(khos)
     return jsonify(result)
+
+@app.route('/duoc/tonkho/theokho/dskho/<site>', methods=['GET'])
+def duoc_tonkho_theokho_dskho(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    
+    result = []
+    
+    hcm_kho_ids = "4, 90, 91, 89"
+    
+    if (site == 'HCM_DEV'):
+        kho_ids = hcm_kho_ids
+    else:
+        kho_ids = hcm_kho_ids
+        
+    stm = f'''SELECT ID, TEN FROM D_DMKHO WHERE id IN ({kho_ids})'''
+        
+    khos = cursor.execute(stm).fetchall()
+    for kho in khos:
+        result.append({
+            'id': kho[0],
+            'name': kho[1]
+        })
+    return jsonify(result)
+
+@app.route('/duoc/tonkho/theokho/<site>/<idkho>', methods=['GET'])
+def duoc_tonkho_theokho(site, idkho):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    
+    result = []
+    
+    col_name = ['mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tonthuc', 'booking', 'tonkhadung']
+    
+    stm = f'''
+        SELECT C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLYEUCAU , a.TONDAU- A.SLYEUCAU
+        FROM HSOFTTAMANH0624.D_TONKHOTH A 
+        INNER JOIN D_DMKHO B ON A.MAKHO = B.ID
+        INNER JOIN D_DMBD C ON A.MABD = C.ID
+        WHERE A.MAKHO = {idkho}
+    '''
+    
+    datas = cursor.execute(stm).fetchall()
+    for data in datas:
+        obj = {}
+        for idx, col in  enumerate(col_name):
+            obj[col] = data[idx]
+        result.append(obj)
+
+    
+
+    return jsonify(result), 200
+    
     
 
 
