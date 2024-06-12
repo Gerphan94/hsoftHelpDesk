@@ -33,7 +33,6 @@ function TonKhoKeToa({ site, type }) {
     }
     const handleSearch = (event) => {
         setSearchTerm(event.target.value);
-        console.log(event.target.value);
         if (event.target.value === '') {
             setViewDatas(pharmars);
         }

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import styles from "./styles.module.css"
 
 import Inpatient from "./Inpatient";
 import HoSoBA from "./HoSo/HoSoBA";
@@ -9,7 +10,7 @@ import SQLCol from "./SQL/SQLCollection";
 import DanhMuc from "./DanhMuc/DanhMuc";
 import Duoc from "./Duoc/Duoc";
 import KPI from "./KPI/KPI";
-import styles from "./styles.module.css"
+import NoiTru from "./NoiTru/NoiTru";
 
 import SideMenu from "./SideMenu";
 
@@ -50,6 +51,7 @@ function MainPage() {
                             {selectedFunc === 1 && <Inpatient site={site} />}
                             {selectedFunc === 'goikham' && <GoiKham site={site} />}
                             {selectedFunc === 'khambenh' && <KhamBenh site={site} />}
+                            {selectedFunc === 'noitru' && <NoiTru site={site} />}
                             {selectedFunc === 'datkham' && <DatKham site={site} />}
                             {selectedFunc === 'duoc' && <Duoc site={site} />}
                             {selectedFunc === 'danhmuc' && <DanhMuc />}

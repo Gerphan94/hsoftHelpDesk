@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 
 function Notice({ message, setModalshow, type }) {
 
-
     useEffect(() => {
         const timer = setTimeout(() => {
             setModalshow(false);
@@ -11,6 +10,8 @@ function Notice({ message, setModalshow, type }) {
         // Cleanup the timer if the component is unmounted before the time is up
         return () => clearTimeout(timer);
     }, []);
+
+    
 
     return (
         <div className="relative">

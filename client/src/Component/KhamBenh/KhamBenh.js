@@ -84,16 +84,20 @@ function KhamBenh({ site }) {
     }
 
     const handleClickPID = (pid) => {
+        navigator.clipboard.writeText(pid).then(() => {
+            setNoticeMessage('Đã copy ' + pid);
+            setNoticeType('success');
+        }).catch(err => {
+            console.error('Failed to copy text: ', err);
+        });
         setNoticeShow(true);
-        setNoticeMessage('Đã copy ' + pid);
-        setNoticeType('success');
 
-    }   
+    }
 
     return (
         <>
             {noticeshow &&
-                <Notice message={noticeMessage} setModalshow={setNoticeShow} type={noticeType}/>
+                <Notice message={noticeMessage} setModalshow={setNoticeShow} type={noticeType} />
 
             }
             <div className="flex gap-10 w-full h-12 border-b p-2">

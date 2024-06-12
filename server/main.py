@@ -179,7 +179,6 @@ def taolichkham(site):
     print("Json data is", type(json_data) )
     BN = json.loads(json_data)[0]
     # BN = cursor.execute(stm1).fetchall()
-    print(BN)
     den = datetime.now()
     ngay = den -  timedelta(days=2)
     id = ngay.strftime("%y%m%d%H%M%S%f")
@@ -433,8 +432,72 @@ def khambenh_xuattutruc(site , maql):
     
     return jsonify(result)
     
+# NOI TRU ######################################################################
+# API for NOI TRU ##############################################################
+# ##############################################################################
+
+@app.route('/noitru/dskhoa/<site>', methods=['GET'])
+def noitru_dskhoa(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
     
+    stm = 'SELECT * FROM BTDKP_BV WHERE LOAI = 0'
     
+    khoas = cursor.execute(stm).fetchall()
+    
+    for khoa in khoas:
+        result.append({
+            'id': khoa[0],
+            'name': khoa[1]
+        })
+    
+    return jsonify(result)
+
+@app.route('/noitru/hiendien/<site>/<makp>', methods=['GET'])
+def noitru_hiendien(site, makp):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm = f'''
+        SELECT A.ID, A.MAVAOVIEN, A.MAQL, A.MABN, B.HOTEN, B.PHAI, B.NAMSINH, A.NGAYVV, A.NGAY AS NGAYVK, A.MAICD, D.MADOITUONG , E.DOITUONG, F.SOTHE
+        FROM HIENDIEN A
+        INNER JOIN BTDBN B ON A.MABN = B.MABN
+        INNER JOIN ICD10 C ON A.MAICD = C.CICD10
+        left JOIN BENHANDT D ON A.MAVAOVIEN = D.MAVAOVIEN AND A.MAQL = D.MAQL
+        INNER JOIN DOITUONG E ON D.MADOITUONG = E.MADOITUONG
+        LEFT JOIN BHYT F ON A.MAQL = F.MAQL
+        WHERE A.MAKP = '{makp}' AND A.NHAPKHOA = 1
+        ORDER BY A.NGAY DESC
+    '''
+    data_list = cursor.execute(stm).fetchall()
+    
+    for data in data_list:
+        result.append({
+            'id': data[0],
+            'mavaovien': data[1],
+            'maql': data[2],
+            'mabn': data[3],
+            'hoten': data[4],
+            'phai': data[5],
+            'namsinh': data[6],
+            'ngayvv': data[7].strftime("%d/%m/%Y, %H:%M"),
+            'ngayvk': data[8].strftime("%d/%m/%Y, %H:%M"),
+            'maicd': data[9],
+            'madoituong': data[10],
+            'doituong': data[11],
+            'sothe': data[12]
+        })
+    
+    return jsonify(result), 200
+
+  
+
+
+####################################################################
 
 @app.route('/datkham/error_datkham/<site>/<ngay>/<upper>', methods=['GET'])
 def error_datkham(site , ngay, upper):
@@ -536,7 +599,7 @@ def duoc_tonkho(site, id_nhom):
     print(khos)
     return jsonify(result)
     
-    
+
 
 
 @app.route('/duoc/tonbhyt/<site>', methods=['GET'])
@@ -564,7 +627,6 @@ def tonbhyt(site):
         losx = []
         for theodoi in theodois:
             losx.append({"losx": theodoi[0], 'hsd': theodoi[1]})
-        
         result.append({
             'id': data[0],
             "ma": data[1],
