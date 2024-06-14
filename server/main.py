@@ -463,14 +463,17 @@ def noitru_hiendien(site, makp):
     result = []
     
     stm = f'''
+        WITH tmp_bhyt AS (
+            SELECT MAQL, SOTHE FROM BHYT WHERE SUDUNG = 1 
+        )
         SELECT A.ID, A.MAVAOVIEN, A.MAQL, A.MABN, B.HOTEN, B.PHAI, B.NAMSINH, A.NGAYVV, A.NGAY AS NGAYVK, A.MAICD, D.MADOITUONG , E.DOITUONG, F.SOTHE
         FROM HIENDIEN A
         INNER JOIN BTDBN B ON A.MABN = B.MABN
         INNER JOIN ICD10 C ON A.MAICD = C.CICD10
         left JOIN BENHANDT D ON A.MAVAOVIEN = D.MAVAOVIEN AND A.MAQL = D.MAQL
         INNER JOIN DOITUONG E ON D.MADOITUONG = E.MADOITUONG
-        LEFT JOIN BHYT F ON A.MAQL = F.MAQL
-        WHERE A.MAKP = '{makp}' AND A.NHAPKHOA = 1
+        LEFT JOIN tmp_bhyt F ON A.MAQL = F.MAQL
+        WHERE A.MAKP = '278' AND A.NHAPKHOA = 1 
         ORDER BY A.NGAY DESC
     '''
     data_list = cursor.execute(stm).fetchall()
@@ -603,7 +606,7 @@ def duoc_tonkho_theokho_dskho(site):
     
     result = []
     
-    hcm_kho_ids = "4, 90, 91, 89"
+    hcm_kho_ids = "4, 90, 91, 89, 2, 102"
     
     if (site == 'HCM_DEV'):
         kho_ids = hcm_kho_ids
@@ -628,10 +631,10 @@ def duoc_tonkho_theokho(site, idkho):
     
     result = []
     
-    col_name = ['mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tonthuc', 'booking', 'tonkhadung']
+    col_name = ['id', 'mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tonthuc', 'booking', 'tonkhadung']
     
     stm = f'''
-        SELECT C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLYEUCAU , a.TONDAU- A.SLYEUCAU
+        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLYEUCAU , a.TONDAU- A.SLYEUCAU
         FROM HSOFTTAMANH0624.D_TONKHOTH A 
         INNER JOIN D_DMKHO B ON A.MAKHO = B.ID
         INNER JOIN D_DMBD C ON A.MABD = C.ID

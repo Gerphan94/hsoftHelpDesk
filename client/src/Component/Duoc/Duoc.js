@@ -15,7 +15,7 @@ function Duoc({ site }) {
         <>
             <div className="flex items-center">
                 <Dropdown setSelectedOption={setSelectedOption} />
-                <div className="font-bold text-xl">{selectedOption.name}</div>
+                <div className="font-bold text-xl uppercase">{selectedOption.name}</div>
             </div>
             <div>
                 {selectedOption.id === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
