@@ -9,7 +9,9 @@ function NhanVien({ site }) {
     const apiURL = process.env.REACT_APP_API_URL;
 
     const [nhomnvs, setNhomnvs] = useState([]);
-    const [nhanveien, setNhanvien] = useState([]);
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [nhanviens, setNhanviens] = useState([]);
     const [viewDatas, setViewDatas] = useState([]);
 
     useEffect(() => async () => {
@@ -30,12 +32,25 @@ function NhanVien({ site }) {
             const fecthURL = apiURL + "/danhmuc/nhanvien/" + site;
             const response = await fetch(fecthURL);
             const data = await response.json();
-            setNhanvien(data);
+            setNhanviens(data);
             setViewDatas(data);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
     }
+
+    const handleSearch = (event) => {
+        setSearchTerm(event.target.value);
+        if (event.target.value === '') {
+            setViewDatas(nhanviens);
+        }
+        else {
+            const filedata = nhanviens.filter((item) =>
+                item.ma.toLowerCase().includes(event.target.value.toLowerCase()) || item.hoten.toLowerCase().includes(event.target.value.toLowerCase())
+            );
+            setViewDatas(filedata);
+        }
+    };
 
     return (
         <>
@@ -52,9 +67,9 @@ function NhanVien({ site }) {
                             type="text"
                             className="border w-56 px-2 py-1 outline-none"
                             placeholder="Nhập mã, tên, ..."
-                            // value={searchTerm}
+                            value={searchTerm}
                             spellCheck="false"
-                        // onChange={handleSearch}
+                            onChange={handleSearch}
                         />
                         <div>
                             <Dropdown data={nhomnvs} />
@@ -68,7 +83,8 @@ function NhanVien({ site }) {
                         </div>
 
                     </div>
-                    <div className="mt-2 px-4 w-full lg:h-[720px] overflow-y-auto flex justify-center" >
+                    <div>
+                    <div className="mt-2 px-4 w-full lg:max-h-[720px] overflow-y-auto flex justify-center" >
                         <table className="w-full">
                             <thead className="sticky top-0">
                                 <tr className="bg-gray-200 ">
@@ -90,8 +106,8 @@ function NhanVien({ site }) {
                                         className="border-b hover:bg-gray-100"
                                     >
                                         <td><div className="py-1 text-center">{index + 1}</div></td>
-                                        <td className="w-24"><div className="">{item.ma}</div></td>
-                                        <td><div className="text-left">{item.hoten}</div></td>
+                                        <td className="w-24">{item.ma}</td>
+                                        <td><div className="text-left h-4">{item.hoten}</div></td>
                                         <td><div className="text-left">{item.viettat}</div></td>
                                         <td><div className="text-left">{item.tennhom}</div></td>
                                         <td><div className="text-left">{item.duyetkhambhyt}</div></td>
@@ -105,6 +121,8 @@ function NhanVien({ site }) {
                             </tbody>
 
                         </table>
+                    </div>
+
                     </div>
 
                 </div>

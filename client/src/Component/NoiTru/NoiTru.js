@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Dropdown from "../Dropdown";
+import ViewButton from "../Button/ViewButton";
+
 
 function NoiTru({ site }) {
 
@@ -29,19 +31,23 @@ function NoiTru({ site }) {
 
 
 
-    useEffect(() => {
-        const gethiendien = async () => {
-            try {
-                const fecthURL = apiURL + "/noitru/hiendien/" + site + "/" + selectedKhoa.id;
-                const response = await fetch(fecthURL);
-                const data = await response.json();
-                setHiendiens(data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
+    const gethiendien = async () => {
+        console.log("Fetching data...");
+        try {
+            const fecthURL = apiURL + "noitru/hiendien/" + site + "/" + selectedKhoa.id;
+            console.log(fecthURL)
+            const response = await fetch(fecthURL);
+            const data = await response.json();
+            setHiendiens(data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
         }
+    }
+
+
+    useEffect(() => {
         gethiendien();
-    }, [selectedKhoa.id]);
+    }, [selectedKhoa]);
 
     return (
         <>
@@ -51,8 +57,7 @@ function NoiTru({ site }) {
                     <Dropdown data={khoas} setSelectedOption={setSelectedKhoa} />
                 </div>
                 <div className="h-full">
-                    
-
+                    <ViewButton onClick={gethiendien} />
                 </div>
 
 
@@ -87,8 +92,7 @@ function NoiTru({ site }) {
                         <tbody>
                             {hiendiens.map((ele, index) => (
 
-                                <tr key={index}>
-                                    {console.log(ele.ngayvv)}
+                                <tr key={index} className="even:bg-gray-100 hover:bg-blue-200">
                                     <td className="text-center"><div className=" py-1 text-center">{index + 1}</div></td>
                                     <td><div className="text-left">{ele.mabn}</div></td>
                                     <td><div className="text-left">{ele.hoten}</div></td>

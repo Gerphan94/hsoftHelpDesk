@@ -9,7 +9,9 @@ function TonTheoKho({ site }) {
     const apiURL = process.env.REACT_APP_API_URL;
 
     const [khoList, setKhoList] = useState([]);
-    const [selectedOption, setSelectedOption] = useState({ id: 0, name: '' });
+    const [selectedKho, setSelectedKho] = useState({ id: 0, name: '' });
+
+    const [selectedBHYTLevel, setSelectedBHYTLevel] = useState(0);
     const [pharmars, setPharmars] = useState([]);
     const [selectedPharmarId, setSelectedPharmarId] = useState(0);
     const [isShowModal, setIsShowModal] = useState(false);
@@ -34,7 +36,7 @@ function TonTheoKho({ site }) {
 
     const getPharmars = async () => {
         try {
-            const fecthURL = apiURL + "duoc/tonkho/theokho/" + site + "/" + selectedOption.id;
+            const fecthURL = apiURL + "duoc/tonkho/theokho/" + site + "/" + selectedKho.id;
             console.log(fecthURL)
             const response = await fetch(fecthURL);
             const data = await response.json();
@@ -54,7 +56,8 @@ function TonTheoKho({ site }) {
 
     }
     const onClick = () => {
-        if (selectedOption.id === 0) {
+        console.log(selectedKho.id)
+        if (selectedKho.id === 0) {
             return;
         }
         getPharmars();
@@ -63,7 +66,7 @@ function TonTheoKho({ site }) {
     useEffect(() => {
         getPharmars();
 
-    }, [selectedOption]);
+    }, [selectedKho]);
 
 
     const onClickPharmar = (pharmarid) => {
@@ -88,15 +91,24 @@ function TonTheoKho({ site }) {
 
     // /duoc/tonkho/theokho/dskho/<site>
     return (
-        <div className="p-4">
+        <div className="px-4">
 
-            <div className="flex items-center gap-2">
-                <label className="font-bold">Kho: </label>
-                <div className="w-96">
-                    <Dropdown data={khoList} setSelectedOption={setSelectedOption} />
+            <div className="flex items-center gap-10">
+                <div className="flex items-center gap-2">
+                    <label className="font-bold">Kho: </label>
+                    <div className="w-96">
+                        <Dropdown 
+                        data={khoList} 
+                        setSelectedOption={setSelectedKho}
+                        placeholder="Chọn kho --- "
+                        
+                        />
 
+                    </div>
+                    <ViewButton onClick={onClick} />
                 </div>
-                <ViewButton onClick={onClick} />
+
+
                 <input
                     type="text"
                     className="border w-56 px-2 py-1 outline-none"
@@ -105,6 +117,24 @@ function TonTheoKho({ site }) {
                     spellCheck="false"
                     onChange={handleSearch}
                 />
+
+                <div className="flex items-center gap-2">
+                <label className="font-bold">BHYT: </label>
+                    <div className="w-24">
+                        <Dropdown 
+                        data={[{id:100, name: '100'}, {id:0, name: '0'}, {id:-1,name:'Other'}]} 
+                        setSelectedOption={setSelectedBHYTLevel} 
+                        searchable={false}
+                        
+                        
+                        />
+
+                    </div>
+
+                </div>
+
+
+
             </div>
 
             {/* Table */}
@@ -114,15 +144,18 @@ function TonTheoKho({ site }) {
                         <thead className="sticky top-0">
                             <tr className="bg-gray-200 ">
 
-                                <th className="text-center"><div className="py-1 text-center">STT</div></th>
+                                <th className="text-center w-10"><div className="py-1 text-center">STT</div></th>
                                 <th className="w-24"><div className="">Mã BD</div></th>
                                 <th className="w-[600px]"><div>Tên BD</div></th>
                                 <th><div className="text-left w-20">DVT-DVD</div></th>
                                 <th><div>Đường dùng</div></th>
                                 <th><div className="text-right">BHYT</div></th>
-                                <th><div className="text-right w-20">Tồn thực</div></th>
-                                <th><div className="w-20">SL YC</div></th>
-                                <th><div className="text-center w-20">SLKD</div></th>
+                                <th><div className="text-right w-20">Tồn đầu</div></th>
+                                <th><div className="text-right w-20">Nhập</div></th>
+                                <th><div className="text-right w-20">Xuất</div></th>
+                                <th><div className="text-right w-20">Tồn cuối</div></th>
+                                <th><div className="text-right w-20">SLYC</div></th>
+                                <th><div className="text-right w-20">SLKD</div></th>
                                 <th><div className="text-center w-20">TồnBH</div></th>
                             </tr>
                         </thead>
@@ -138,11 +171,14 @@ function TonTheoKho({ site }) {
                                         onClick={() => onClickPharmar(item.id)}
                                     >{item.tenbd}</td>
                                     <td className="text-left">{item.dvt} - {item.dvd}</td>
-                                    <td className="">{item.duongdung}</td>
+                                    <td className="text-left">{item.duongdung}</td>
                                     <td className="text-center">{item.bhyt}</td>
-                                    <td className="text-right">{item.tonthuc}</td>
-                                    <td className="">{item.booking}</td>
-                                    <td className="text-center">{item.tonkhadung}</td>
+                                    <td className="text-right">{item.tondau}</td>
+                                    <td className="text-right">{item.slnhap}</td>
+                                    <td className="text-right">{item.slxuat}</td>
+                                    <td className="text-right">{item.toncuoi}</td>
+                                    <td className="text-right">{item.slycau}</td>
+                                    <td className="text-right">{item.tonkhadung}</td>
                                     <td></td>
                                 </tr>
                             ))}

@@ -7,7 +7,8 @@ import DichVuModal from "./DichvuModal";
 import ThuocModal from "./ThuocModal";
 
 import Notice from "../Message/Notice";
-
+import ButtonMenu from "../ButtonMenu";
+import ViewButton from "../Button/ViewButton";
 
 function KhamBenh({ site }) {
     const apiURL = process.env.REACT_APP_API_URL;
@@ -91,16 +92,15 @@ function KhamBenh({ site }) {
             console.error('Failed to copy text: ', err);
         });
         setNoticeShow(true);
-
     }
 
     return (
         <>
             {noticeshow &&
                 <Notice message={noticeMessage} setModalshow={setNoticeShow} type={noticeType} />
-
             }
-            <div className="flex gap-10 w-full h-12 border-b p-2">
+            <div className="flex items-center gap-10 w-full h-12 border-b p-2">
+                <ButtonMenu />
                 <div className="font-bold text-xl">DANH SÁCH KHÁM BỆNH</div>
                 <div>
                     <label>Ngày: </label>
@@ -112,10 +112,8 @@ function KhamBenh({ site }) {
                     />
                 </div>
                 <div>
-                    <button
-                        className={styles.buttonSubmit}
-                        onClick={() => handleView()}
-                    >Xem</button>
+                    <ViewButton onClick={handleView} />
+                    
                 </div>
                 <div className="flex gap-4">
                     <input

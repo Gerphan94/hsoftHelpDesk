@@ -473,7 +473,7 @@ def noitru_hiendien(site, makp):
         left JOIN BENHANDT D ON A.MAVAOVIEN = D.MAVAOVIEN AND A.MAQL = D.MAQL
         INNER JOIN DOITUONG E ON D.MADOITUONG = E.MADOITUONG
         LEFT JOIN tmp_bhyt F ON A.MAQL = F.MAQL
-        WHERE A.MAKP = '278' AND A.NHAPKHOA = 1 
+        WHERE A.MAKP = {makp} AND A.NHAPKHOA = 1 
         ORDER BY A.NGAY DESC
     '''
     data_list = cursor.execute(stm).fetchall()
@@ -631,10 +631,10 @@ def duoc_tonkho_theokho(site, idkho):
     
     result = []
     
-    col_name = ['id', 'mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tonthuc', 'booking', 'tonkhadung']
+    col_name = ['id', 'mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slycau', 'tonkhadung']
     
     stm = f'''
-        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLYEUCAU , a.TONDAU- A.SLYEUCAU
+        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD
         FROM HSOFTTAMANH0624.D_TONKHOTH A 
         INNER JOIN D_DMKHO B ON A.MAKHO = B.ID
         INNER JOIN D_DMBD C ON A.MABD = C.ID
