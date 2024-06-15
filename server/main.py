@@ -541,12 +541,15 @@ def error_datkham(site , ngay, upper):
     return jsonify(result)
 
 # DƯỢC
-@app.route('/duoc/danhmuc/<site>', methods=['GET'])
-def duoc_danhmuc(site):
+@app.route('/duoc/dmbd/<site>', methods=['GET'])
+def duoc_dmbd(site):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
+    
+    
+    
     
     return jsonify(result)
 
