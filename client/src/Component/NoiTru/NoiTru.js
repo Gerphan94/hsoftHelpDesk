@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Dropdown from "../Dropdown";
 import ViewButton from "../Button/ViewButton";
-
+import { AiOutlineMan,  AiOutlineWoman } from "react-icons/ai";
+import TouchSwitch from "../TouchSwitch";
 
 function NoiTru({ site }) {
 
@@ -60,6 +61,7 @@ function NoiTru({ site }) {
                     <ViewButton onClick={gethiendien} />
                 </div>
 
+                <TouchSwitch />
 
             </div>
             <div className="px-4 flex flex-row-reverse">
@@ -78,7 +80,6 @@ function NoiTru({ site }) {
                                 <th className="text-center"><div className=" py-1 text-center">STT</div></th>
                                 <th className=""><div className="">PID</div></th>
                                 <th className=""><div>Họ tên</div></th>
-                                <th><div className="text-center w-20">Giới tính</div></th>
                                 <th><div>Năm sinh</div></th>
                                 <th><div className="text-center">Ngày VV</div></th>
                                 <th><div className="text-center">Ngày VK</div></th>
@@ -94,13 +95,14 @@ function NoiTru({ site }) {
 
                                 <tr key={index} className="even:bg-gray-100 hover:bg-blue-200">
                                     <td className="text-center"><div className=" py-1 text-center">{index + 1}</div></td>
-                                    <td><div className="text-left">{ele.mabn}</div></td>
-                                    <td><div className="text-left">{ele.hoten}</div></td>
-                                    <td><div className="text-center">{ele.phai === 0 ? 'Nam' : 'Nữ'}</div></td>
+                                    <td><div className="text-left hover:underline hover:text-blue-500 cursor-pointer">{ele.mabn}</div></td>
+                                    <td><div className="flex gap-2 items-center">
+                                        {ele.phai === 0 ? <AiOutlineMan className="text-blue-500"/> : <AiOutlineWoman className="text-pink-500" />}
+                                        {ele.hoten}</div></td>
                                     <td><div className="text-center">{ele.namsinh}</div></td>
-                                    <td><div className="text-center">{ele.ngayvv}</div></td>
-                                    <td><div className="text-center">{ele.ngayvk}</div></td>
-                                    <td><div className="">{ele.doituong}</div></td>
+                                    <td><div className="text-right">{ele.ngayvv}</div></td>
+                                    <td><div className="text-right">{ele.ngayvk}</div></td>
+                                    <td><div className="text-left px-2">{ele.doituong}</div></td>
                                     <td><div className="">{ele.sothe}</div></td>
                                     <td><div className="">{ele.songaydt}</div></td>
                                     <td><div className="">{ele.ghichu}</div></td>

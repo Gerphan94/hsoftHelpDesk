@@ -34,7 +34,7 @@ function SideMenu({ selectedFunc, setSelectedFunc, setPageTitle }) {
         <>
             {funcs.map((func, index) => (
                 <div className={`px-2 flex gap-1 text-white text-lg items-center hover:opacity-100  ${func.id === selectedFunc ? 'opacity-100' : 'opacity-50'} `}>
-                    <func.icon />
+                    <func.icon className="ml-2" />
                     <button
                         key={index}
                         className={`block py-2 w-full text-left px-1 `}
