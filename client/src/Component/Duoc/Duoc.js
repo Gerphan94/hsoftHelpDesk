@@ -10,7 +10,6 @@ import TonTuTruc from "./TonTuTruc";
 
 function Duoc({ site }) {
 
-    const [curnav, setCurnav] = useState('')
     const [ selectedOption, setSelectedOption ] = useState({id:0, name:''})
 
     return (
@@ -23,7 +22,7 @@ function Duoc({ site }) {
                 {selectedOption.id === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
                 {selectedOption.id === 'tonkho_tonbhyt' && <TonBHYT site={site}/>}
                 {selectedOption.id === 'tonkho_theokho' && <TonTheoKho site={site}/>}
-                {selectedOption.id === 'tonkho_theokho' && <TonTheoKho site={site}/>}
+                {/* {selectedOption.id === 'tonkho_theokho' && <TonTheoKho site={site}/>} */}
                 {selectedOption.id === 'dmbd' && <DMBD site={site}/>}
             </div>
         </>
