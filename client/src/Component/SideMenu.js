@@ -7,7 +7,7 @@ import { IoFileTrayFullSharp } from "react-icons/io5";
 import { FaBook, FaBed  } from "react-icons/fa";
 import { MdAttachMoney, MdBackpack } from "react-icons/md";
 
-function SideMenu({ selectedFunc, setSelectedFunc, setPageTitle }) {
+function SideMenu({ selectedFunc, setSelectedFunc, setPageTitle,setMainIcon }) {
 
     const funcs = [
         { id: 'hosobenhan', name: 'Hồ sơ bệnh án', icon: IoFileTrayFullSharp },
@@ -24,9 +24,10 @@ function SideMenu({ selectedFunc, setSelectedFunc, setPageTitle }) {
         { id: 'document', name: "Documents" , icon: FaBook}
     ];
 
-    const handleClick = (id, name) => {
+    const handleClick = (id, name, icon) => {
         setSelectedFunc(id);
         setPageTitle(name);
+        setMainIcon(icon);
     }
 
     return (
@@ -38,7 +39,7 @@ function SideMenu({ selectedFunc, setSelectedFunc, setPageTitle }) {
                     <button
                         key={index}
                         className={`block py-2 w-full text-left px-1 `}
-                        onClick={() => handleClick(func.id, func.name)}
+                        onClick={() => handleClick(func.id, func.name, func.icon)}
 
                     >{func.name}</button>
 

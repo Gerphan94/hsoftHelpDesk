@@ -3,6 +3,8 @@ import Dropdown from "../Dropdown";
 import ViewButton from "../Button/ViewButton";
 import { CiPill } from "react-icons/ci";
 import PharmarDetailModal from "./PharmarDetailModal";
+import DDDropdown from "./DDDropdown";
+
 
 function TonTheoKho({ site }) {
 
@@ -40,6 +42,7 @@ function TonTheoKho({ site }) {
             console.log(fecthURL)
             const response = await fetch(fecthURL);
             const data = await response.json();
+            // console.log(data)
             setPharmars(data);
             if (searchTerm === '') {
                 setViewDatas(pharmars);
@@ -97,11 +100,11 @@ function TonTheoKho({ site }) {
                 <div className="flex items-center gap-2">
                     <label className="font-bold">Kho: </label>
                     <div className="w-96">
-                        <Dropdown 
-                        data={khoList} 
-                        setSelectedOption={setSelectedKho}
-                        placeholder="Chọn kho --- "
-                        
+                        <Dropdown
+                            data={khoList}
+                            setSelectedOption={setSelectedKho}
+                            placeholder="Chọn kho --- "
+
                         />
 
                     </div>
@@ -119,14 +122,14 @@ function TonTheoKho({ site }) {
                 />
 
                 <div className="flex items-center gap-2">
-                <label className="font-bold">BHYT: </label>
+                    <label className="font-bold">BHYT: </label>
                     <div className="w-24">
-                        <Dropdown 
-                        data={[{id:100, name: '100'}, {id:0, name: '0'}, {id:-1,name:'Other'}]} 
-                        setSelectedOption={setSelectedBHYTLevel} 
-                        searchable={false}
-                        
-                        
+                        <Dropdown
+                            data={[{ id: 100, name: '100' }, { id: 0, name: '0' }, { id: -1, name: 'Other' }]}
+                            setSelectedOption={setSelectedBHYTLevel}
+                            searchable={false}
+
+
                         />
 
                     </div>
@@ -141,8 +144,8 @@ function TonTheoKho({ site }) {
             <div>
                 <div className="mt-2 w-full lg:h-[720px] overflow-y-auto" >
                     <table className="w-full">
-                        <thead className="sticky top-0">
-                            <tr className="bg-gray-200 ">
+                        <thead className="sticky top-0 z-80">
+                            <tr className="bg-gray-200">
 
                                 <th className="text-center w-10"><div className="py-1 text-center">STT</div></th>
                                 <th className="w-24"><div className="">Mã BD</div></th>
@@ -162,7 +165,8 @@ function TonTheoKho({ site }) {
                         <tbody>
 
                             {viewDatas.map((item, index) => (
-                                <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200">
+
+                                <tr tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200" >
 
                                     <td className="text-center">{index + 1}</td>
                                     <td className="text-left">{item.mabd}</td>
@@ -171,7 +175,11 @@ function TonTheoKho({ site }) {
                                         onClick={() => onClickPharmar(item.id)}
                                     >{item.tenbd}</td>
                                     <td className="text-left">{item.dvt} - {item.dvd}</td>
-                                    <td className="text-left">{item.duongdung}</td>
+                                    <td className="text-left">
+                                        {item.duongdung}
+                                       
+
+                                    </td>
                                     <td className="text-center">{item.bhyt}</td>
                                     <td className="text-right">{item.tondau}</td>
                                     <td className="text-right">{item.slnhap}</td>
@@ -191,7 +199,7 @@ function TonTheoKho({ site }) {
 
             {isShowModal && <PharmarDetailModal site={site} pharmarId={selectedPharmarId} setModalShow={setIsShowModal} />}
 
-        </div>
+        </div >
     );
 }
 export default TonTheoKho;

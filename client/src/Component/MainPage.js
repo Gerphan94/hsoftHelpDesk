@@ -20,6 +20,7 @@ function MainPage() {
     const [site, setSite] = useState('HCM_DEV')
     const [selectedFunc, setSelectedFunc] = useState(1);
     const [pageTitle, setPageTitle] = useState('')
+    const [mainIcon, setMainIcon] = useState(null);
 
     const handleChangeEnv = (event) => {
         console.log(event.target.value);
@@ -32,7 +33,7 @@ function MainPage() {
                 <div className="flex">
                     <div className="w-56  h-screen border-r-2 bg-[#031C30]">
                         <div className="text-left p-2">
-<select className="bg-gray-300 border w-full px-2 py-1 rounded-md" value={site} onChange={handleChangeEnv}>
+                            <select className="bg-gray-300 border w-full px-2 py-1 rounded-md" value={site} onChange={handleChangeEnv}>
                                 <option value="HCM_DEV">HCM - DEV</option>
                                 <option value="HCM_UAT">HCM - UAT</option>
                                 <option value="HN_DEV">HN - Dev</option>
@@ -40,10 +41,18 @@ function MainPage() {
                             </select>
                         </div>
 
-                        <SideMenu selectedFunc={selectedFunc} setSelectedFunc={setSelectedFunc} setPageTitle={setPageTitle} />
+                        <SideMenu 
+                        selectedFunc={selectedFunc} 
+                        setSelectedFunc={setSelectedFunc} 
+                        setPageTitle={setPageTitle}
+                        setMainIcon={setMainIcon}
+                        
+                        />
                     </div>
                     <div className={styles.MainPage}>
-                        <div className="p-2 w-full border-b">
+                        <div className="p-2 w-full border-b flex gap-2 items-center">
+                            <span className="">{mainIcon}</span>
+                            
                             <div className="text-left text-2xl font-bold">{pageTitle}</div>
 
                         </div>
@@ -61,7 +70,7 @@ function MainPage() {
                         </div>
                     </div>
                     <div>
-                                </div>
+                    </div>
                 </div>
                 <div>
                 </div>
