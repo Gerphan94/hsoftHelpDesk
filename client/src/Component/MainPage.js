@@ -32,8 +32,9 @@ function MainPage() {
                 <div className="flex">
                     <div className="w-56  h-screen border-r-2 bg-[#031C30]">
                         <div className="text-left p-2">
-                            <select className="bg-gray-300 border w-full px-2 py-1 rounded-md" value={site} onChange={handleChangeEnv}>
+<select className="bg-gray-300 border w-full px-2 py-1 rounded-md" value={site} onChange={handleChangeEnv}>
                                 <option value="HCM_DEV">HCM - DEV</option>
+                                <option value="HCM_UAT">HCM - UAT</option>
                                 <option value="HN_DEV">HN - Dev</option>
                                 <option value="HN_LIVE">HN - Live</option>
                             </select>
@@ -58,26 +59,18 @@ function MainPage() {
                             {selectedFunc === 99 && <SQLCol />}
                             {selectedFunc === 999 && <KPI />}
                         </div>
-
-
-
                     </div>
-
-
-
                     <div>
-                    </div>
+                                </div>
                 </div>
-
                 <div>
-
                 </div>
 
 
 
             </div>
             {/* FOOTER */}
-            <div className={`w-full h-4 ${site === 'HCM_DEV' || site === 'HN_DEV' ? "bg-red-500" : "bg-green-500"}  `} ></div>
+            <div className={`w-full h-4 ${site === 'HCM_DEV' || site === 'HN_DEV' || site === 'HCM_UAT' ? "bg-red-500" : "bg-green-500"}  `} ></div>
 
 
         </>

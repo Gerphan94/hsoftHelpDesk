@@ -55,13 +55,6 @@ function Inpatient( {site }   ) {
         // /hien_dien/dutru_benhnhan/<site>/<hiendien_id>
 
     }
-
-
-
-
-
-
-
     return (
         <>
             <div className="p-5">

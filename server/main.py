@@ -14,6 +14,19 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 #     password='hsofttamanh',
 #     dsn="hsoft-dev.vdc.tahcm.vn/dev3")
 
+
+def init_current_schema():
+    
+    inow = datetime.now()
+    
+    print(inow)
+    
+    
+    
+    
+    
+    return
+
 def conn_info(env):
    
     if (env == 'HN_LIVE'):
@@ -27,7 +40,14 @@ def conn_info(env):
             'user':"hsofttamanh",
             'password':'hsofttamanh',
             'dsn':"192.168.8.5/hndev"
-        }  
+        }
+    elif (env == 'HCM_UAT'):
+        return {
+            'user':"hsofttamanh",
+            'password':'hsofttamanh',
+            'dsn':"hsoft-dev.vdc.tahcm.vn/uat1"
+        }
+        
     else:
         return {
             'user':"hsofttamanh",
@@ -399,9 +419,6 @@ def khambenh(site , ngay):
     for kb in khambenhs:
         
         kb_maql = kb[10]
-        
-        
-        
         result.append({
             "mabn": kb[0],
             "hoten": kb[1],
@@ -609,7 +626,7 @@ def duoc_tonkho_theokho_dskho(site):
     
     result = []
     
-    hcm_kho_ids = "4, 90, 91, 89, 2, 102"
+    hcm_kho_ids = "4, 90, 91, 89, 2, 102, 104"
     
     if (site == 'HCM_DEV'):
         kho_ids = hcm_kho_ids
