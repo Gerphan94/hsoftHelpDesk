@@ -11,6 +11,7 @@ import DanhMuc from "./DanhMuc/DanhMuc";
 import Duoc from "./Duoc/Duoc";
 import KPI from "./KPI/KPI";
 import NoiTru from "./NoiTru/NoiTru";
+import MainPageHeader from "./MainPageHeader";
 
 import SideMenu from "./SideMenu";
 
@@ -50,12 +51,7 @@ function MainPage() {
                         />
                     </div>
                     <div className={styles.MainPage}>
-                        <div className="p-2 w-full border-b flex gap-2 items-center">
-                            <span className="">{mainIcon}</span>
-                            
-                            <div className="text-left text-2xl font-bold">{pageTitle}</div>
-
-                        </div>
+                        <MainPageHeader title={selectedFunc.name} />
                         <div>
                             {selectedFunc === 'hosobenhan' && <HoSoBA site={site} />}
                             {selectedFunc === 1 && <Inpatient site={site} />}

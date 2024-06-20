@@ -146,6 +146,7 @@ function TonTheoKho({ site }) {
                     <table className="w-full">
                         <thead className="sticky top-0 z-80">
                             <tr className="bg-gray-200">
+                                <th></th>
 
                                 <th className="text-center w-10"><div className="py-1 text-center">STT</div></th>
                                 <th className="w-24"><div className="">Mã BD</div></th>
@@ -167,7 +168,7 @@ function TonTheoKho({ site }) {
                             {viewDatas.map((item, index) => (
 
                                 <tr tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200" >
-
+                                    <td>{item.dalieu}</td>
                                     <td className="text-center">{index + 1}</td>
                                     <td className="text-left">{item.mabd}</td>
                                     <td
