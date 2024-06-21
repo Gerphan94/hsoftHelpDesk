@@ -4,7 +4,8 @@ import ViewButton from "../Button/ViewButton";
 import { CiPill } from "react-icons/ci";
 import PharmarDetailModal from "./PharmarDetailModal";
 import DDDropdown from "./DDDropdown";
-
+import { FaBottleDroplet } from "react-icons/fa6";
+import Filter from "../Common/Filter";
 
 function TonTheoKho({ site }) {
 
@@ -21,6 +22,10 @@ function TonTheoKho({ site }) {
 
     const [viewDatas, setViewDatas] = useState([]);
 
+    const [filter, setFilter] = useState([
+        {id:'dalieu ',name:"Đa liều", value:false},
+        {id:'bhyt ',name:"BHYT", value:false}
+    ]);
 
     useEffect(() => async () => {
         try {
@@ -108,6 +113,8 @@ function TonTheoKho({ site }) {
                         />
 
                     </div>
+                    <Filter filter={filter} setFilter={setFilter} />
+
                     <ViewButton onClick={onClick} />
                 </div>
 
@@ -128,12 +135,14 @@ function TonTheoKho({ site }) {
                             data={[{ id: 100, name: '100' }, { id: 0, name: '0' }, { id: -1, name: 'Other' }]}
                             setSelectedOption={setSelectedBHYTLevel}
                             searchable={false}
-
-
                         />
 
                     </div>
 
+                </div>
+
+                <div>
+                    <Filter filter={filter} setFilter={setFilter} />
                 </div>
 
 
@@ -168,7 +177,17 @@ function TonTheoKho({ site }) {
                             {viewDatas.map((item, index) => (
 
                                 <tr tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200" >
-                                    <td>{item.dalieu}</td>
+                                    <td>
+                                        <button tooltip="Đa liều">
+                                            {item.dalieu === 1 ?
+                                                <FaBottleDroplet  /> :
+                                                <CiPill tooltip="" />
+                                            }
+                                        </button>
+
+
+
+                                    </td>
                                     <td className="text-center">{index + 1}</td>
                                     <td className="text-left">{item.mabd}</td>
                                     <td
@@ -178,7 +197,7 @@ function TonTheoKho({ site }) {
                                     <td className="text-left">{item.dvt} - {item.dvd}</td>
                                     <td className="text-left">
                                         {item.duongdung}
-                                       
+
 
                                     </td>
                                     <td className="text-center">{item.bhyt}</td>
