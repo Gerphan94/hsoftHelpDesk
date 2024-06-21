@@ -54,7 +54,8 @@ function TonTheoKho({ site }) {
             }
             else {
                 const filedata = pharmars.filter((item) =>
-                    item.mabd.toLowerCase().includes(searchTerm.toLowerCase()) || item.tenbd.toLowerCase().includes(searchTerm.toLowerCase())
+                    item.mabd.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                    item.tenbd.toLowerCase().includes(searchTerm.toLowerCase())
                 );
                 setViewDatas(filedata);
             }
