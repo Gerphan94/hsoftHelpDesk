@@ -14,7 +14,7 @@ import NoiTru from "./NoiTru/NoiTru";
 import MainPageHeader from "./MainPageHeader";
 
 import SideMenu from "./SideMenu";
-
+import ChooseSite from "./Site/ChooseSite";
 
 function MainPage() {
 
@@ -23,10 +23,19 @@ function MainPage() {
     const [pageTitle, setPageTitle] = useState('')
     const [mainIcon, setMainIcon] = useState(null);
 
+    const [isChooseSite, setIsChooseSite] = useState(false);
+
     const handleChangeEnv = (event) => {
         console.log(event.target.value);
         setSite(event.target.value);
     }
+
+    const sites = [
+        { id: 'HCM_DEV', name: 'HCM - DEV' },
+        { id: 'HCM_UAT', name: 'HCM - UAT' },
+        { id: 'HN_DEV', name: 'HN - Dev' },
+        { id: 'HN_LIVE', name: 'HN - Live' }
+    ]
 
     return (
         <>
@@ -42,16 +51,21 @@ function MainPage() {
                             </select>
                         </div>
 
-                        <SideMenu 
-                        selectedFunc={selectedFunc} 
-                        setSelectedFunc={setSelectedFunc} 
-                        setPageTitle={setPageTitle}
-                        setMainIcon={setMainIcon}
-                        
+                        {/* <button
+                            className="w-full text-left p-2 hover:bg-gray-200"
+
+                            onClick={() => setIsChooseSite(true)}>Choose Site</button> */}
+
+                        <SideMenu
+                            selectedFunc={selectedFunc}
+                            setSelectedFunc={setSelectedFunc}
+                            setPageTitle={setPageTitle}
+                            setMainIcon={setMainIcon}
+
                         />
                     </div>
                     <div className={styles.MainPage}>
-                        <MainPageHeader title={selectedFunc.name} />
+                        <MainPageHeader title={pageTitle} />
                         <div>
                             {selectedFunc === 'hosobenhan' && <HoSoBA site={site} />}
                             {selectedFunc === 1 && <Inpatient site={site} />}
@@ -76,8 +90,9 @@ function MainPage() {
             </div>
             {/* FOOTER */}
             <div className={`w-full h-4 ${site === 'HCM_DEV' || site === 'HN_DEV' || site === 'HCM_UAT' ? "bg-red-500" : "bg-green-500"}  `} ></div>
+            
 
-
+            {isChooseSite && <ChooseSite sites={sites} setSite={setSite} setModalShow={setIsChooseSite} />}
         </>
 
     )
