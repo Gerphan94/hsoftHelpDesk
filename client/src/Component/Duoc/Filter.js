@@ -4,10 +4,6 @@ import { MdFilterAlt, MdFilterAltOff } from "react-icons/md";
 function Filter({ filter, setFilter }) {
 
     const [count, setCount] = useState(0);
-
-
-
-
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
 
@@ -55,6 +51,14 @@ function Filter({ filter, setFilter }) {
         setFilter(updatedCheckboxes);
     };
 
+    const onClickClear = () => {
+        setFilter(filter.map(item => ({ ...item, value: false })));
+        setCount(0);
+    }
+
+
+
+
     return (
         <>
             <div className='text-left p-3' ref={dropdownRef}>
@@ -88,7 +92,11 @@ function Filter({ filter, setFilter }) {
 
                             </div>
                             <div className="mt-2">
-                                <button className="w-full px-2 py-1 rounded-md bg-[#9BB0C1]">Clear</button>
+                                <button
+                                    className="w-full px-2 py-1 rounded-md bg-[#9BB0C1]"
+                                    onClick={() => onClickClear()}
+
+                                >Clear</button>
                             </div>
 
 

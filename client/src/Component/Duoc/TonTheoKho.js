@@ -5,7 +5,7 @@ import { CiPill } from "react-icons/ci";
 import PharmarDetailModal from "./PharmarDetailModal";
 import DDDropdown from "./DDDropdown";
 import { FaBottleDroplet } from "react-icons/fa6";
-import Filter from "../Common/Filter";
+import Filter from "./Filter";
 
 function TonTheoKho({ site }) {
 
@@ -22,10 +22,17 @@ function TonTheoKho({ site }) {
 
     const [viewDatas, setViewDatas] = useState([]);
 
-    const [filter, setFilter] = useState([
-        {id:'dalieu ',name:"Đa liều", value:false},
-        {id:'bhyt ',name:"BHYT", value:false}
-    ]);
+    const [filterList, setFilterList] = useState([
+        { id: 'dalieu', name: 'Đa liều', value: false },
+        { id: 'bhyt', name: 'BHYT', value: false },
+        { id: 'notbhyt', name: 'Không BHYT', value: false }
+
+    ])
+
+    // FILTER VARIABLE
+    const [filterDalieu, setFilterDalieu] = useState(true);
+
+
 
     useEffect(() => async () => {
         try {
@@ -39,6 +46,34 @@ function TonTheoKho({ site }) {
 
     }, []);
 
+    const filter = () => {
+        const filterData = pharmars.filter((item) => {
+            // Initialize match to true
+            let matchesAllFilters = true;
+    
+            // Iterate through each filter in the list
+            filterList.forEach(filter => {
+                if (filter.id === 'dalieu' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.dalieu === 1;
+                }
+                if (filter.id === 'bhyt' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.bhyt > 0;
+                }
+                if (filter.id === 'notbhyt' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.bhyt === 0;
+                }
+                // Add more conditions for other filters here
+            });
+    
+            return matchesAllFilters;
+        });
+    
+        return filterData;
+    };
+    
+
+
+
 
 
     const getPharmars = async () => {
@@ -49,16 +84,19 @@ function TonTheoKho({ site }) {
             const data = await response.json();
             // console.log(data)
             setPharmars(data);
-            if (searchTerm === '') {
-                setViewDatas(pharmars);
-            }
-            else {
-                const filedata = pharmars.filter((item) =>
-                    item.mabd.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                    item.tenbd.toLowerCase().includes(searchTerm.toLowerCase())
-                );
-                setViewDatas(filedata);
-            }
+
+            setViewDatas(filter);
+        //     if (searchTerm === '') {
+        //         setViewDatas(pharmars);
+        //     }
+        //     else {
+        //         const filedata = pharmars.filter((item) =>
+        //         (item.mabd.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        //             item.tenbd.toLowerCase().includes(searchTerm.toLowerCase()))
+
+        //         );
+        //         setViewDatas(filedata);
+        //     }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -114,12 +152,10 @@ function TonTheoKho({ site }) {
                         />
 
                     </div>
-                    <Filter filter={filter} setFilter={setFilter} />
+                    <Filter filter={filterList} setFilter={setFilterList} />
 
                     <ViewButton onClick={onClick} />
                 </div>
-
-
                 <input
                     type="text"
                     className="border w-56 px-2 py-1 outline-none"
@@ -128,26 +164,6 @@ function TonTheoKho({ site }) {
                     spellCheck="false"
                     onChange={handleSearch}
                 />
-
-                <div className="flex items-center gap-2">
-                    <label className="font-bold">BHYT: </label>
-                    <div className="w-24">
-                        <Dropdown
-                            data={[{ id: 100, name: '100' }, { id: 0, name: '0' }, { id: -1, name: 'Other' }]}
-                            setSelectedOption={setSelectedBHYTLevel}
-                            searchable={false}
-                        />
-
-                    </div>
-
-                </div>
-
-                <div>
-                    <Filter filter={filter} setFilter={setFilter} />
-                </div>
-
-
-
             </div>
 
             {/* Table */}
@@ -181,7 +197,7 @@ function TonTheoKho({ site }) {
                                     <td>
                                         <button tooltip="Đa liều">
                                             {item.dalieu === 1 ?
-                                                <FaBottleDroplet  /> :
+                                                <FaBottleDroplet /> :
                                                 <CiPill tooltip="" />
                                             }
                                         </button>
