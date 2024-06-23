@@ -20,11 +20,6 @@ def init_current_schema():
     inow = datetime.now()
     
     print(inow)
-    
-    
-    
-    
-    
     return
 
 def conn_info(env):

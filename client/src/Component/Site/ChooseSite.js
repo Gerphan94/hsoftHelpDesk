@@ -1,13 +1,16 @@
 import React from "react";
 import styles from "../styles.module.css"
 
-function ChooseSite({ sites, setSite,  setModalShow }) {
+function ChooseSite({ sites, setSite,  setModalShow, setSelectedFunc, setPageTitle }) {
 
 
 
-    const handleClick = (id) => {
-        setSite(id);
+    const handleClick = (id, name) => {
+        setSite({id: id, name: name});
+        setSelectedFunc('welcome');
         setModalShow(false);
+        setPageTitle("WELCOME")
+
     }
     return (
         <>
@@ -18,13 +21,11 @@ function ChooseSite({ sites, setSite,  setModalShow }) {
                             {sites.map((site) => (
                                 <div 
                                     className="border rounded-md p-3 hover:bg-[#9BB0C1] hover:text-white cursor-pointer"
-                                    onClick={() => handleClick(site.id)}
+                                    onClick={() => handleClick(site.id, site.name)}
                                 >
                                     {site.name}
-
                                     </div>
                             ))}
-
                         </div>
                      
                     </div>

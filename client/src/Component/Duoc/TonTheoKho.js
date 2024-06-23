@@ -193,11 +193,11 @@ function TonTheoKho({ site }) {
 
                             {viewDatas.map((item, index) => (
 
-                                <tr tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200" >
+                                <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200" >
                                     <td>
                                         <button tooltip="Đa liều">
                                             {item.dalieu === 1 ?
-                                                <FaBottleDroplet /> :
+                                                <FaBottleDroplet className="text-green-700" /> :
                                                 <CiPill tooltip="" />
                                             }
                                         </button>

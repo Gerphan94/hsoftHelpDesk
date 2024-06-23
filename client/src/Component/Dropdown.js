@@ -83,7 +83,7 @@ const Dropdown = ({ data, setSelectedOption, searchable=true, placeholder='---' 
                     <div className="origin-top-right absolute left-0 mt-2 w-full max-h-96 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
                         <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu" className='pb-2'>
                             {viewData.map((item) => (
-                                <li>
+                                <li key={item.id}>
                                     <button
                                         className="w-full text-left block px-4 py-2 text-sm text-[#0C1844] hover:bg-gray-100 select-none"
                                         onClick={() => handleClick(item.id, item.name)}
