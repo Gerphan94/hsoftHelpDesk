@@ -1,11 +1,30 @@
 import React, { useRef, useState, useEffect } from "react";
 import { MdFilterAlt, MdFilterAltOff } from "react-icons/md";
+import Dropdown from "../Dropdown";
+import styles from "../styles.module.css"
 
-function Filter({ filter, setFilter }) {
+function Filter({ site, filter, setFilter, setFilterDuocBV }) {
+
+    const apiURL = process.env.REACT_APP_API_URL;
+
+    const [duocbvs, setDuocbvs] = useState([]);
+
+    useEffect(() => {
+        const getDuocbvs = async () => {
+            const response = await fetch(`${apiURL}duoc/dm_duocbv/${site}`);
+            const data = await response.json();
+            setDuocbvs(data);
+        };
+        getDuocbvs();
+    }, [site]);
+
+
+
 
     const [count, setCount] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const [filterDuocBvId, setFilterDuocBvId] = useState(null);
 
     const toggleDropdown = () => {
         setIsOpen(!isOpen);
@@ -54,10 +73,13 @@ function Filter({ filter, setFilter }) {
     const onClickClear = () => {
         setFilter(filter.map(item => ({ ...item, value: false })));
         setCount(0);
+        setIsOpen(false);
     }
 
+    const onClickApply = () => {
+        setIsOpen(false);
 
-
+    }
 
     return (
         <>
@@ -71,11 +93,9 @@ function Filter({ filter, setFilter }) {
                             <MdFilterAlt className="h-5 w-5" /> :
                             <MdFilterAltOff className="h-5 w-5" />
                         }
-
                     </button>
-
                     {isOpen && (
-                        <div className="border p-4 origin-top-right absolute left-0 mt-2 w-44 shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 min-h-10">
+                        <div className="border p-4 origin-top-right absolute left-0 mt-2 w-[600px] shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 min-h-10">
                             <div>
                                 {filter.map((item) => (
                                     <div className="w-full px-2 py-1 flex gap-1 items-center">
@@ -89,14 +109,21 @@ function Filter({ filter, setFilter }) {
                                         <label className="select-none" htmlFor={item.id}>{item.name}</label>
                                     </div>
                                 ))}
-
                             </div>
-                            <div className="mt-2">
-                                <button
-                                    className="w-full px-2 py-1 rounded-md bg-[#9BB0C1]"
-                                    onClick={() => onClickClear()}
-
-                                >Clear</button>
+                            <div className="border rounded-xl p-3">
+                                <div className="flex gap-2">
+                                    <label className="w-40">Dược BV</label>
+                                    <Dropdown data={duocbvs} setSelectedOption={setFilterDuocBV} />
+                                </div>
+                            </div>
+                            <div className="flex gap-4 mt-2">
+                                {count === 0 ?
+                                    <button className={`${styles.btn} ${styles.btnNotAllowed}`}>Apply</button>
+                                    :
+                                    <button className={`${styles.btn} ${styles.btnOk}`} onClick={() => onClickApply()}>Apply</button>
+                                }
+                                <button className={`${styles.btn} ${styles.btnClose}`} onClick={() => onClickClear()}>Clear</button>
+                              
                             </div>
 
 

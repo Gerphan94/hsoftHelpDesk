@@ -29,6 +29,14 @@ function TonTheoKho({ site }) {
 
     ])
 
+    const [filterDuocBV, setFilterDuocBV] = useState({id:0, name:''});
+
+
+
+
+
+
+
     // FILTER VARIABLE
     const [filterDalieu, setFilterDalieu] = useState(true);
 
@@ -50,7 +58,7 @@ function TonTheoKho({ site }) {
         const filterData = pharmars.filter((item) => {
             // Initialize match to true
             let matchesAllFilters = true;
-    
+
             // Iterate through each filter in the list
             filterList.forEach(filter => {
                 if (filter.id === 'dalieu' && filter.value === true) {
@@ -64,13 +72,13 @@ function TonTheoKho({ site }) {
                 }
                 // Add more conditions for other filters here
             });
-    
+
             return matchesAllFilters;
         });
-    
+
         return filterData;
     };
-    
+
 
 
 
@@ -86,17 +94,17 @@ function TonTheoKho({ site }) {
             setPharmars(data);
 
             setViewDatas(filter);
-        //     if (searchTerm === '') {
-        //         setViewDatas(pharmars);
-        //     }
-        //     else {
-        //         const filedata = pharmars.filter((item) =>
-        //         (item.mabd.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        //             item.tenbd.toLowerCase().includes(searchTerm.toLowerCase()))
+            //     if (searchTerm === '') {
+            //         setViewDatas(pharmars);
+            //     }
+            //     else {
+            //         const filedata = pharmars.filter((item) =>
+            //         (item.mabd.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            //             item.tenbd.toLowerCase().includes(searchTerm.toLowerCase()))
 
-        //         );
-        //         setViewDatas(filedata);
-        //     }
+            //         );
+            //         setViewDatas(filedata);
+            //     }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -152,7 +160,13 @@ function TonTheoKho({ site }) {
                         />
 
                     </div>
-                    <Filter filter={filterList} setFilter={setFilterList} />
+                    <Filter 
+                    site={site} 
+                    filter={filterList} 
+                    setFilter={setFilterList}
+                    setFilterDuocBV={setFilterDuocBV}
+                    
+                    />
 
                     <ViewButton onClick={onClick} />
                 </div>
@@ -195,12 +209,15 @@ function TonTheoKho({ site }) {
 
                                 <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200" >
                                     <td>
-                                        <button tooltip="Đa liều">
-                                            {item.dalieu === 1 ?
-                                                <FaBottleDroplet className="text-green-700" /> :
-                                                <CiPill tooltip="" />
-                                            }
-                                        </button>
+                                        <div className="flex items-center px-1">
+                                            <button tooltip="Đa liều">
+                                                {item.dalieu === 1 ?
+                                                    <FaBottleDroplet className="text-green-700" /> :
+                                                    <CiPill className="text-red-700" />
+                                                }
+                                            </button>
+                                        </div>
+
 
 
 

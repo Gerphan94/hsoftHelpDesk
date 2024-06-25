@@ -129,6 +129,7 @@
 .btnNotAllowed {
     background-color: rgb(115, 119, 123);
     box-shadow: rgb(115, 119, 123) 0px 4px 0px 0px;
+    cursor: not-allowed;
 }
 
 .btnNotAllowed::before {

@@ -552,17 +552,33 @@ def error_datkham(site , ngay, upper):
         )
     return jsonify(result)
 
-# DƯỢC
+#################################################################
+# API DƯỢC ######################################################
+# ###############################################################
+
+@app.route('/duoc/dm_duocbv/<site>', methods=['GET'])
+def duoc_dm_duocbv(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    stm = 'SELECT ID, TEN FROM D_NHOMBO ORDER BY ID ASC'
+    
+    duocbvs = cursor.execute(stm).fetchall()
+    for duocbv in duocbvs:
+        result.append({
+            'id': duocbv[0],
+            'name': duocbv[1]
+        })  
+    return jsonify(result)
+
+
 @app.route('/duoc/dmbd/<site>', methods=['GET'])
 def duoc_dmbd(site):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
-    
-    
-    
-    
     return jsonify(result)
 
 @app.route('/duoc/tonkho_ketoa_pk/<site>/<type>', methods=['GET'])
@@ -663,9 +679,6 @@ def duoc_tonkho_theokho(site, idkho):
         for idx, col in  enumerate(col_name):
             obj[col] = data[idx]
         result.append(obj)
-
-    
-
     return jsonify(result), 200
     
     
