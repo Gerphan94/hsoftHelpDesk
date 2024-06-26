@@ -39,16 +39,19 @@ const ButtonMenu = ({ data, setSelectedOption }) => {
     }, [isDropdownOpen]);
 
     return (
-        <div className='w-10 items-center inline-block' ref={dropdownRef}>
+        <div className='w-20 items-center inline-block' ref={dropdownRef}>
             <div className="relative inline-block w-full">
                 <div className='flex items-center'>
-                   <button className='w-full h-full p-1'>
+                   <button className='w-8 h-full p-1'
+                   onClick={toggleDropdown}>
                     <RiAlignJustify className='w-full h-full' />
+
+
                     </button>
                 </div>
 
                 {isDropdownOpen && (
-                    <div className="origin-top-right absolute left-0 mt-2 w-full max-h-96 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
+                    <div className="origin-top-right absolute left-0 mt-2 w-44 max-h-96 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
                         <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu" className='pb-2'>
                             {data.map((item) => (
                                 <li>

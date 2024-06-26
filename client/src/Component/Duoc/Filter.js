@@ -110,12 +110,12 @@ function Filter({ site, filter, setFilter, setFilterDuocBV }) {
                                     </div>
                                 ))}
                             </div>
-                            <div className="border rounded-xl p-3">
+                            {/* <div className="border rounded-xl p-3">
                                 <div className="flex gap-2">
                                     <label className="w-40">Dược BV</label>
                                     <Dropdown data={duocbvs} setSelectedOption={setFilterDuocBV} />
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="flex gap-4 mt-2">
                                 {count === 0 ?
                                     <button className={`${styles.btn} ${styles.btnNotAllowed}`}>Apply</button>

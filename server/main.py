@@ -662,10 +662,10 @@ def duoc_tonkho_theokho(site, idkho):
     
     result = []
     
-    col_name = ['id', 'mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slycau', 'tonkhadung', 'dalieu']
+    col_name = ['id', 'mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slycau', 'tonkhadung', 'dalieu', 'duocbvid']
     
     stm = f'''
-        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU
+        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO
         FROM HSOFTTAMANH0624.D_TONKHOTH A 
         INNER JOIN D_DMKHO B ON A.MAKHO = B.ID
         INNER JOIN D_DMBD C ON A.MABD = C.ID
@@ -726,6 +726,55 @@ def tonbhyt(site):
         })
 
     return jsonify(result)
+
+# ############################################################
+# VIỆN PHÍ ###################################################
+# ############################################################
+
+
+@app.route('/vienphi/nhomnbhyt/<site>/', methods=['GET'])
+def vienphi_nhomnbhyt(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm = f'SELECT ID, TEN FROM V_NHOMBHYT ORDER BY ID ASC'
+    
+    nhombhyts = cursor.execute(stm).fetchall()
+    for nhombhyt in nhombhyts:
+        result.append({
+            'id': nhombhyt[0],
+            'name': nhombhyt[1]
+        })  
+    return jsonify(result)
+
+
+
+@app.route('/vienphi/dmgiavp/<site>/<idnhom>', methods=['GET'])
+def vienphi_dmgiavp(site, idnhom):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    
+    result = []
+    col_name = ['id', 'mavp', 'ten', 'dvt', 'bhyt', 'giath', 'giabh', 'giadv', 'trongoi']
+    
+    stm = f'''
+    SELECT A.ID, A.ID_LOAI, A.TEN, A.DVT, A.BHYT, A.GIA_TH , A.GIA_BH , A.GIA_DV, A.TRONGOI FROM V_GIAVP A WHERE A.HIDE = {hide} ORDER BY A.ID ASC
+    
+    '''
+    
+    giavps = cursor.execute(stm).fetchall()
+    for giavp in giavps:
+        obj = {}
+        for idx, col in  enumerate(col_name):
+            obj[col] = giavp[idx]
+        result.append(obj)
+    return jsonify(result)    
+
+
+
 
 # DANH MỤC
 

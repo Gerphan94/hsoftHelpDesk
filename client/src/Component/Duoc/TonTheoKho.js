@@ -6,6 +6,9 @@ import PharmarDetailModal from "./PharmarDetailModal";
 import DDDropdown from "./DDDropdown";
 import { FaBottleDroplet } from "react-icons/fa6";
 import Filter from "./Filter";
+import { TbCircleLetterK } from "react-icons/tb";
+
+
 
 function TonTheoKho({ site }) {
 
@@ -25,7 +28,8 @@ function TonTheoKho({ site }) {
     const [filterList, setFilterList] = useState([
         { id: 'dalieu', name: 'Đa liều', value: false },
         { id: 'bhyt', name: 'BHYT', value: false },
-        { id: 'notbhyt', name: 'Không BHYT', value: false }
+        { id: 'notbhyt', name: 'Không BHYT', value: false },
+        { id: 'khangsinh', name: 'Kháng sinh', value: false }
 
     ])
 
@@ -70,6 +74,10 @@ function TonTheoKho({ site }) {
                 if (filter.id === 'notbhyt' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.bhyt === 0;
                 }
+                if (filter.id === 'khangsinh' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.duocbvid === 3;
+                }
+
                 // Add more conditions for other filters here
             });
 
@@ -79,11 +87,6 @@ function TonTheoKho({ site }) {
         return filterData;
     };
 
-
-
-
-
-
     const getPharmars = async () => {
         try {
             const fecthURL = apiURL + "duoc/tonkho/theokho/" + site + "/" + selectedKho.id;
@@ -92,7 +95,6 @@ function TonTheoKho({ site }) {
             const data = await response.json();
             // console.log(data)
             setPharmars(data);
-
             setViewDatas(filter);
             //     if (searchTerm === '') {
             //         setViewDatas(pharmars);
@@ -217,10 +219,6 @@ function TonTheoKho({ site }) {
                                                 }
                                             </button>
                                         </div>
-
-
-
-
                                     </td>
                                     <td className="text-center">{index + 1}</td>
                                     <td className="text-left">{item.mabd}</td>

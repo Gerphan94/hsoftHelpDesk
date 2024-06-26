@@ -75,7 +75,7 @@ function MainPage() {
                             {selectedFunc === 'noitru' && <NoiTru site={site.id} />}
                             {selectedFunc === 'datkham' && <DatKham site={site.id} />}
                             {selectedFunc === 'duoc' && <Duoc site={site.id} />}
-                            {selectedFunc === 'danhmuc' && <DanhMuc />}
+                            {selectedFunc === 'danhmuc' && <DanhMuc site={site.id} />}
                             {selectedFunc === 99 && <SQLCol />}
                             {selectedFunc === 999 && <KPI />}
                         </div>

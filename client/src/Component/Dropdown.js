@@ -71,12 +71,12 @@ const Dropdown = ({ data, setSelectedOption, searchable=true, placeholder='---' 
                         spellCheck={false}
                         readOnly={!searchable}
                     />
-                    <button
+                    <div
                         className="h-full px-2 py-1  border border-l-0 group-hover:border-blue-200 "
                         onClick={toggleDropdown}
                     >
                         <FaAngleDown className="h-5 w-5 text-gray-500 group-hover:text-blue-200 " />
-                    </button>
+                    </div>
                 </div>
 
                 {isDropdownOpen && (
