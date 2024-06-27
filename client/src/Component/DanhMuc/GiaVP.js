@@ -24,6 +24,19 @@ function GiaVP( { site } ) {
 
     }, []);
 
+    const handleClickView = async () => {
+        try {
+            const fecthURL = apiURL + "vienphi/giavp/" + site + "/" + nhombhyt.id;
+            const response = await fetch(fecthURL);
+            const data = await response.json();
+            console.log(data);
+            setGiavps(data);
+            
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    }
+
 
     return(
         <>
@@ -31,7 +44,7 @@ function GiaVP( { site } ) {
             <div className="p-2 flex gap-2 items-center w-[500px]">
                 <label>Nhóm: </label>
                 <Dropdown data={nhombhytys} setSelectedOption={setNhombhyt} />
-                <ViewButton onClick={() => {}} />
+                <ViewButton onClick={() => {handleClickView()}} />
             </div>
         </div>
         

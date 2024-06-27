@@ -1,17 +1,26 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FaAngleDown } from "react-icons/fa6";
 
-const Dropdown = ({ data, setSelectedOption, searchable=true, placeholder='---' }) => {
+const Dropdown = ({ data, setSelectedOption, searchable=true, placeholder='---', firstChoose=false }) => {
 
+    console.log(data)
     const [viewData, setViewData] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
 
     const dropdownRef = useRef(null);
+    
 
     useEffect(() => {
         setViewData(data);
     }, [data]);
+
+    useEffect(() => {
+        if (firstChoose && data.length > 0) {
+            setSelectedOption({ id: data[0].id, name: data[0].name });
+            setSearchTerm(data[0].name)
+        }
+    }, [data, setSelectedOption]);
 
     const toggleDropdown = () => {
         setIsDropdownOpen(!isDropdownOpen);

@@ -78,6 +78,7 @@
     transition: all 0.3s ease-in-out;
     z-index: 0;
     overflow: hidden;
+    user-select: none;
 }
 
 .btn::before {

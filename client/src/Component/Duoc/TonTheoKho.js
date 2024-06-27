@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Dropdown from "../Dropdown";
 import ViewButton from "../Button/ViewButton";
-import { CiPill } from "react-icons/ci";
 import PharmarDetailModal from "./PharmarDetailModal";
-import DDDropdown from "./DDDropdown";
-import { FaBottleDroplet } from "react-icons/fa6";
 import Filter from "./Filter";
-import { TbCircleLetterK } from "react-icons/tb";
-
-
+import Table from "./Table";
 
 function TonTheoKho({ site }) {
 
@@ -17,7 +12,6 @@ function TonTheoKho({ site }) {
     const [khoList, setKhoList] = useState([]);
     const [selectedKho, setSelectedKho] = useState({ id: 0, name: '' });
 
-    const [selectedBHYTLevel, setSelectedBHYTLevel] = useState(0);
     const [pharmars, setPharmars] = useState([]);
     const [selectedPharmarId, setSelectedPharmarId] = useState(0);
     const [isShowModal, setIsShowModal] = useState(false);
@@ -29,21 +23,11 @@ function TonTheoKho({ site }) {
         { id: 'dalieu', name: 'Đa liều', value: false },
         { id: 'bhyt', name: 'BHYT', value: false },
         { id: 'notbhyt', name: 'Không BHYT', value: false },
-        { id: 'khangsinh', name: 'Kháng sinh', value: false }
-
+        { id: 'khangsinh', name: 'Kháng sinh', value: false },
+        { id: 'khangsinhchungatc', name: 'Kháng sinh cùng atc', value: false }
     ])
 
-    const [filterDuocBV, setFilterDuocBV] = useState({id:0, name:''});
-
-
-
-
-
-
-
-    // FILTER VARIABLE
-    const [filterDalieu, setFilterDalieu] = useState(true);
-
+    const [selectedAtc, setSelectedAtc] = useState({id:'', name: ''});
 
 
     useEffect(() => async () => {
@@ -76,6 +60,9 @@ function TonTheoKho({ site }) {
                 }
                 if (filter.id === 'khangsinh' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.duocbvid === 3;
+                }
+                if (filter.id === 'khangsinhchungatc' && filter.value === true) {
+                    matchesAllFilters = matchesAllFilters && item.duocbvid === 3 && item.atc === selectedAtc.id;
                 }
 
                 // Add more conditions for other filters here
@@ -162,12 +149,13 @@ function TonTheoKho({ site }) {
                         />
 
                     </div>
-                    <Filter 
-                    site={site} 
-                    filter={filterList} 
-                    setFilter={setFilterList}
-                    setFilterDuocBV={setFilterDuocBV}
-                    
+                    <Filter
+                        idkho={selectedKho.id}
+                        site={site}
+                        filter={filterList}
+                        setFilter={setFilterList}
+                        setSelectedAtc={setSelectedAtc}
+
                     />
 
                     <ViewButton onClick={onClick} />
@@ -180,73 +168,12 @@ function TonTheoKho({ site }) {
                     spellCheck="false"
                     onChange={handleSearch}
                 />
+                {selectedAtc.id}
             </div>
 
             {/* Table */}
             <div>
-                <div className="mt-2 w-full lg:h-[720px] overflow-y-auto" >
-                    <table className="w-full">
-                        <thead className="sticky top-0 z-80">
-                            <tr className="bg-gray-200">
-                                <th></th>
-
-                                <th className="text-center w-10"><div className="py-1 text-center">STT</div></th>
-                                <th className="w-24"><div className="">Mã BD</div></th>
-                                <th className="w-[600px]"><div>Tên BD</div></th>
-                                <th><div className="text-left w-20">DVT-DVD</div></th>
-                                <th><div>Đường dùng</div></th>
-                                <th><div className="text-right">BHYT</div></th>
-                                <th><div className="text-right w-20">Tồn đầu</div></th>
-                                <th><div className="text-right w-20">Nhập</div></th>
-                                <th><div className="text-right w-20">Xuất</div></th>
-                                <th><div className="text-right w-20">Tồn cuối</div></th>
-                                <th><div className="text-right w-20">SLYC</div></th>
-                                <th><div className="text-right w-20">SLKD</div></th>
-                                <th><div className="text-center w-20">TồnBH</div></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-
-                            {viewDatas.map((item, index) => (
-
-                                <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200" >
-                                    <td>
-                                        <div className="flex items-center px-1">
-                                            <button tooltip="Đa liều">
-                                                {item.dalieu === 1 ?
-                                                    <FaBottleDroplet className="text-green-700" /> :
-                                                    <CiPill className="text-red-700" />
-                                                }
-                                            </button>
-                                        </div>
-                                    </td>
-                                    <td className="text-center">{index + 1}</td>
-                                    <td className="text-left">{item.mabd}</td>
-                                    <td
-                                        className="text-left hover:underline hover:text-blue-600"
-                                        onClick={() => onClickPharmar(item.id)}
-                                    >{item.tenbd}</td>
-                                    <td className="text-left">{item.dvt} - {item.dvd}</td>
-                                    <td className="text-left">
-                                        {item.duongdung}
-
-
-                                    </td>
-                                    <td className="text-center">{item.bhyt}</td>
-                                    <td className="text-right">{item.tondau}</td>
-                                    <td className="text-right">{item.slnhap}</td>
-                                    <td className="text-right">{item.slxuat}</td>
-                                    <td className="text-right">{item.toncuoi}</td>
-                                    <td className="text-right">{item.slycau}</td>
-                                    <td className="text-right">{item.tonkhadung}</td>
-                                    <td></td>
-                                </tr>
-                            ))}
-
-                        </tbody>
-                    </table>
-                </div>
-
+                <Table data={viewDatas} onClickPharmar={onClickPharmar} />
             </div>
 
             {isShowModal && <PharmarDetailModal site={site} pharmarId={selectedPharmarId} setModalShow={setIsShowModal} />}

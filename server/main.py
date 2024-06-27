@@ -15,11 +15,10 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 #     dsn="hsoft-dev.vdc.tahcm.vn/dev3")
 
 
-def init_current_schema():
-    
+def schema():
     inow = datetime.now()
-    
-    print(inow)
+    format_string = inow.strftime('%Y%m%d')
+    print(format_string)
     return
 
 def conn_info(env):
@@ -581,6 +580,31 @@ def duoc_dmbd(site):
     result = []
     return jsonify(result)
 
+@app.route('/duoc/dup_act/<site>/<idkho>', methods=['GET'])
+def duoc_dup_act(site, idkho):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm =f'''
+        SELECT B.MAATC AS ID, B.MAATC AS NAME
+        FROM hsofttamanh0624.D_TONKHOTH A
+        INNER JOIN D_DMBD B ON A.MABD = B.ID 
+        WHERE A.MAKHO = {idkho}
+        GROUP BY MAATC
+        HAVING COUNT(MAATC) > 1
+    '''
+    
+    ATCS = cursor.execute(stm).fetchall()
+    for ATC in ATCS:
+        result.append({
+            'id': ATC[0],
+            'name': ATC[1]
+        }) 
+    return jsonify(result)
+
+
 @app.route('/duoc/tonkho_ketoa_pk/<site>/<type>', methods=['GET'])
 def tonkho_ketoa_pk(site, type):
     cn = conn_info(site)
@@ -618,7 +642,6 @@ def tonkho_ketoa_pk(site, type):
     return jsonify(result), 200
     
 
-
 @app.route('/duoc/tonkho/<site>/<id_nhom>', methods=['GET'])
 def duoc_tonkho(site, id_nhom):
     cn = conn_info(site)
@@ -634,9 +657,7 @@ def duoc_tonkho_theokho_dskho(site):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
-    
     result = []
-    
     hcm_kho_ids = "4, 90, 91, 89, 2, 102, 104"
     
     if (site == 'HCM_DEV'):
@@ -645,7 +666,7 @@ def duoc_tonkho_theokho_dskho(site):
         kho_ids = hcm_kho_ids
         
     stm = f'''SELECT ID, TEN FROM D_DMKHO WHERE id IN ({kho_ids})'''
-        
+    schemaa = schema()
     khos = cursor.execute(stm).fetchall()
     for kho in khos:
         result.append({
@@ -662,12 +683,11 @@ def duoc_tonkho_theokho(site, idkho):
     
     result = []
     
-    col_name = ['id', 'mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slycau', 'tonkhadung', 'dalieu', 'duocbvid']
+    col_name = ['id', 'mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slycau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc']
     
     stm = f'''
-        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO
+        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC
         FROM HSOFTTAMANH0624.D_TONKHOTH A 
-        INNER JOIN D_DMKHO B ON A.MAKHO = B.ID
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
         WHERE A.MAKHO = {idkho}
@@ -751,7 +771,7 @@ def vienphi_nhomnbhyt(site):
 
 
 
-@app.route('/vienphi/dmgiavp/<site>/<idnhom>', methods=['GET'])
+@app.route('/vienphi/giavp/<site>/<idnhom>', methods=['GET'])
 def vienphi_dmgiavp(site, idnhom):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
@@ -761,8 +781,10 @@ def vienphi_dmgiavp(site, idnhom):
     col_name = ['id', 'mavp', 'ten', 'dvt', 'bhyt', 'giath', 'giabh', 'giadv', 'trongoi']
     
     stm = f'''
-    SELECT A.ID, A.ID_LOAI, A.TEN, A.DVT, A.BHYT, A.GIA_TH , A.GIA_BH , A.GIA_DV, A.TRONGOI FROM V_GIAVP A WHERE A.HIDE = {hide} ORDER BY A.ID ASC
-    
+    SELECT A.ID, A.ID_LOAI, A.TEN, A.DVT, A.BHYT, A.GIA_TH , A.GIA_BH , A.GIA_DV, A.TRONGOI
+    FROM V_GIAVP A 
+    INNER JOIN V_LOAIVP B ON A.ID_LOAI = B.ID
+    WHERE B.ID_NHOM = {idnhom} AND A.HIDE = 0
     '''
     
     giavps = cursor.execute(stm).fetchall()

@@ -3,11 +3,12 @@ import { MdFilterAlt, MdFilterAltOff } from "react-icons/md";
 import Dropdown from "../Dropdown";
 import styles from "../styles.module.css"
 
-function Filter({ site, filter, setFilter, setFilterDuocBV }) {
+function Filter({ idkho, site, filter, setFilter, setSelectedAtc }) {
 
     const apiURL = process.env.REACT_APP_API_URL;
-
+    console.log(idkho)
     const [duocbvs, setDuocbvs] = useState([]);
+    const [atcs, setAtcs] = useState([]);
 
     useEffect(() => {
         const getDuocbvs = async () => {
@@ -18,7 +19,16 @@ function Filter({ site, filter, setFilter, setFilterDuocBV }) {
         getDuocbvs();
     }, [site]);
 
+    useEffect(() => {
+        const getACTs = async () => {
+            const response = await fetch(`${apiURL}duoc/dup_act/${site}/${idkho}`);
+            const data = await response.json();
+            console.log("ACTS", data);
+            setAtcs(data);
+        };
+        getACTs();
 
+    }, [idkho]);
 
 
     const [count, setCount] = useState(0);
@@ -27,7 +37,10 @@ function Filter({ site, filter, setFilter, setFilterDuocBV }) {
     const [filterDuocBvId, setFilterDuocBvId] = useState(null);
 
     const toggleDropdown = () => {
-        setIsOpen(!isOpen);
+        if (idkho !== 0) {
+            setIsOpen(!isOpen);
+
+        }
     };
 
     const handleClickOutside = (event) => {
@@ -107,6 +120,20 @@ function Filter({ site, filter, setFilter, setFilterDuocBV }) {
                                             onChange={() => handleChange(item)}
                                         />
                                         <label className="select-none" htmlFor={item.id}>{item.name}</label>
+                                        {item.id === 'khangsinhchungatc' &&
+
+                                            <div className="w-32">
+                                                <Dropdown
+                                                    searchable={false}
+                                                    data={atcs}
+                                                    setSelectedOption={setSelectedAtc}
+                                                    firstChoose={true}
+
+                                                />
+                                            </div>
+                                        }
+
+
                                     </div>
                                 ))}
                             </div>
@@ -123,7 +150,7 @@ function Filter({ site, filter, setFilter, setFilterDuocBV }) {
                                     <button className={`${styles.btn} ${styles.btnOk}`} onClick={() => onClickApply()}>Apply</button>
                                 }
                                 <button className={`${styles.btn} ${styles.btnClose}`} onClick={() => onClickClear()}>Clear</button>
-                              
+
                             </div>
 
 
