@@ -3,21 +3,26 @@ import { MdFilterAlt, MdFilterAltOff } from "react-icons/md";
 import Dropdown from "../Dropdown";
 import styles from "../styles.module.css"
 
-function Filter({ idkho, site, filter, setFilter, setSelectedAtc }) {
+function Filter({ idkho, site, filter, setFilter, setSelectedAtc, setTyleBH }) {
 
     const apiURL = process.env.REACT_APP_API_URL;
     console.log(idkho)
-    const [duocbvs, setDuocbvs] = useState([]);
     const [atcs, setAtcs] = useState([]);
 
-    useEffect(() => {
-        const getDuocbvs = async () => {
-            const response = await fetch(`${apiURL}duoc/dm_duocbv/${site}`);
-            const data = await response.json();
-            setDuocbvs(data);
-        };
-        getDuocbvs();
-    }, [site]);
+    const tyleBHYTs = [
+        {id: '100', name :'100'},
+        {id: '0', name :'0'},
+        {id: '1', name :'Other'}
+    ];
+
+    // useEffect(() => {
+    //     const getDuocbvs = async () => {
+    //         const response = await fetch(`${apiURL}duoc/dm_duocbv/${site}`);
+    //         const data = await response.json();
+    //         setDuocbvs(data);
+    //     };
+    //     getDuocbvs();
+    // }, [site]);
 
     useEffect(() => {
         const getACTs = async () => {
@@ -111,7 +116,7 @@ function Filter({ idkho, site, filter, setFilter, setSelectedAtc }) {
                         <div className="border p-4 origin-top-right absolute left-0 mt-2 w-[600px] shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 min-h-10">
                             <div>
                                 {filter.map((item) => (
-                                    <div className="w-full px-2 py-1 flex gap-1 items-center">
+                                    <div className="w-full px-2 py-2 flex gap-1 items-center">
                                         <input
                                             id={item.id}
                                             name={item.id}
@@ -121,7 +126,6 @@ function Filter({ idkho, site, filter, setFilter, setSelectedAtc }) {
                                         />
                                         <label className="select-none" htmlFor={item.id}>{item.name}</label>
                                         {item.id === 'khangsinhchungatc' &&
-
                                             <div className="w-32">
                                                 <Dropdown
                                                     searchable={false}
@@ -133,7 +137,16 @@ function Filter({ idkho, site, filter, setFilter, setSelectedAtc }) {
                                             </div>
                                         }
 
-
+                                        {/* {item.id === 'bhyt' &&
+                                            <div className="w-32">
+                                                 <Dropdown
+                                                    searchable={false}
+                                                    data={tyleBHYTs}
+                                                    setSelectedOption={setTyleBH}
+                                                    firstChoose={true}
+                                                    />
+                                                </div>
+                                        } */}
                                     </div>
                                 ))}
                             </div>

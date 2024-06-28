@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FaAngleDown } from "react-icons/fa6";
 
-const Dropdown = ({ data, setSelectedOption, searchable=true, placeholder='---', firstChoose=false }) => {
+const Dropdown = ({ data, setSelectedOption, searchable = true, placeholder = '', firstChoose = false }) => {
 
     console.log(data)
     const [viewData, setViewData] = useState([]);
@@ -9,7 +9,7 @@ const Dropdown = ({ data, setSelectedOption, searchable=true, placeholder='---',
     const [searchTerm, setSearchTerm] = useState('');
 
     const dropdownRef = useRef(null);
-    
+
 
     useEffect(() => {
         setViewData(data);
@@ -68,9 +68,9 @@ const Dropdown = ({ data, setSelectedOption, searchable=true, placeholder='---',
     return (
         <div className='w-full h-full inline-block text-left' ref={dropdownRef}>
             <div className="relative inline-block w-full">
-                <div className='group flex'>
+                <div className='relative group'>
                     <input
-                        className="border border-r-0 outline-none h-full w-full py-1 px-2 text-[#0C1844] group-hover:border-blue-200 "
+                        className="border outline-none h-full w-full py-1 px-2 text-[#0C1844] group-hover:border-blue-200 "
                         value={searchTerm}
                         onClick={toggleDropdown}
                         onChange={handleChange}
@@ -81,7 +81,7 @@ const Dropdown = ({ data, setSelectedOption, searchable=true, placeholder='---',
                         readOnly={!searchable}
                     />
                     <div
-                        className="h-full px-2 py-1  border border-l-0 group-hover:border-blue-200 "
+                        className="absolute inset-y-0 right-0 pr-3  px-2 py-1 group-hover:border-blue-200 "
                         onClick={toggleDropdown}
                     >
                         <FaAngleDown className="h-5 w-5 text-gray-500 group-hover:text-blue-200 " />
@@ -90,8 +90,34 @@ const Dropdown = ({ data, setSelectedOption, searchable=true, placeholder='---',
 
                 {isDropdownOpen && (
                     <div className="origin-top-right absolute left-0 mt-2 w-full max-h-96 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
-                        <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu" className='pb-2'>
-                            {viewData.map((item) => (
+                        <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu">
+                            {viewData.length === 0 ?
+                                <li className="">
+                                    <button
+                                            className="w-full text-left block px-4 py-2 text-sm text-[#0C1844] hover:bg-gray-100 select-none"
+                                        >
+                                            None
+                                        </button>
+
+
+                                </li> :
+                                viewData.map((item) => (
+                                    <li key={item.id}>
+                                        <button
+                                            className="w-full text-left block px-4 py-2 text-sm text-[#0C1844] hover:bg-[#667BC6] select-none"
+                                            onClick={() => handleClick(item.id, item.name)}
+                                        >
+                                            {item.name}
+                                        </button>
+                                    </li>
+                                ))
+
+
+
+                            }
+
+
+                            {/* {viewData.map((item) => (
                                 <li key={item.id}>
                                     <button
                                         className="w-full text-left block px-4 py-2 text-sm text-[#0C1844] hover:bg-gray-100 select-none"
@@ -100,7 +126,7 @@ const Dropdown = ({ data, setSelectedOption, searchable=true, placeholder='---',
                                         {item.name}
                                     </button>
                                 </li>
-                            ))}
+                            ))} */}
                         </ul>
                     </div>
                 )}

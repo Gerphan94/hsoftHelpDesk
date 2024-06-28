@@ -12,17 +12,17 @@ function TonKhoKeToa({ site, type }) {
     const [searchTerm, setSearchTerm] = useState('');
 
     const handeleView = async () => {
+        console.log("Start view....")
         try {
             const fecthURL = apiURL + "/duoc/tonkho_ketoa_pk/" + site + "/" + type;
             const response = await fetch(fecthURL);
             const data = await response.json();
             setPharmars(data);
-
             if (searchTerm === '') {
-                setViewDatas(pharmars);
+                setViewDatas(data);
             }
             else {
-                const filedata = pharmars.filter((item) =>
+                const filedata = data.filter((item) =>
                     item.mabd.toLowerCase().includes(searchTerm.toLowerCase()) || item.tenbd.toLowerCase().includes(searchTerm.toLowerCase())
                 );
                 setViewDatas(filedata);

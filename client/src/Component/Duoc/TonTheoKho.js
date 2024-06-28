@@ -19,14 +19,15 @@ function TonTheoKho({ site }) {
 
     const [viewDatas, setViewDatas] = useState([]);
 
+
+    // FILTER
     const [filterList, setFilterList] = useState([
         { id: 'dalieu', name: 'Đa liều', value: false },
         { id: 'bhyt', name: 'BHYT', value: false },
-        { id: 'notbhyt', name: 'Không BHYT', value: false },
         { id: 'khangsinh', name: 'Kháng sinh', value: false },
         { id: 'khangsinhchungatc', name: 'Kháng sinh cùng atc', value: false }
     ])
-
+    const [tyleBH, setTyleBH] = useState({id: '100', name: '100'});
     const [selectedAtc, setSelectedAtc] = useState({id:'', name: ''});
 
 
@@ -53,7 +54,16 @@ function TonTheoKho({ site }) {
                     matchesAllFilters = matchesAllFilters && item.dalieu === 1;
                 }
                 if (filter.id === 'bhyt' && filter.value === true) {
-                    matchesAllFilters = matchesAllFilters && item.bhyt > 0;
+                    if (tyleBH.id === 100) {
+                        matchesAllFilters = matchesAllFilters && item.bhyt === 100;
+                    }
+                    else if (tyleBH.id === 0) {
+                        matchesAllFilters = matchesAllFilters && item.bhyt === 0;
+                    }
+                    else {
+                        matchesAllFilters = matchesAllFilters && item.bhyt > 0;
+                    }
+                    
                 }
                 if (filter.id === 'notbhyt' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.bhyt === 0;
@@ -64,6 +74,12 @@ function TonTheoKho({ site }) {
                 if (filter.id === 'khangsinhchungatc' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.duocbvid === 3 && item.atc === selectedAtc.id;
                 }
+
+
+                
+
+
+
 
                 // Add more conditions for other filters here
             });
@@ -155,6 +171,7 @@ function TonTheoKho({ site }) {
                         filter={filterList}
                         setFilter={setFilterList}
                         setSelectedAtc={setSelectedAtc}
+                        setTyleBH={setTyleBH}
 
                     />
 
@@ -173,7 +190,7 @@ function TonTheoKho({ site }) {
 
             {/* Table */}
             <div>
-                <Table data={viewDatas} onClickPharmar={onClickPharmar} />
+                <Table data={viewDatas} setIsShowModal={setIsShowModal} setSelectedPharmarId={setSelectedPharmarId} />
             </div>
 
             {isShowModal && <PharmarDetailModal site={site} pharmarId={selectedPharmarId} setModalShow={setIsShowModal} />}

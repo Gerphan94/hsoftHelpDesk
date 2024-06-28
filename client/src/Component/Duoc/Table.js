@@ -1,19 +1,24 @@
 import React from "react";
-import { FaBottleDroplet } from "react-icons/fa6";
+import { FaBottleDroplet, FaJar } from "react-icons/fa6";
 import { CiPill } from "react-icons/ci";
 import { TbCircleLetterK } from "react-icons/tb";
 
+import { FaPills } from "react-icons/fa6";
+import { MdMoreHoriz } from "react-icons/md";
+import { GiDrippingTube } from "react-icons/gi";
+import { GiPorcelainVase } from "react-icons/gi";
 
+import ItemComponent from "./TableIconComponent";
 
-function Table({ data }) {
+function Table({ data, setIsShowModal, setSelectedPharmarId }) {
 
     const onClickPharmar = (pharmarid) => {
-
+        setSelectedPharmarId(pharmarid);
+        setIsShowModal(true);
     }
-
     return (
         <>
-            <div className="mt-2 w-full lg:h-[720px] overflow-y-auto" >
+            <div className="mt-2 w-full lg:h-[700px] overflow-y-auto" >
                 <table className="w-full">
                     <thead className="sticky top-0 z-80">
                         <tr className="bg-gray-200">
@@ -22,7 +27,7 @@ function Table({ data }) {
                             <th className="text-center w-10"><div className="py-1 text-center">STT</div></th>
                             <th className="w-24"><div className="">Mã BD</div></th>
                             <th className="w-[600px]"><div>Tên BD</div></th>
-                            <th><div className="text-left w-20">DVT-DVD</div></th>
+                            <th><div className="text-left w-20">DVD</div></th>
                             <th><div className="w-28">Đường dùng</div></th>
                             <th><div className="w-28">ATC</div></th>
                             <th><div className="text-right">BHYT</div></th>
@@ -39,9 +44,9 @@ function Table({ data }) {
 
                         {data.map((item, index) => (
 
-                            <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200" >
+                            <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200 text-sm" >
                                 <td>
-                                    <div className="flex items-center gap-0.5 px-1">
+                                    <div className="flex items-center gap-0.5 px-1 py-1">
                                         <button tooltip="Đa liều">
                                             {item.dalieu === 1 ?
                                                 <FaBottleDroplet className="text-green-700" /> :
@@ -51,9 +56,7 @@ function Table({ data }) {
                                         <button>
                                             {item.duocbvid === 3 ?
                                                 <TbCircleLetterK className="text-orange-700" /> : ''}
-
                                         </button>
-
                                     </div>
                                 </td>
                                 <td className="text-center">{index + 1}</td>
@@ -61,8 +64,15 @@ function Table({ data }) {
                                 <td
                                     className="text-left hover:underline hover:text-blue-600"
                                     onClick={() => onClickPharmar(item.id)}
-                                >{item.tenbd}</td>
-                                <td className="text-left">{item.dvt} - {item.dvd}</td>
+                                >
+                                    <div className="flex gap-1 items-center">
+                                        <div className="mr-2">
+                                            <ItemComponent dvt={item.dvt} />
+                                        </div>
+                                        <div> {item.tenbd}</div>
+                                    </div>
+                                </td>
+                                <td className="text-left">{item.dvd}</td>
                                 <td>
                                     <div className="w-28 text-left truncate ...">
                                         {item.duongdung}
