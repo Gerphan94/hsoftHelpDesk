@@ -15,11 +15,16 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 #     dsn="hsoft-dev.vdc.tahcm.vn/dev3")
 
 
+medicine_cols = ['id', 'mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slycau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc']
+
+
 def schema():
     inow = datetime.now()
-    format_string = inow.strftime('%Y%m%d')
+    format_string = inow.strftime('%m%Y')
     print(format_string)
-    return
+    return format_string
+
+a =  schema()
 
 def conn_info(env):
    
@@ -555,6 +560,7 @@ def error_datkham(site , ngay, upper):
 # API DƯỢC ######################################################
 # ###############################################################
 
+
 @app.route('/duoc/dm_duocbv/<site>', methods=['GET'])
 def duoc_dm_duocbv(site):
     cn = conn_info(site)
@@ -570,6 +576,8 @@ def duoc_dm_duocbv(site):
             'name': duocbv[1]
         })  
     return jsonify(result)
+
+
 
 
 @app.route('/duoc/dmbd/<site>', methods=['GET'])
@@ -746,6 +754,68 @@ def tonbhyt(site):
         })
 
     return jsonify(result)
+
+# TỦ TRỰC
+
+
+@app.route('/duoc/tutruc/ds_khoaphong/<site>', methods=['GET'])
+def duoc_dm_khoaphong(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm = '''
+        SELECT DISTINCT B.MAKP AS ID , B.TENKP AS NAME 
+        FROM D_DUOCKP A
+        INNER JOIN BTDKP_BV B ON A.MAKP = B.MAKP
+        ORDER BY B.TENKP ASC
+    '''
+    
+    khoaphongs = cursor.execute(stm).fetchall()
+    for khoaphong in khoaphongs:
+        result.append({
+            'id': khoaphong[0],
+            'name': khoaphong[1]
+        })  
+    return jsonify(result)
+
+@app.route('/duoc/tutruc/ds_tutruc/<site>/<makp>', methods=['GET'])
+def duoc_dm_tutruc(site, makp):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    stm = f'SELECT ID, TEN FROM D_DUOCKP WHERE MAKP = {makp}'
+    tutrucs = cursor.execute(stm).fetchall()
+    for tutruc in tutrucs:
+        result.append({
+            'id': tutruc[0],
+            'name': tutruc[1]
+        })  
+    return jsonify(result)  
+
+@app.route('/duoc/tutruc/tontutruc/<site>/<idtutruc>', methods=['GET'])
+def duoc_tontutruc(site, idtutruc):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    stm = f'''
+        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC
+        FROM HSOFTTAMANH0624.D_TUTRUCTH A 
+        INNER JOIN D_DMBD C ON A.MABD = C.ID
+        INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
+        WHERE A.MAKP = {idtutruc}
+    
+    '''
+    datas = cursor.execute(stm).fetchall()
+    for data in datas:
+        obj = {}
+        for idx, col in  enumerate(medicine_cols):
+            obj[col] = data[idx]
+        result.append(obj)
+    return jsonify(result), 200
 
 # ############################################################
 # VIỆN PHÍ ###################################################

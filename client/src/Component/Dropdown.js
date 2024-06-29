@@ -1,24 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { FaAngleDown } from "react-icons/fa6";
 
-const Dropdown = ({ data, setSelectedOption, searchable = true, placeholder = '', firstChoose = false }) => {
+const Dropdown = ({ data, setSelectedOption, searchable = true, placeholder = '', chooseIndex = 0, firstChoose = false }) => {
 
     console.log(data)
     const [viewData, setViewData] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-
     const dropdownRef = useRef(null);
-
 
     useEffect(() => {
         setViewData(data);
     }, [data]);
 
     useEffect(() => {
-        if (firstChoose && data.length > 0) {
-            setSelectedOption({ id: data[0].id, name: data[0].name });
-            setSearchTerm(data[0].name)
+        if (chooseIndex > 0 && data.length > 0) {
+            setSelectedOption({ id: data[chooseIndex-1].id, name: data[chooseIndex-1].name });
+            setSearchTerm(data[chooseIndex-1].name)
         }
     }, [data, setSelectedOption]);
 
@@ -70,7 +68,7 @@ const Dropdown = ({ data, setSelectedOption, searchable = true, placeholder = ''
             <div className="relative inline-block w-full">
                 <div className='relative group'>
                     <input
-                        className="border outline-none h-full w-full py-1 px-2 text-[#0C1844] group-hover:border-blue-200 "
+                        className={`border outline-none h-full w-full py-1 px-2 text-[#0C1844] group-hover:border-blue-200 }`}
                         value={searchTerm}
                         onClick={toggleDropdown}
                         onChange={handleChange}

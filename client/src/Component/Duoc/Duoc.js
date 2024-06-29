@@ -22,7 +22,7 @@ function Duoc({ site }) {
                 {selectedOption.id === 'tonkho_ketoa_bhyt' && <TonKhoKeToa site={site} type={'BHYT'} />}
                 {selectedOption.id === 'tonkho_tonbhyt' && <TonBHYT site={site}/>}
                 {selectedOption.id === 'tonkho_theokho' && <TonTheoKho site={site}/>}
-                {/* {selectedOption.id === 'tonkho_theokho' && <TonTheoKho site={site}/>} */}
+                {selectedOption.id === 'tontutruc' && <TonTuTruc site={site}/>} 
                 {selectedOption.id === 'dmbd' && <DMBD site={site}/>}
             </div>
         </>
