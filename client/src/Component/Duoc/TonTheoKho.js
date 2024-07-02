@@ -4,10 +4,14 @@ import ViewButton from "../Button/ViewButton";
 import PharmarDetailModal from "./PharmarDetailModal";
 import Filter from "./Filter";
 import Table from "./Table";
+import styles from "../styles.module.css";
+
 
 function TonTheoKho({ site }) {
 
     const apiURL = process.env.REACT_APP_API_URL;
+    const [timeoutId, setTimeoutId] = useState(null);
+
 
     const [khoList, setKhoList] = useState([]);
     const [selectedKho, setSelectedKho] = useState({ id: 0, name: '' });
@@ -99,17 +103,6 @@ function TonTheoKho({ site }) {
             // console.log(data)
             setPharmars(data);
             setViewDatas(filter);
-            //     if (searchTerm === '') {
-            //         setViewDatas(pharmars);
-            //     }
-            //     else {
-            //         const filedata = pharmars.filter((item) =>
-            //         (item.mabd.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            //             item.tenbd.toLowerCase().includes(searchTerm.toLowerCase()))
-
-            //         );
-            //         setViewDatas(filedata);
-            //     }
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -125,7 +118,6 @@ function TonTheoKho({ site }) {
 
     useEffect(() => {
         getPharmars();
-
     }, [selectedKho]);
 
 
@@ -136,20 +128,32 @@ function TonTheoKho({ site }) {
 
     // Search
     const handleSearch = (event) => {
-        setSearchTerm(event.target.value);
-        if (event.target.value === '') {
+        const searchvalue = event.target.value;
+        setSearchTerm(searchvalue);
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        if (searchvalue === '') {
             setViewDatas(pharmars);
         }
         else {
-            const filedata = pharmars.filter((item) =>
-                item.mabd.toLowerCase().includes(event.target.value.toLowerCase()) || item.tenbd.toLowerCase().includes(event.target.value.toLowerCase())
-            );
-            setViewDatas(filedata);
+            const newTimeoutId = setTimeout(() => {
+                const filedata = pharmars.filter((item) =>
+                    item.mabd.toLowerCase().includes(searchvalue.toLowerCase()) || item.tenbd.toLowerCase().includes(searchvalue.toLowerCase())
+                );
+                setViewDatas(filedata);
+            }, 1000);
+            setTimeoutId(newTimeoutId);
         }
     };
+    useEffect(() => {
+        return () => {
+            if (timeoutId) {
+                clearTimeout(timeoutId);
+            }
+        };
+    }, [timeoutId]);
 
-
-    // /duoc/tonkho/theokho/dskho/<site>
     return (
         <div className="px-4">
 
@@ -174,8 +178,12 @@ function TonTheoKho({ site }) {
                         setTyleBH={setTyleBH}
 
                     />
+                    
 
-                    <ViewButton onClick={onClick} />
+
+                    <button className={`${styles.btn} ${styles.btnNew }`} onClick={onClick} >
+                        Xem
+                    </button>
                 </div>
                 <input
                     type="text"

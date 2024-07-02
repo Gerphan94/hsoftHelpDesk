@@ -6,6 +6,10 @@ function ViewButton({ onClick }) {
     return (
         <>
             <button
+            
+
+
+
                 type="button"
                 onClick={onClick}
                 class="relative inline-flex w-20 items-center justify-center px-1 py-1  overflow-hidden text-indigo-600 transition duration-300 ease-out border border-blue-500 shadow-md group">

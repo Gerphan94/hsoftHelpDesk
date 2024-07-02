@@ -3,14 +3,31 @@ import { FaBottleDroplet, FaJar } from "react-icons/fa6";
 import { CiPill } from "react-icons/ci";
 import { TbCircleLetterK } from "react-icons/tb";
 
-import { FaPills } from "react-icons/fa6";
-import { MdMoreHoriz } from "react-icons/md";
-import { GiDrippingTube } from "react-icons/gi";
-import { GiPorcelainVase } from "react-icons/gi";
-
 import ItemComponent from "./TableIconComponent";
 
 function Table({ data, setIsShowModal, setSelectedPharmarId }) {
+
+
+    const HighlightText = ({ text, highlight }) => {
+        if (!highlight) {
+          return <div>{text}</div>;
+        }
+        
+        const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+        return (
+          <div>
+            {parts.map((part, index) => 
+              part.toLowerCase() === highlight.toLowerCase() ? (
+                <span key={index} style={{ backgroundColor: 'yellow', fontWeight: 'bold' }}>{part}</span>
+              ) : (
+                part
+              )
+            )}
+          </div>
+        );
+      };
+
+
 
     const onClickPharmar = (pharmarid) => {
         setSelectedPharmarId(pharmarid);
@@ -41,9 +58,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                         </tr>
                     </thead>
                     <tbody>
-
                         {data.map((item, index) => (
-
                             <tr key={item.mabd} className="even:bg-gray-100 hover:bg-blue-200 text-sm" >
                                 <td>
                                     <div className="flex items-center gap-0.5 px-1 py-1">
@@ -83,7 +98,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                 <td className="text-right">{item.tondau}</td>
                                 <td className="text-right">{item.slnhap}</td>
                                 <td className="text-right">{item.slxuat}</td>
-                                <td className="text-right">{item.toncuoi}</td>
+                                <td className={`text-right ${item.toncuoi === 0 ? 'text-red-500 font-bold': ''}`}>{Number(item.toncuoi).toLocaleString()}</td>
                                 <td className="text-right">{item.slycau}</td>
                                 <td className="text-right">{item.tonkhadung}</td>
                                 <td></td>

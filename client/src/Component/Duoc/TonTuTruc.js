@@ -15,14 +15,11 @@ function TonTuTruc({ site }) {
     const [tuTrucList, setTuTrucList] = useState([]);
     const [selectedTuTruc, setSelectedTuTruc] = useState({ id: 0, name: '' });
 
-
     const [medicines, setMedicines] = useState([]);
     const [selectedPharmarId, setSelectedPharmarId] = useState(0);
     const [isShowModal, setIsShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-
     const [viewDatas, setViewDatas] = useState([]);
-
 
     useEffect(() => async () => {
         try {
@@ -54,7 +51,6 @@ function TonTuTruc({ site }) {
     
     const getMedicines = async () => {
         try {
-          
             const response = await fetch(`${apiURL}duoc/tutruc/tontutruc/${site}/${selectedTuTruc.id}`);
             const data = await response.json();
             setMedicines(data);
@@ -70,7 +66,6 @@ function TonTuTruc({ site }) {
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-
     }
 
     const onClick = () => {
@@ -82,14 +77,9 @@ function TonTuTruc({ site }) {
 
     // }, [selectedKho]);
 
-
-    const onClickPharmar = (pharmarid) => {
-        setSelectedPharmarId(pharmarid);
-        setIsShowModal(true);
-    }
-
     // Search
     const handleSearch = (event) => {
+        console.log(event.target.value)
         setSearchTerm(event.target.value);
         if (event.target.value === '') {
             setViewDatas(medicines);

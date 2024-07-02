@@ -20,11 +20,9 @@ medicine_cols = ['id', 'mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tond
 
 def schema():
     inow = datetime.now()
-    format_string = inow.strftime('%m%Y')
-    print(format_string)
-    return format_string
+    format_string = inow.strftime('%m%y')
+    return f'HSOFTTAMANH{format_string}'
 
-a =  schema()
 
 def conn_info(env):
    
@@ -803,7 +801,7 @@ def duoc_tontutruc(site, idtutruc):
     result = []
     stm = f'''
         SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC
-        FROM HSOFTTAMANH0624.D_TUTRUCTH A 
+        FROM {schema()}.D_TUTRUCTH A 
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
         WHERE A.MAKP = {idtutruc}
@@ -839,32 +837,107 @@ def vienphi_nhomnbhyt(site):
         })  
     return jsonify(result)
 
+@app.route('/vienphi/loaivp/<site>/<idnhom>', methods=['GET'])
+def vienphi_dmloaivp(site, idnhom):
+    cn = conn_info(site)    
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    stm = f'SELECT ID, TEN FROM V_LOAIVP WHERE ID_NHOM = {idnhom} ORDER BY ID ASC'
+    loaivps = cursor.execute(stm).fetchall()
+    for loaivp in loaivps:
+        result.append({
+            'id': loaivp[0],
+            'name': loaivp[1]
+        })  
+    return jsonify(result), 200
 
+@app.route('/vienphi/treeloaivp/<site>', methods=['GET'])
+def vienphi_treeloaivp(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm1 = f'SELECT ID, TEN FROM V_NHOMBHYT ORDER BY ID ASC'
+    nhoms = cursor.execute(stm1).fetchall()
 
-@app.route('/vienphi/giavp/<site>/<idnhom>', methods=['GET'])
-def vienphi_dmgiavp(site, idnhom):
+    for nhom in nhoms:
+        stm2 = f'''
+            WITH TMP AS(
+                SELECT ID_LOAI, COUNT(*) AS COUNT  FROM V_GIAVP
+                GROUP BY ID_LOAI 
+            ) 
+            SELECT A.ID, A.TEN, TMP.COUNT
+            FROM V_LOAIVP A
+            INNER JOIN V_NHOMVP B ON A.ID_NHOM = B.MA
+            INNER JOIN TMP ON A.ID = TMP.ID_LOAI
+            WHERE B.IDNHOMBHYT = {nhom[0]} ORDER BY B.IDNHOMBHYT ASC
+        
+        '''
+        loais = cursor.execute(stm2).fetchall()
+        childs = []
+        for loai in loais:
+            childs.append({
+                'id': loai[0],
+                'name': loai[1],
+                'total': loai[2]
+            })
+        
+        result.append({
+            'id': nhom[0],
+            'name': nhom[1],
+            'child': childs
+        })
+    
+    return jsonify(result), 200     
+
+@app.route('/vienphi/giavp/theonhombhyt/<site>/<bhytid>', methods=['GET'])
+def vienphi_giavp_bhyt(site, bhytid):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     
     result = []
-    col_name = ['id', 'mavp', 'ten', 'dvt', 'bhyt', 'giath', 'giabh', 'giadv', 'trongoi']
-    
+    col_name = ['id', 'idloai', 'mavp', 'ten', 'dvt', 'bhyt', 'giath', 'giabh', 'giadv', 'trongoi']
     stm = f'''
-    SELECT A.ID, A.ID_LOAI, A.TEN, A.DVT, A.BHYT, A.GIA_TH , A.GIA_BH , A.GIA_DV, A.TRONGOI
-    FROM V_GIAVP A 
-    INNER JOIN V_LOAIVP B ON A.ID_LOAI = B.ID
-    WHERE B.ID_NHOM = {idnhom} AND A.HIDE = 0
+    SELECT A.ID, A.ID_LOAI, A.MA, A.TEN, A.DVT, A.BHYT, A.GIA_TH , A.GIA_BH , A.GIA_DV, A.TRONGOI
+    FROM V_GIAVP A
+    WHERE ID_LOAI IN (
+        SELECT ID FROM V_LOAIVP 
+        INNER JOIN V_NHOMVP ON V_LOAIVP.ID_NHOM = V_NHOMVP.MA
+        WHERE V_NHOMVP.IDNHOMBHYT = {bhytid}
+    )
+    ORDER BY A.ID_LOAI ASC
     '''
-    
     giavps = cursor.execute(stm).fetchall()
     for giavp in giavps:
         obj = {}
         for idx, col in  enumerate(col_name):
             obj[col] = giavp[idx]
         result.append(obj)
-    return jsonify(result)    
+    return jsonify(result), 200  
 
+@app.route('/vienphi/giavp/theoloaivp/<site>/<idloai>', methods=['GET'])
+def vienphi_giavp_loaivp(site, idloai):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    
+    result = []
+    col_name = ['id', 'idloai', 'mavp', 'ten', 'dvt', 'bhyt', 'giath', 'giabh', 'giadv', 'trongoi']
+    stm = f'''
+        SELECT A.ID, A.ID_LOAI, A.MA, A.TEN, A.DVT, A.BHYT, A.GIA_TH , A.GIA_BH , A.GIA_DV, A.TRONGOI
+        FROM V_GIAVP A 
+        WHERE A.ID_LOAI = {idloai}
+    '''
+    giavps = cursor.execute(stm).fetchall()
+    for giavp in giavps:
+        obj = {}
+        for idx, col in  enumerate(col_name):
+            obj[col] = giavp[idx]
+        result.append(obj)
+    return jsonify(result), 200  
 
 
 
