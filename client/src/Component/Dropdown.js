@@ -3,7 +3,6 @@ import { FaAngleDown } from "react-icons/fa6";
 
 const Dropdown = ({ data, setSelectedOption, searchable = true, placeholder = '', chooseIndex = 0, firstChoose = false }) => {
 
-    console.log(data)
     const [viewData, setViewData] = useState([]);
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');

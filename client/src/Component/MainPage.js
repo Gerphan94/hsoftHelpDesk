@@ -25,9 +25,13 @@ import { GiHospitalCross } from "react-icons/gi";
 function MainPage() {
 
     const [site, setSite] = useState({ id: 'HCM_DEV', name: 'HCM - DEV' })
-    const [selectedFunc, setSelectedFunc] = useState(1);
+    const [selectedFunc, setSelectedFunc] = useState('welcome');
     const [pageTitle, setPageTitle] = useState('')
     const [mainIcon, setMainIcon] = useState(null);
+
+    
+
+
 
     const [isChooseSite, setIsChooseSite] = useState(false);
 

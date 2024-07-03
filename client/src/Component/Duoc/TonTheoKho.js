@@ -12,7 +12,6 @@ function TonTheoKho({ site }) {
     const apiURL = process.env.REACT_APP_API_URL;
     const [timeoutId, setTimeoutId] = useState(null);
 
-
     const [khoList, setKhoList] = useState([]);
     const [selectedKho, setSelectedKho] = useState({ id: 0, name: '' });
 
@@ -20,20 +19,16 @@ function TonTheoKho({ site }) {
     const [selectedPharmarId, setSelectedPharmarId] = useState(0);
     const [isShowModal, setIsShowModal] = useState(false);
     const [searchTerm, setSearchTerm] = useState('');
-
     const [viewDatas, setViewDatas] = useState([]);
-
 
     // FILTER
     const [filterList, setFilterList] = useState([
         { id: 'dalieu', name: 'Đa liều', value: false },
         { id: 'bhyt', name: 'BHYT', value: false },
         { id: 'khangsinh', name: 'Kháng sinh', value: false },
-        { id: 'khangsinhchungatc', name: 'Kháng sinh cùng atc', value: false }
     ])
     const [tyleBH, setTyleBH] = useState({id: '100', name: '100'});
     const [selectedAtc, setSelectedAtc] = useState({id:'', name: ''});
-
 
     useEffect(() => async () => {
         try {
@@ -51,7 +46,6 @@ function TonTheoKho({ site }) {
         const filterData = pharmars.filter((item) => {
             // Initialize match to true
             let matchesAllFilters = true;
-
             // Iterate through each filter in the list
             filterList.forEach(filter => {
                 if (filter.id === 'dalieu' && filter.value === true) {
@@ -67,7 +61,6 @@ function TonTheoKho({ site }) {
                     else {
                         matchesAllFilters = matchesAllFilters && item.bhyt > 0;
                     }
-                    
                 }
                 if (filter.id === 'notbhyt' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.bhyt === 0;
@@ -75,16 +68,7 @@ function TonTheoKho({ site }) {
                 if (filter.id === 'khangsinh' && filter.value === true) {
                     matchesAllFilters = matchesAllFilters && item.duocbvid === 3;
                 }
-                if (filter.id === 'khangsinhchungatc' && filter.value === true) {
-                    matchesAllFilters = matchesAllFilters && item.duocbvid === 3 && item.atc === selectedAtc.id;
-                }
-
-
                 
-
-
-
-
                 // Add more conditions for other filters here
             });
 
@@ -126,6 +110,13 @@ function TonTheoKho({ site }) {
         setIsShowModal(true);
     }
 
+    const search = (data, seachValue) => {
+        if (seachValue === '') {
+            return data;
+        }
+        return data.filter((item) => item.mabd.toLowerCase().includes(seachValue.toLowerCase()) || item.tenbd.toLowerCase().includes(seachValue.toLowerCase()));
+    }
+
     // Search
     const handleSearch = (event) => {
         const searchvalue = event.target.value;
@@ -133,18 +124,22 @@ function TonTheoKho({ site }) {
         if (timeoutId) {
             clearTimeout(timeoutId);
         }
-        if (searchvalue === '') {
-            setViewDatas(pharmars);
-        }
-        else {
-            const newTimeoutId = setTimeout(() => {
-                const filedata = pharmars.filter((item) =>
-                    item.mabd.toLowerCase().includes(searchvalue.toLowerCase()) || item.tenbd.toLowerCase().includes(searchvalue.toLowerCase())
-                );
-                setViewDatas(filedata);
-            }, 1000);
-            setTimeoutId(newTimeoutId);
-        }
+        const newTimeoutId = setTimeout(() => {
+            setViewDatas(search(pharmars, searchvalue));
+        }, 1000);
+        setTimeoutId(newTimeoutId);
+        // if (searchvalue === '') {
+        //     setViewDatas(pharmars);
+        // }
+        // else {
+        //     const newTimeoutId = setTimeout(() => {
+        //         const filedata = pharmars.filter((item) =>
+        //             item.mabd.toLowerCase().includes(searchvalue.toLowerCase()) || item.tenbd.toLowerCase().includes(searchvalue.toLowerCase())
+        //         );
+        //         setViewDatas(filedata);
+        //     }, 1000);
+        //     setTimeoutId(newTimeoutId);
+        // }
     };
     useEffect(() => {
         return () => {

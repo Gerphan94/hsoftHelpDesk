@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Dropdown from "../Dropdown";
 import ViewButton from "../Button/ViewButton";
+import { FaPlus, FaMinus, FaDotCircle } from "react-icons/fa";
+import { FaFolderTree } from "react-icons/fa6";
 
 
 function GiaVP({ site }) {
@@ -16,6 +18,15 @@ function GiaVP({ site }) {
     const [showIndex, setShowIndex] = useState(0);
     const [selectedNhomBHYT, setSelectedNhomBHYT] = useState(0);
     const [selectedLoaiVP, setSelectedLoaiVP] = useState(0);
+
+    const giavpTypes = [
+        { id: 'giavp', name: 'Giá viện phí' },
+        { id: 'goivp', name: 'Gói viện phí' },
+        { id: 'dieutiet', name: 'Điều tiết' }
+    ]
+    const [showType, setShowType] = useState('giavp');
+
+
 
     useEffect(() => async () => {
         try {
@@ -62,6 +73,12 @@ function GiaVP({ site }) {
             console.error('Error fetching data:', error);
         }
     }
+    const handleClick3 = async (id) => {
+        setShowIndex(id);
+    }
+
+
+
     return (
         <>
             <div>
@@ -72,7 +89,14 @@ function GiaVP({ site }) {
                                 <div className="text-left text-[#17273D] ">
                                     <div className={`px-2 py-1  hover:bg-[#667BC6] hover:border-b-white select-none ${showIndex === item.id ? 'bg-[#667BC6]' : ''}`}
                                         onClick={() => handleClick1(item.id)}>
-                                        {item.name}
+                                        <div className="flex items-center gap-1">
+                                            {item.child.length > 0 ?
+                                                showIndex === item.id ?
+                                                    <FaMinus className="text-sm" /> :
+                                                    <FaPlus className="text-sm" />
+                                                : <FaPlus className="text-sm text-transparent" />}
+                                            {item.name}
+                                        </div>
                                     </div>
                                     {showIndex === item.id && (
                                         <div className="border-lime-300 ml-5">
@@ -82,16 +106,38 @@ function GiaVP({ site }) {
                                                     onClick={() => handleClick2(item1.id)}
                                                 >
                                                     <div>
-                                                    {item1.name}
-                                                        </div>
-                                                    <span className="rounded-xl px-2 text-sm">{item1.total}</span>
-                                                    
+                                                        {item1.name}
                                                     </div>
+                                                    <span className="rounded-xl px-2 text-sm">{item1.total}</span>
+                                                </div>
                                             ))}
                                         </div>
                                     )}
+
+
                                 </div>
+
                             ))}
+                            <div
+                                className={`text-left px-2 py-1  hover:bg-[#667BC6] hover:border-b-white select-none ${showIndex === -1 ? 'bg-[#667BC6]' : ''}`}
+                                onClick={() => handleClick3(-1)}
+                            >
+                                <div className="flex gap-1 items-center">
+                                    <FaFolderTree />
+                                    <div> Gói viện phí</div>
+                                </div>
+                            </div>
+                            
+                            <div
+                                className={`text-left px-2 py-1  hover:bg-[#667BC6] hover:border-b-white select-none ${showIndex === -2 ? 'bg-[#667BC6]' : ''}`}
+                                onClick={() => handleClick3(-2)}
+                            >
+                                <div className="flex gap-1 items-center">
+                                    <FaFolderTree />
+                                    <div> Điều tiết</div>
+                                </div>
+                               
+                            </div>
                         </div>
                         <div className="px-4 w-full overflow-y-auto">
                             <table className=" w-full">

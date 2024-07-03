@@ -13,11 +13,7 @@ import ViewButton from "../Button/ViewButton";
 function KhamBenh({ site }) {
     const apiURL = process.env.REACT_APP_API_URL;
 
-    const btns = [
-        { id: "thuoc", name: "Thuốc" },
-        { id: "dichvu", name: "Dịch vụ" }
-
-    ]
+   
 
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -129,12 +125,7 @@ function KhamBenh({ site }) {
             <div className=" h-12 px-4 py-2 flex">
 
 
-                <div className="flex items-center justify-center gap-2 w-full">
-                    {btns.map((btn) =>
-                        <button className="border px-2 py-1" onClick={() => handleClickPID(btn.id)}>{btn.name}</button>
-                    )}
-                </div>
-
+                
 
             </div>
 

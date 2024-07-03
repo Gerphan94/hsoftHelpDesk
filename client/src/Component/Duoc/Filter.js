@@ -14,6 +14,8 @@ function Filter({ idkho, site, filter, setFilter, setSelectedAtc, setTyleBH }) {
         {id: '0', name :'0'},
         {id: '1', name :'Other'}
     ];
+    
+
 
     // useEffect(() => {
     //     const getDuocbvs = async () => {

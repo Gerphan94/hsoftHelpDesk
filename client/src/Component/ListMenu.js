@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 
 function ListMenu({ data }) {
 
+    const apiURL = process.env.REACT_APP_API_URL;
+
 
     const [showIndex, setShowIndex] = useState(0);
     const [selectedNhom, setSelectedNhom] = useState(0);
@@ -29,7 +31,7 @@ function ListMenu({ data }) {
                     {showIndex === item.id && (
                         <div className="px-2">
                             {item.child.map((item1) => (
-                                <div className="px-2 py-1 ">{item1.name}</div>
+                                <div key={item1.id} className="px-2 py-1 ">{item1.name}</div>
                             ))}
                             
                         </div>

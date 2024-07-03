@@ -595,7 +595,7 @@ def duoc_dup_act(site, idkho):
     
     stm =f'''
         SELECT B.MAATC AS ID, B.MAATC AS NAME
-        FROM hsofttamanh0624.D_TONKHOTH A
+        FROM {schema()}.D_TONKHOTH A
         INNER JOIN D_DMBD B ON A.MABD = B.ID 
         WHERE A.MAKHO = {idkho}
         GROUP BY MAATC
@@ -631,7 +631,7 @@ def tonkho_ketoa_pk(site, type):
 
     stm =f'''
         SELECT C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT ,sum(a.TONDAU) AS TONTHUC, sum(A.SLYEUCAU) AS BOOKING ,  (sum(a.TONDAU) - sum(A.SLYEUCAU)) AS TONKHADUNG
-        FROM HSOFTTAMANH0624.D_TONKHOTH A
+        FROM {schema()}.D_TONKHOTH A
         INNER JOIN D_DMKHO B ON A.MAKHO = B.ID
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         WHERE A.MAKHO IN ({kho_ids})
@@ -693,7 +693,7 @@ def duoc_tonkho_theokho(site, idkho):
     
     stm = f'''
         SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC
-        FROM HSOFTTAMANH0624.D_TONKHOTH A 
+        FROM {schema()}.D_TONKHOTH A 
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
         WHERE A.MAKHO = {idkho}

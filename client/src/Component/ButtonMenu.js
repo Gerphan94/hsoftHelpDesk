@@ -39,7 +39,7 @@ const ButtonMenu = ({ data, setSelectedOption }) => {
     }, [isDropdownOpen]);
 
     return (
-        <div className='w-20 items-center inline-block' ref={dropdownRef}>
+        <div className='w-20 items-center inline-block p-2' ref={dropdownRef}>
             <div className="relative inline-block w-full">
                 <div className='flex items-center'>
                    <button className='w-8 h-full p-1'
