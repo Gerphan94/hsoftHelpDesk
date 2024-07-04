@@ -118,26 +118,20 @@ function GiaVP({ site }) {
                                 </div>
 
                             ))}
-                            <div
-                                className={`text-left px-2 py-1  hover:bg-[#667BC6] hover:border-b-white select-none ${showIndex === -1 ? 'bg-[#667BC6]' : ''}`}
-                                onClick={() => handleClick3(-1)}
-                            >
-                                <div className="flex gap-1 items-center">
-                                    <FaFolderTree />
-                                    <div> Gói viện phí</div>
+
+                            {giavpTypes.map((item) => (
+                                <div
+                                    className={`text-left px-2 py-1  hover:bg-[#667BC6] hover:border-b-white select-none ${showIndex === item.id ? 'bg-[#667BC6]' : ''}`}
+                                    onClick={() => handleClick3(item.id)}
+                                >
+                                    <div className="flex gap-1 items-center">
+                                        <FaFolderTree />
+                                        <div> {item.name}</div>
+                                    </div>
                                 </div>
-                            </div>
-                            
-                            <div
-                                className={`text-left px-2 py-1  hover:bg-[#667BC6] hover:border-b-white select-none ${showIndex === -2 ? 'bg-[#667BC6]' : ''}`}
-                                onClick={() => handleClick3(-2)}
-                            >
-                                <div className="flex gap-1 items-center">
-                                    <FaFolderTree />
-                                    <div> Điều tiết</div>
-                                </div>
-                               
-                            </div>
+                            ))}
+
+
                         </div>
                         <div className="px-4 w-full overflow-y-auto">
                             <table className=" w-full">
