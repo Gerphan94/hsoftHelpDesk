@@ -18,6 +18,7 @@ function SideMenu({ selectedFunc, setSelectedFunc, setPageTitle, setMainIcon }) 
         { id: 'vienphi', name: 'Viện phí', icon: MdAttachMoney },
         { id: 'datkham', name: "Đặt khám", icon: GiAlarmClock },
         { id: 'duoc', name: "Dược", icon: CiPill },
+        { id: 'todieutri', name: "Tờ điều trị", icon: CiPill },
         { id: 'danhmuc', name: "Danh mục", icon: TbCategoryFilled },
         { id: 'sql', name: 'SQL', icon: PiFileSqlDuotone },
         { id: 'document', name: "Documents", icon: FaBook }
