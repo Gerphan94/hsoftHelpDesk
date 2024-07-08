@@ -12,6 +12,7 @@ import DatKham from "./DatKham/DatKham";
 import SQLCol from "./SQL/SQLCollection";
 import DanhMuc from "./DanhMuc/DanhMuc";
 import Duoc from "./Duoc/Duoc";
+import ToDieuTri from "./ToDieuTri/ToDieuTri";
 import KPI from "./KPI/KPI";
 import NoiTru from "./NoiTru/NoiTru";
 import MainPageHeader from "./MainPageHeader";
@@ -79,7 +80,7 @@ function MainPage() {
                             {selectedFunc === 'noitru' && <NoiTru site={site.id} />}
                             {selectedFunc === 'datkham' && <DatKham site={site.id} />}
                             {selectedFunc === 'duoc' && <Duoc site={site.id} />}
-                            {selectedFunc === 'todieutri' && <Duoc site={site.id} />}
+                            {selectedFunc === 'todieutri' && <ToDieuTri site={site.id} />}
                             {selectedFunc === 'danhmuc' && <DanhMuc site={site.id} />}
 
                             {selectedFunc === 99 && <SQLCol />}

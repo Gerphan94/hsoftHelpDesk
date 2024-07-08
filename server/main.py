@@ -990,6 +990,27 @@ def danhmuc_nhanvien(site):
     
     return jsonify(result), 200
     
+@app.route('/todieutri/toamau/<site>', methods=['GET'])
+def todieutri_toamau(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    col_names = ['id', 'ma', 'ten', 'dungchung', 'isactive']
+    
+    stm = 'SELECT ID, MA, TEN, DUNGCHUNG, ISACTIVE FROM TA_TOAMAULL ORDER BY ID ASC'
+    
+    toamaus = cursor.execute(stm).fetchall()
+    for toamau in toamaus:
+        obj = {}
+        for idx, col in  enumerate(col_names):
+            obj[col] = toamau[idx]
+        result.append(obj)
+    
+    return jsonify(result), 200
+
+    
     
 if __name__=='__main__':
     app.run(debug=True)
