@@ -13,10 +13,7 @@ function SQLElement({ data }) {
                         <div className="italic">{childdata.des}</div>
                         <div className="bg-gray-100 p-4 text-[#803D3B] whitespace-pre-wrap">{childdata.sql}</div>
                     </div>
-
                 )}
-
-
             </div>
         </>
     )

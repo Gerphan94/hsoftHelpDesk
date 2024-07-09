@@ -41,7 +41,7 @@ def conn_info(env):
     elif (env == 'HCM_UAT'):
         return {
             'user':"hsofttamanh",
-            'password':'hsofttamanh',
+            'password':'HSOFTTAMANH2023',
             'dsn':"hsoft-dev.vdc.tahcm.vn/uat1"
         }
         
@@ -990,25 +990,63 @@ def danhmuc_nhanvien(site):
     
     return jsonify(result), 200
     
+# @app.route('/todieutri/toamau/<site>', methods=['GET'])
+# def todieutri_toamau(site):
+#     cn = conn_info(site)
+#     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+#     cursor = connection.cursor()
+#     result = []
+    
+#     col_names = ['id', 'ma', 'ten', 'dungchung', 'isactive']
+    
+#     stm = 'SELECT ID, MA, TEN, DUNGCHUNG, ISACTIVE FROM TA_TOAMAULL ORDER BY ID ASC'
+    
+#     toamaus = cursor.execute(stm).fetchall()
+#     for toamau in toamaus:
+#         obj = {}
+#         for idx, col in  enumerate(col_names):
+#             obj[col] = toamau[idx]
+#         result.append(obj)
+    
+#     return jsonify(result), 200
+
 @app.route('/todieutri/toamau/<site>', methods=['GET'])
-def todieutri_toamau(site):
+def toamau(site):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
     
-    col_names = ['id', 'ma', 'ten', 'dungchung', 'isactive']
-    
     stm = 'SELECT ID, MA, TEN, DUNGCHUNG, ISACTIVE FROM TA_TOAMAULL ORDER BY ID ASC'
     
     toamaus = cursor.execute(stm).fetchall()
+    col_names = ['stt', 'mabd', 'ma', 'ten', 'tenhc', 'ma_mau', 'tenbd_mau', 'tenhc_mau', 'dang', 'donvidung', 'solan', 'soluong', 'lan', 'cachnhau', 'cachdung', 'duongdung', 'tocdo', 'lieudung', 'ghichu', 'giobd', 'dalieu', 'nhombo']
     for toamau in toamaus:
-        obj = {}
-        for idx, col in  enumerate(col_names):
-            obj[col] = toamau[idx]
-        result.append(obj)
-    
+        detail_ar = []
+        stm2 = f'''
+            SELECT A.STT, A.MABD , B.MA, (B.TEN || ' ' || B.HAMLUONG) AS TEN , B.TENHC,  A.MA AS MA_MAU, A.TENBD AS TENBD_MAU , A.TENHC AS TENHC_MAU, A.DANG, B.DONVIDUNG , A.SOLAN, A.SOLUONG , A.LAN, A.CACHNHAU , A.CACHDUNG , A.DUONGDUNG , A.TOCDO , A.LIEUDUNG , A.GHICHU , A.GIOBD, C.DALIEU, B.NHOMBO 
+            FROM TA_TOAMAUCT A
+            INNER JOIN D_DMBD B ON A.MABD = B.ID 
+            INNER JOIN D_DMBD_ATC C ON A.MABD = C.ID
+            WHERE A.ID = {toamau[0]}
+        '''
+        details = cursor.execute(stm2).fetchall()
+        for detail in details:
+            obj = {}
+            for idx, col in  enumerate(col_names):
+                obj[col] = detail[idx]
+            detail_ar.append(obj)
+        result.append({
+            'id': toamau[0],
+            'ma': toamau[1],
+            'ten': toamau[2],
+            'dungchung': toamau[3],
+            'isactive': toamau[4],
+            'details': detail_ar
+        })
     return jsonify(result), 200
+    
+
 
     
     

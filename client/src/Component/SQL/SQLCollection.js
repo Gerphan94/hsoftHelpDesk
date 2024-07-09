@@ -3,9 +3,7 @@ import SQLElement from './SQLElement';
 
 import khambenh from "./data/khambenh.json"
 
-
 function SQLCol() {
-
 
 
   // const path = "./sql.json";
@@ -16,10 +14,6 @@ function SQLCol() {
     {ma: 'duoc', name: "Dược"}
     ]
   const [jsonData, setJsonData] = useState(khambenh);
-
-
-
-
 
   return (
     <>

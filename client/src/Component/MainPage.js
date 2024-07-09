@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import styles from "./styles.module.css"
-
 import Welcome from "./Welcome";
-
-
 import Inpatient from "./Inpatient";
 import HoSoBA from "./HoSo/HoSoBA";
 import GoiKham from "./GoiKham/GoiKham";
@@ -13,7 +10,6 @@ import SQLCol from "./SQL/SQLCollection";
 import DanhMuc from "./DanhMuc/DanhMuc";
 import Duoc from "./Duoc/Duoc";
 import ToDieuTri from "./ToDieuTri/ToDieuTri";
-import KPI from "./KPI/KPI";
 import NoiTru from "./NoiTru/NoiTru";
 import MainPageHeader from "./MainPageHeader";
 
@@ -82,9 +78,7 @@ function MainPage() {
                             {selectedFunc === 'duoc' && <Duoc site={site.id} />}
                             {selectedFunc === 'todieutri' && <ToDieuTri site={site.id} />}
                             {selectedFunc === 'danhmuc' && <DanhMuc site={site.id} />}
-
-                            {selectedFunc === 99 && <SQLCol />}
-                            {selectedFunc === 999 && <KPI />}
+                            {selectedFunc === 'sql' && <SQLCol />}
                         </div>
                     </div>
                 </div>
