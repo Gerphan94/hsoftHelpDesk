@@ -1020,11 +1020,11 @@ def toamau(site):
     stm = 'SELECT ID, MA, TEN, DUNGCHUNG, ISACTIVE FROM TA_TOAMAULL ORDER BY ID ASC'
     
     toamaus = cursor.execute(stm).fetchall()
-    col_names = ['stt', 'mabd', 'ma', 'ten', 'tenhc', 'ma_mau', 'tenbd_mau', 'tenhc_mau', 'dang', 'donvidung', 'solan', 'soluong', 'lan', 'cachnhau', 'cachdung', 'duongdung', 'tocdo', 'lieudung', 'ghichu', 'giobd', 'dalieu', 'nhombo']
+    col_names = ['stt', 'mabd', 'ma', 'ten', 'tenhc', 'ma_mau', 'tenbd_mau', 'tenhc_mau', 'dang', 'donvidung','bhyt', 'solan', 'soluong', 'lan', 'cachnhau', 'cachdung', 'duongdung', 'tocdo', 'lieudung', 'ghichu', 'giobd', 'dalieu', 'nhombo']
     for toamau in toamaus:
         detail_ar = []
         stm2 = f'''
-            SELECT A.STT, A.MABD , B.MA, (B.TEN || ' ' || B.HAMLUONG) AS TEN , B.TENHC,  A.MA AS MA_MAU, A.TENBD AS TENBD_MAU , A.TENHC AS TENHC_MAU, A.DANG, B.DONVIDUNG , A.SOLAN, A.SOLUONG , A.LAN, A.CACHNHAU , A.CACHDUNG , A.DUONGDUNG , A.TOCDO , A.LIEUDUNG , A.GHICHU , A.GIOBD, C.DALIEU, B.NHOMBO 
+            SELECT A.STT, A.MABD , B.MA, (B.TEN || ' ' || B.HAMLUONG) AS TEN , B.TENHC,  A.MA AS MA_MAU, A.TENBD AS TENBD_MAU , A.TENHC AS TENHC_MAU, A.DANG, B.DONVIDUNG , B.BHYT, A.SOLAN, A.SOLUONG , A.LAN, A.CACHNHAU , A.CACHDUNG , A.DUONGDUNG , A.TOCDO , A.LIEUDUNG , A.GHICHU , A.GIOBD, C.DALIEU, B.NHOMBO 
             FROM TA_TOAMAUCT A
             INNER JOIN D_DMBD B ON A.MABD = B.ID 
             INNER JOIN D_DMBD_ATC C ON A.MABD = C.ID
