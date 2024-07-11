@@ -171,11 +171,7 @@ function TonTheoKho({ site }) {
                         setFilter={setFilterList}
                         setSelectedAtc={setSelectedAtc}
                         setTyleBH={setTyleBH}
-
                     />
-                    
-
-
                     <button className={`${styles.btn} ${styles.btnNew }`} onClick={onClick} >
                         Xem
                     </button>

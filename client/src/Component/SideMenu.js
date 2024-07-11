@@ -3,7 +3,7 @@ import { GiEarbuds, GiAlarmClock } from "react-icons/gi";
 import { TbCategoryFilled } from "react-icons/tb";
 import { CiPill } from "react-icons/ci";
 import { PiFileSqlDuotone } from "react-icons/pi";
-import { IoFileTrayFullSharp } from "react-icons/io5";
+import { IoFileTrayFullSharp, IoNewspaperOutline } from "react-icons/io5";
 import { FaBook, FaBed } from "react-icons/fa";
 import { MdAttachMoney, MdBackpack } from "react-icons/md";
 
@@ -18,7 +18,7 @@ function SideMenu({ selectedFunc, setSelectedFunc, setPageTitle, setMainIcon }) 
         { id: 'vienphi', name: 'Viện phí', icon: MdAttachMoney },
         { id: 'datkham', name: "Đặt khám", icon: GiAlarmClock },
         { id: 'duoc', name: "Dược", icon: CiPill },
-        { id: 'todieutri', name: "Tờ điều trị", icon: CiPill },
+        { id: 'todieutri', name: "Tờ điều trị", icon: IoNewspaperOutline },
         { id: 'danhmuc', name: "Danh mục", icon: TbCategoryFilled },
         { id: 'sql', name: 'SQL', icon: PiFileSqlDuotone },
         { id: 'document', name: "Documents", icon: FaBook }

@@ -665,12 +665,10 @@ def duoc_tonkho_theokho_dskho(site):
     cursor = connection.cursor()
     result = []
     hcm_kho_ids = "4, 90, 91, 89, 2, 102, 104"
-    
     if (site == 'HCM_DEV'):
         kho_ids = hcm_kho_ids
     else:
-        kho_ids = hcm_kho_ids
-        
+        kho_ids = hcm_kho_ids 
     stm = f'''SELECT ID, TEN FROM D_DMKHO WHERE id IN ({kho_ids})'''
     schemaa = schema()
     khos = cursor.execute(stm).fetchall()
@@ -686,13 +684,10 @@ def duoc_tonkho_theokho(site, idkho):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
-    
     result = []
-    
-    col_name = ['id', 'mabd', 'tenbd', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slycau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc']
-    
+    col_name = ['id', 'mabd', 'tenbd','tenhc', 'dvt', 'dvd', 'duongdung', 'bhyt', 'tondau', 'slnhap', 'slxuat', 'toncuoi', 'slycau', 'tonkhadung', 'dalieu', 'duocbvid', 'maatc']
     stm = f'''
-        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC
+        SELECT  A.MABD AS ID, C.MA,  C.TEN || ' ' || C.HAMLUONG AS TEN_HAMLUONG, C.TENHC, C.DANG AS DVT, C.DONVIDUNG AS DVD, C.DUONGDUNG, C.BHYT, A.TONDAU, A.SLNHAP, A.SLXUAT, (A.TONDAU + A.SLNHAP - A.SLXUAT) AS TONCUOI,A.SLYEUCAU , (A.TONDAU + A.SLNHAP - A.SLXUAT - A.SLYEUCAU) AS TONKD, D.DALIEU, C.NHOMBO, C.MAATC
         FROM {schema()}.D_TONKHOTH A 
         INNER JOIN D_DMBD C ON A.MABD = C.ID
         INNER JOIN D_DMBD_ATC D ON C.ID = D.ID
@@ -707,10 +702,6 @@ def duoc_tonkho_theokho(site, idkho):
         result.append(obj)
     return jsonify(result), 200
     
-    
-
-
-
 @app.route('/duoc/tonbhyt/<site>', methods=['GET'])
 def tonbhyt(site):
     cn = conn_info(site)
@@ -943,6 +934,33 @@ def vienphi_giavp_loaivp(site, idloai):
 
 # DANH MỤC
 
+# DANH MỤC ICD10
+@app.route('/danhmuc/icd10/<site>', methods=['GET'])
+def danhmuc_icd10(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm = 'SELECT ID_CHAPTER AS ID, CHAPTER AS NAME FROM ICD_CHAPTER ORDER BY ID_CHAPTER ASC'
+    chapters = cursor.execute(stm).fetchall()
+    
+    for chapter in chapters:
+        
+        icd_ar = []
+        
+        stm1 = ''
+        
+        result.append({
+            'id': chapter[0],
+            'name': chapter[1]
+        })
+    
+    return jsonify(result), 200
+    
+
+
+# DANH MỤC NHÂN VIÊN
 @app.route('/danhmuc/nhomnhanvien/<site>', methods=['GET'])
 def danhmuc_nhomnhanvien(site):
     cn = conn_info(site)
@@ -1017,7 +1035,12 @@ def toamau(site):
     cursor = connection.cursor()
     result = []
     
-    stm = 'SELECT ID, MA, TEN, DUNGCHUNG, ISACTIVE FROM TA_TOAMAULL ORDER BY ID ASC'
+    stm = '''
+        SELECT A.ID, A.MA, A.TEN, A.DUNGCHUNG, A.ISACTIVE, B.HOTEN AS TENBS
+        FROM TA_TOAMAULL A
+        INNER JOIN DMBS B ON A.MABS = B.MA
+        ORDER BY A.ID ASC
+    '''
     
     toamaus = cursor.execute(stm).fetchall()
     col_names = ['stt', 'mabd', 'ma', 'ten', 'tenhc', 'ma_mau', 'tenbd_mau', 'tenhc_mau', 'dang', 'donvidung','bhyt', 'solan', 'soluong', 'lan', 'cachnhau', 'cachdung', 'duongdung', 'tocdo', 'lieudung', 'ghichu', 'giobd', 'dalieu', 'nhombo']
@@ -1042,9 +1065,56 @@ def toamau(site):
             'ten': toamau[2],
             'dungchung': toamau[3],
             'isactive': toamau[4],
+            'bs': toamau[5],
             'details': detail_ar
         })
     return jsonify(result), 200
+
+@app.route('/todieutri/toamau/tonkho/<site>/<idkho>', methods=['GET'])
+def toamau_tonkho(site, idkho):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    stm = 'SELECT ID, MA, TEN, DUNGCHUNG, ISACTIVE FROM TA_TOAMAULL ORDER BY ID ASC'
+    
+    toamaus = cursor.execute(stm).fetchall()
+    col_names = ['stt', 'mabd', 'ma', 'ten', 'tenhc', 'ma_mau', 'tenbd_mau', 'tenhc_mau', 'dang', 'donvidung','bhyt', 'dalieu', 'nhombo', 'solan', 'soluong', 'lan','tondau','slnhap', 'slxuat', 'slyeucau']
+    for toamau in toamaus:
+        detail_ar = []
+        stm2 = f'''
+            WITH tmp AS (
+                SELECT MAKHO, MABD, TONDAU, SLNHAP, SLXUAT, SLYEUCAU FROM {schema()}.D_TONKHOTH
+                WHERE MAKHO = {idkho}
+            )
+            SELECT A.STT, A.MABD , B.MA, (B.TEN || ' ' || B.HAMLUONG) AS TEN , B.TENHC,  A.MA AS MA_MAU, A.TENBD AS TENBD_MAU , A.TENHC AS TENHC_MAU, A.DANG, B.DONVIDUNG ,B.BHYT, C.DALIEU, B.NHOMBO,A.SOLAN, A.SOLUONG , A.LAN, COALESCE(D.TONDAU, 0) AS TONDAU , COALESCE(D.SLNHAP, 0) AS SLNHAP, COALESCE(D.SLXUAT, 0) AS SLXUAT,  COALESCE(D.SLYEUCAU, 0) AS SLYEUCAU
+            FROM TA_TOAMAUCT A
+            INNER JOIN D_DMBD B ON A.MABD = B.ID
+            INNER JOIN D_DMBD_ATC C ON A.MABD = C.ID
+            LEFT JOIN tmp D ON D.MABD = A.MABD 
+            WHERE A.ID = {toamau[0]}
+
+        '''
+        details = cursor.execute(stm2).fetchall()
+        for detail in details:
+            obj = {}
+            for idx, col in  enumerate(col_names):
+                obj[col] = detail[idx]
+            detail_ar.append(obj)
+        result.append({
+            'id': toamau[0],
+            'ma': toamau[1],
+            'ten': toamau[2],
+            'dungchung': toamau[3],
+            'isactive': toamau[4],
+            'details': detail_ar
+        })
+    
+    return jsonify(result), 200
+    
+    
+
     
 
 
