@@ -1028,6 +1028,29 @@ def danhmuc_nhanvien(site):
     
 #     return jsonify(result), 200
 
+
+@app.route('/todieutri/toamau/dsbacsi/<site>', methods=['GET'])
+def todieutri_toamau_dsbacsi(site):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    stm = '''
+        SELECT DISTINCT A.MABS, B.HOTEN 
+        FROM TA_TOAMAULL A
+        INNER JOIN DMBS B ON A.MABS = B.MA
+        ORDER BY A.MABS ASC
+    '''
+    
+    dsbs = cursor.execute(stm).fetchall()
+    for bs in dsbs:
+        result.append(
+            {'id': bs[0], 'name': bs[1]}
+        )
+    
+    return jsonify(result), 200
+
+
 @app.route('/todieutri/toamau/<site>', methods=['GET'])
 def toamau(site):
     cn = conn_info(site)
@@ -1041,7 +1064,6 @@ def toamau(site):
         INNER JOIN DMBS B ON A.MABS = B.MA
         ORDER BY A.ID ASC
     '''
-    
     toamaus = cursor.execute(stm).fetchall()
     col_names = ['stt', 'mabd', 'ma', 'ten', 'tenhc', 'ma_mau', 'tenbd_mau', 'tenhc_mau', 'dang', 'donvidung','bhyt', 'solan', 'soluong', 'lan', 'cachnhau', 'cachdung', 'duongdung', 'tocdo', 'lieudung', 'ghichu', 'giobd', 'dalieu', 'nhombo']
     for toamau in toamaus:
@@ -1050,7 +1072,7 @@ def toamau(site):
             SELECT A.STT, A.MABD , B.MA, (B.TEN || ' ' || B.HAMLUONG) AS TEN , B.TENHC,  A.MA AS MA_MAU, A.TENBD AS TENBD_MAU , A.TENHC AS TENHC_MAU, A.DANG, B.DONVIDUNG , B.BHYT, A.SOLAN, A.SOLUONG , A.LAN, A.CACHNHAU , A.CACHDUNG , A.DUONGDUNG , A.TOCDO , A.LIEUDUNG , A.GHICHU , A.GIOBD, C.DALIEU, B.NHOMBO 
             FROM TA_TOAMAUCT A
             INNER JOIN D_DMBD B ON A.MABD = B.ID 
-            INNER JOIN D_DMBD_ATC C ON A.MABD = C.ID
+            LEFT JOIN D_DMBD_ATC C ON A.MABD = C.ID
             WHERE A.ID = {toamau[0]}
         '''
         details = cursor.execute(stm2).fetchall()
@@ -1094,6 +1116,7 @@ def toamau_tonkho(site, idkho):
             INNER JOIN D_DMBD_ATC C ON A.MABD = C.ID
             LEFT JOIN tmp D ON D.MABD = A.MABD 
             WHERE A.ID = {toamau[0]}
+            ORDER BY A.STT ASC
 
         '''
         details = cursor.execute(stm2).fetchall()

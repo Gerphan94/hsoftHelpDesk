@@ -4,6 +4,7 @@ import { FcFilingCabinet, FcHome, FcViewDetails } from "react-icons/fc";
 import Dropdown from "../Dropdown";
 import TableCheckTon from "./TableCheckTon";
 import TableDetail from "./TableDetail";
+import { RiUserSharedFill } from "react-icons/ri";
 
 import styles from "../styles.module.css";
 
@@ -20,7 +21,8 @@ function ToaMau({ site }) {
     const [selectedKho, setSelectedKho] = useState({ id: '', name: '' });
     const [khoas, setKhoas] = useState([]);
     const [tutrucs, setTutrucs] = useState([]);
-
+    const [dsBacsi, setDsBacsi] = useState([]);
+    const [selectedBacsi, setSelectedBacsi] = useState({ id: '', name: '' });
     // /duoc/tonkho/theokho/dskho/
     const fetchMauDetail = async () => {
         try {
@@ -44,6 +46,18 @@ function ToaMau({ site }) {
     }
 
     useEffect(() => async () => {
+        const fetchDSBS = async () => {
+            try {
+                const fecthURL = apiURL + "/todieutri/toamau/dsbacsi/" + site;
+                const response = await fetch(fecthURL);
+                const data = await response.json();
+                setDsBacsi(data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+
+        }
+        fetchDSBS();
         fetchMauDetail();
     }, [site]);
 
@@ -76,7 +90,7 @@ function ToaMau({ site }) {
     // };
     const handClickBTN = (type) => {
         setMauType(type);
-        
+
         if (type === 1) {
             fetchMauDetail();
         }
@@ -97,6 +111,18 @@ function ToaMau({ site }) {
                             <FcHome size={mauType === 2 ? 32 : 20} /></button>
                         <button onClick={() => handClickBTN(3)}>
                             <FcFilingCabinet size={mauType === 3 ? 32 : 20} /></button>
+
+
+                    </div>
+                    <div className="flex gap-2 items-center">
+                        <label>Bác sĩ:</label>
+                        <div className="w-96">
+                            <Dropdown data={dsBacsi} selectedOption={selectedBacsi} setSelectedOption={setSelectedBacsi} placeholder="Chọn bác sĩ" />
+                        </div>
+                        <button
+                            className={`${styles.btn} ${styles.btnNew}`}
+                        >Lọc BS</button>
+
                     </div>
                     {mauType === 2 && (
                         <div className="flex gap-3 items-center px-4 py-1 select-none">
@@ -123,9 +149,7 @@ function ToaMau({ site }) {
                     )}
                 </div>
             </div>
-
-
-            <div className="px-4 overflow-y-auto h-[750px]">
+            <div className="px-4 overflow-y-auto h-[680px]">
                 {toaMaus.map((item, index) => (
                     <div className="mb-4">
                         <div className="flex gap-2 items-center font-bold text-[#5A639C]">
@@ -133,6 +157,11 @@ function ToaMau({ site }) {
                             <div className="text-left py-1 ">{item.ten}</div>
                             <span className="border rounded-full px-3 bg-slate-200 text-sm">{item.details.length}</span>
                             <div className="italic text-sm">{item.bs}</div>
+                            <div>
+                                {item.dungchung === 1 && (
+                                    <RiUserSharedFill />
+                                )}
+                                </div>
                         </div>
                         {mauType === 1 ? (
                             <TableDetail data={item.details} />
@@ -142,19 +171,9 @@ function ToaMau({ site }) {
 
                         }
 
-
                     </div>
                 ))}
-
             </div>
-
-
-
-
-
-
-
-
         </>
     )
 }
