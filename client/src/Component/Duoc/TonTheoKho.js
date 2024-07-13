@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Dropdown from "../Dropdown";
-import ViewButton from "../Button/ViewButton";
 import PharmarDetailModal from "./PharmarDetailModal";
 import Filter from "./Filter";
 import Table from "./Table";
@@ -160,6 +159,7 @@ function TonTheoKho({ site }) {
                             data={khoList}
                             setSelectedOption={setSelectedKho}
                             placeholder="Chọn kho --- "
+                            selectedOption={selectedKho}
 
                         />
 

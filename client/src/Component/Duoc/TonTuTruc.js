@@ -105,6 +105,8 @@ function TonTuTruc({ site }) {
                             <Dropdown
                                 data={khoaphongList}
                                 setSelectedOption={setSelectedKhoaphong}
+                                selectedOption={selectedKhoaphong}
+
                                 placeholder="Chọn khoa phòng "
                             />
 
@@ -119,6 +121,7 @@ function TonTuTruc({ site }) {
                                 placeholder="Chọn tủ trực"
                                 chooseIndex={1}
                                 searchable={false}
+                                selectedOption={selectedTuTruc}
 
                             />
 

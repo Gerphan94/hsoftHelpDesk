@@ -20,20 +20,16 @@ function ToaMau({ site }) {
     const [khos, setKhos] = useState([]);
     const [selectedKho, setSelectedKho] = useState({ id: '', name: '' });
     const [khoas, setKhoas] = useState([]);
+    const [selectedKhoa, setSelectedKhoa] = useState({ id: '', name: '' });
     const [tutrucs, setTutrucs] = useState([]);
+    const [selectedTutruc, setSelectedTutruc] = useState({ id: '', name: '' });
     const [dsBacsi, setDsBacsi] = useState([]);
-    const [selectedBacsi, setSelectedBacsi] = useState({ id: '', name: '' });
+    const [selectedBacsi, setSelectedBacsi] = useState({ id: '0', name: 'Tất cả' });
+    const [viewData, setViewData] = useState([]);
+
+    const [shared, setShared] = useState(0);
     // /duoc/tonkho/theokho/dskho/
-    const fetchMauDetail = async () => {
-        try {
-            const fecthURL = apiURL + "/todieutri/toamau/" + site;
-            const response = await fetch(fecthURL);
-            const data = await response.json();
-            setToaMaus(data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    }
+
     const fetchMauTonKho = async () => {
         try {
             const fecthURL = apiURL + "/todieutri/toamau/tonkho/" + site + "/" + selectedKho.id;
@@ -58,7 +54,6 @@ function ToaMau({ site }) {
 
         }
         fetchDSBS();
-        fetchMauDetail();
     }, [site]);
 
     const fetchKhoList = async () => {
@@ -90,20 +85,47 @@ function ToaMau({ site }) {
     // };
     const handClickBTN = (type) => {
         setMauType(type);
+        setViewData([]);
 
-        if (type === 1) {
-            fetchMauDetail();
+        // if (type === 1) {
+        //     fetchMauDetail();
+        // }
+        // if (type === 2) {
+        //     fetchKhoList();
+        // }
+    }
+
+
+    const handleClickView = async () => {
+        console.log("Start view....")
+        console.log(selectedBacsi, shared)
+        const fetchMauDetail = async () => {
+            try {
+                const fecthURL = apiURL + "/todieutri/toamau/detail/" + site;
+                const response = await fetch(fecthURL);
+                const data = await response.json();
+                setToaMaus(data);
+                if (selectedBacsi === 0) {
+                    
+                }
+
+                setViewData(data);
+    
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
         }
-        if (type === 2) {
-            fetchKhoList();
-        }
+
+        fetchMauDetail();
+
+        // hhhh
     }
 
     return (
         <>
             <div className=" px-3 mb-4 ">
-                <div className="bg-slate-100 w-full flex gap-10">
-                    <div className="flex gap-3 items-center h-[50px] px-4 py-1 select-none">
+                <div className="bg-slate-100 w-full flex gap-4">
+                    <div className="flex gap-3 items-center px-4 py-1 select-none bg-slate-300">
                         <button onClick={() => handClickBTN(1)}>
                             <FcViewDetails size={mauType === 1 ? 32 : 20} />
                         </button>
@@ -111,24 +133,41 @@ function ToaMau({ site }) {
                             <FcHome size={mauType === 2 ? 32 : 20} /></button>
                         <button onClick={() => handClickBTN(3)}>
                             <FcFilingCabinet size={mauType === 3 ? 32 : 20} /></button>
-
-
                     </div>
                     <div className="flex gap-2 items-center">
                         <label>Bác sĩ:</label>
                         <div className="w-96">
-                            <Dropdown data={dsBacsi} selectedOption={selectedBacsi} setSelectedOption={setSelectedBacsi} placeholder="Chọn bác sĩ" />
+                            <Dropdown data={dsBacsi} selectedOption={selectedBacsi} setSelectedOption={setSelectedBacsi} placeholder="Chọn bác sĩ" optionALL={true} />
                         </div>
+                        <label className="flex items-center gap-1">
+                            <input
+                                type="checkbox"
+                                className="w-4 h-4"
+                                checked={shared}
+                                value={shared}
+                                onChange={() => setShared(prevValue => (prevValue === 0 ? 1 : 0))}
+                            />
+                            Shared - {shared}
+
+
+                        </label>
+
+
                         <button
                             className={`${styles.btn} ${styles.btnNew}`}
-                        >Lọc BS</button>
+                            onClick={() => handleClickView(selectedBacsi.id)}
+                        >Xem</button>
 
                     </div>
                     {mauType === 2 && (
                         <div className="flex gap-3 items-center px-4 py-1 select-none">
                             <label>Kho:</label>
                             <div className="w-96">
-                                <Dropdown data={khos} setSelectedOption={setSelectedKho} placeholder="Chọn kho" />
+                                <Dropdown
+                                    data={khos}
+                                    selectedOption={selectedKho}
+                                    setSelectedOption={setSelectedKho}
+                                    placeholder="Chọn kho" />
                             </div>
                             <button
                                 className={`${styles.btn} ${styles.btnNew}`}
@@ -142,7 +181,13 @@ function ToaMau({ site }) {
                             <div className="flex gap-3 items-center px-4 py-1 select-none">
                                 <label>Khoa:</label>
                                 <div className="w-96">
-                                    <Dropdown data={[]} placeholder="Chọn khoa" />
+                                    <Dropdown data={[]} placeholder="Chọn khoa" selectedOption={selectedKhoa} setSelectedOption={setSelectedKhoa} />
+                                </div>
+                            </div>
+                            <div className="flex gap-3 items-center px-4 py-1 select-none">
+                                <label>Tủ trực:</label>
+                                <div className="w-96">
+                                    <Dropdown data={[]} placeholder="Chọn khoa" selectedOption={selectedTutruc} setSelectedOption={setSelectedTutruc} />
                                 </div>
                             </div>
                         </div>
@@ -150,7 +195,7 @@ function ToaMau({ site }) {
                 </div>
             </div>
             <div className="px-4 overflow-y-auto h-[680px]">
-                {toaMaus.map((item, index) => (
+                {viewData.map((item, index) => (
                     <div className="mb-4">
                         <div className="flex gap-2 items-center font-bold text-[#5A639C]">
                             <div>{index + 1}</div>-
@@ -161,7 +206,7 @@ function ToaMau({ site }) {
                                 {item.dungchung === 1 && (
                                     <RiUserSharedFill />
                                 )}
-                                </div>
+                            </div>
                         </div>
                         {mauType === 1 ? (
                             <TableDetail data={item.details} />

@@ -1051,7 +1051,7 @@ def todieutri_toamau_dsbacsi(site):
     return jsonify(result), 200
 
 
-@app.route('/todieutri/toamau/<site>', methods=['GET'])
+@app.route('/todieutri/toamau/detail/<site>', methods=['GET'])
 def toamau(site):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
@@ -1064,6 +1064,7 @@ def toamau(site):
         INNER JOIN DMBS B ON A.MABS = B.MA
         ORDER BY A.ID ASC
     '''
+   
     toamaus = cursor.execute(stm).fetchall()
     col_names = ['stt', 'mabd', 'ma', 'ten', 'tenhc', 'ma_mau', 'tenbd_mau', 'tenhc_mau', 'dang', 'donvidung','bhyt', 'solan', 'soluong', 'lan', 'cachnhau', 'cachdung', 'duongdung', 'tocdo', 'lieudung', 'ghichu', 'giobd', 'dalieu', 'nhombo']
     for toamau in toamaus:
