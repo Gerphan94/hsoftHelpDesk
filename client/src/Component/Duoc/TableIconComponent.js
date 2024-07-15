@@ -22,11 +22,6 @@ const iconMapping = {
 const ItemComponent = ({ dvt }) => {
 
     const formatDVT = dvt.toUpperCase().replace(/\s/g, '')
-
-    if(dvt === 'Bơm tiêm') {
-        console.log(formatDVT)
-    }
-
     const IconComponent = iconMapping[formatDVT] || MdMoreHoriz;
     return (
         <div className='text-[#304463]'>

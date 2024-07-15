@@ -6,7 +6,7 @@ import styles from "../styles.module.css"
 function Filter({ idkho, site, filter, setFilter, setSelectedAtc, setTyleBH }) {
 
     const apiURL = process.env.REACT_APP_API_URL;
-    console.log(idkho)
+    console.log('rending filter......')
     const [atcs, setAtcs] = useState([]);
 
     const tyleBHYTs = [

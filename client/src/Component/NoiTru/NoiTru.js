@@ -55,7 +55,7 @@ function NoiTru({ site }) {
             <div className="flex p-2 gap-2 items-center">
                 <label className="font-bold">Khoa: </label>
                 <div className="w-[600px]">
-                    <Dropdown data={khoas} setSelectedOption={setSelectedKhoa} />
+                    <Dropdown data={khoas} selectedOption={selectedKhoa} setSelectedOption={setSelectedKhoa} />
                 </div>
                 <div className="h-full">
                     <ViewButton onClick={gethiendien} />

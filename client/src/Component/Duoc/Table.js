@@ -49,14 +49,14 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                             <th><div className="w-36">Hoạt chất</div></th>
                             <th><div className="text-left w-20">DVD</div></th>
                             <th><div className="w-28">Đường dùng</div></th>
-                            <th><div className="w-28">ATC</div></th>
+                            {/* <th><div className="w-28">ATC</div></th> */}
                             <th><div className="text-right w-20">Tồn đầu</div></th>
                             <th><div className="text-right w-20">Nhập</div></th>
                             <th><div className="text-right w-20">Xuất</div></th>
                             <th><div className="text-right w-20">Tồn cuối</div></th>
                             <th><div className="text-right w-20">SLYC</div></th>
                             <th><div className="text-right w-20">SLKD</div></th>
-                            <th><div className="text-center w-20">TồnBH</div></th>
+                            {/* <th><div className="text-center w-20">TồnBH</div></th> */}
                         </tr>
                     </thead>
                     <tbody>
@@ -82,7 +82,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                             {item.duocbvid === 3 ?
                                                 <TbCircleLetterK className="text-orange-700" /> : ''}
                                         </span>
-                                        
+
                                     </div>
                                 </td>
                                 <td className="text-center">{index + 1}</td>
@@ -95,13 +95,13 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                         <div className="mr-2">
                                             <ItemComponent dvt={item.dvt} />
                                         </div>
-                                        <div> {item.tenbd}</div> |
+                                        <div> {item.tenbd}</div>
                                         {/* <span className="italic text-zinc-500">{item.tenhc}</span> */}
                                     </div>
                                 </td>
                                 <td>
                                     <div className="w-28 text-left truncate ...">
-                                    {item.tenhc}
+                                        {item.tenhc}
                                     </div>
                                 </td>
                                 <td className="text-left">{item.dvd}</td>
@@ -110,14 +110,14 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                         {item.duongdung}
                                     </div>
                                 </td>
-                                <td className="text-center">{item.maatc}</td>
-                                <td className="text-right">{item.tondau}</td>
-                                <td className="text-right">{item.slnhap}</td>
-                                <td className="text-right">{item.slxuat}</td>
-                                <td className={`text-right ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString()}</td>
-                                <td className="text-right">{item.slycau}</td>
-                                <td className="text-right">{item.tonkhadung}</td>
-                                <td></td>
+                                {/* <td className="text-center">{item.maatc}</td> */}
+                                <td className="text-right px-1">{Number(item.tondau).toLocaleString()}</td>
+                                <td className="text-right px-1"> {item.slnhap}</td>
+                                <td className="text-right px-1">{item.slxuat}</td>
+                                <td className={`text-right px-1 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString()}</td>
+                                <td className="text-right px-1">{item.slycau}</td>
+                                <td className="text-right px-1">{item.tonkhadung}</td>
+                                {/* <td></td> */}
                             </tr>
                         ))}
                     </tbody>

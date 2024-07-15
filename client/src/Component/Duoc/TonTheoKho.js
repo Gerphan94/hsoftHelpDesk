@@ -4,7 +4,7 @@ import PharmarDetailModal from "./PharmarDetailModal";
 import Filter from "./Filter";
 import Table from "./Table";
 import styles from "../styles.module.css";
-
+import SearchBar from "../Common/SearchBar";
 
 function TonTheoKho({ site }) {
 
@@ -127,19 +127,18 @@ function TonTheoKho({ site }) {
             setViewDatas(search(pharmars, searchvalue));
         }, 1000);
         setTimeoutId(newTimeoutId);
-        // if (searchvalue === '') {
-        //     setViewDatas(pharmars);
-        // }
-        // else {
-        //     const newTimeoutId = setTimeout(() => {
-        //         const filedata = pharmars.filter((item) =>
-        //             item.mabd.toLowerCase().includes(searchvalue.toLowerCase()) || item.tenbd.toLowerCase().includes(searchvalue.toLowerCase())
-        //         );
-        //         setViewDatas(filedata);
-        //     }, 1000);
-        //     setTimeoutId(newTimeoutId);
-        // }
     };
+
+    useEffect(() => {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        const newTimeoutId = setTimeout(() => {
+            setViewDatas(search(pharmars, searchTerm));
+        }, 1000);
+        setTimeoutId(newTimeoutId);
+    }, [searchTerm]);
+
     useEffect(() => {
         return () => {
             if (timeoutId) {
@@ -176,15 +175,16 @@ function TonTheoKho({ site }) {
                         Xem
                     </button>
                 </div>
-                <input
-                    type="text"
-                    className="border w-56 px-2 py-1 outline-none"
-                    placeholder="Nhập mã, tên, ..."
-                    value={searchTerm}
-                    spellCheck="false"
-                    onChange={handleSearch}
-                />
+               
                 {selectedAtc.id}
+
+                <div>
+                    <SearchBar 
+                    placeholder='Nhập Mã, Tên, HC' 
+                    searchTerm={searchTerm} 
+                    setSearchTerm={setSearchTerm}
+                    handleSearch={handleSearch} />
+                </div>
             </div>
 
             {/* Table */}
