@@ -15,8 +15,6 @@ function Filter({ idkho, site, filter, setFilter, setSelectedAtc, setTyleBH }) {
         {id: '1', name :'Other'}
     ];
     
-
-
     // useEffect(() => {
     //     const getDuocbvs = async () => {
     //         const response = await fetch(`${apiURL}duoc/dm_duocbv/${site}`);

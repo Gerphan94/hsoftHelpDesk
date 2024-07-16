@@ -456,17 +456,13 @@ def noitru_dskhoa(site):
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
-    
     stm = 'SELECT * FROM BTDKP_BV WHERE LOAI = 0'
-    
     khoas = cursor.execute(stm).fetchall()
-    
     for khoa in khoas:
         result.append({
             'id': khoa[0],
             'name': khoa[1]
         })
-    
     return jsonify(result)
 
 @app.route('/noitru/hiendien/<site>/<makp>', methods=['GET'])
@@ -511,7 +507,18 @@ def noitru_hiendien(site, makp):
     
     return jsonify(result), 200
 
-  
+@app.route('/noitru/dsphieuthuoc/<site>/<maql>', methods=['GET'])
+def noitru_dsphieuthuoc(site, maql):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    
+    
+    
+    
+    return jsonify(result), 200
+
 
 
 ####################################################################
