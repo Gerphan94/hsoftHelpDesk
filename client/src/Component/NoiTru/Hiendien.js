@@ -8,7 +8,7 @@ import ButtonMenu from "../ButtonMenu";
 
 
 
-function Hiendien ({ site, setSelectedPatient }) {
+function Hiendien ({ site, setSelectedPatient, setSelectedIdKhoaOfPatinent }) {
     const apiURL = process.env.REACT_APP_API_URL;
 
     const [khoas, setKhoas] = useState([]);
@@ -51,8 +51,9 @@ function Hiendien ({ site, setSelectedPatient }) {
     }, [selectedKhoa]);
 
 
-    const onClickPid = (pid, name, maql) => {
+    const onClickPid = (pid, name, idkhoa) => {
         setSelectedPatient({'pid': pid, 'name': name});
+        setSelectedIdKhoaOfPatinent(idkhoa);
     }
 
     return (
@@ -95,8 +96,7 @@ function Hiendien ({ site, setSelectedPatient }) {
                                 <tr
                                     key={index}
                                     className="even:bg-gray-100 hover:bg-blue-200"
-                                    onClick={() => onClickPid(ele.mabn, ele.hoten, ele.maql)}
-
+                                    onClick={() => onClickPid(ele.mabn, ele.hoten, ele.id.toString())}
                                 >
                                     <td>
                                         <div className="w-6">
@@ -105,7 +105,7 @@ function Hiendien ({ site, setSelectedPatient }) {
                                        
                                     </td>
                                     <td className="text-center"><div className=" py-1 text-center">{index + 1}</div></td>
-                                    <td><div className="text-left hover:underline hover:text-blue-500 cursor-pointer">{ele.mabn}</div></td>
+                                    <td><div className="text-left hover:underline hover:text-blue-500 cursor-pointer">{ele.mabn} - {ele.id}</div></td>
                                     <td><div className="flex gap-2 items-center">
                                         {ele.phai === 0 ? <AiOutlineMan className="text-blue-500" /> : <AiOutlineWoman className="text-pink-500" />}
                                         {ele.hoten}</div></td>

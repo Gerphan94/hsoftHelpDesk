@@ -471,12 +471,11 @@ def noitru_hiendien(site, makp):
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
-    
     stm = f'''
         WITH tmp_bhyt AS (
             SELECT MAQL, SOTHE FROM BHYT WHERE SUDUNG = 1 
         )
-        SELECT A.ID, A.MAVAOVIEN, A.MAQL, A.MABN, B.HOTEN, B.PHAI, B.NAMSINH, A.NGAYVV, A.NGAY AS NGAYVK, A.MAICD, D.MADOITUONG , E.DOITUONG, F.SOTHE
+        SELECT TO_CHAR(A.ID), A.MAVAOVIEN, A.MAQL, A.MABN, B.HOTEN, B.PHAI, B.NAMSINH, A.NGAYVV, A.NGAY AS NGAYVK, A.MAICD, D.MADOITUONG , E.DOITUONG, F.SOTHE
         FROM HIENDIEN A
         INNER JOIN BTDBN B ON A.MABN = B.MABN
         INNER JOIN ICD10 C ON A.MAICD = C.CICD10
@@ -507,18 +506,40 @@ def noitru_hiendien(site, makp):
     
     return jsonify(result), 200
 
-@app.route('/noitru/dsphieuthuoc/<site>/<maql>', methods=['GET'])
-def noitru_dsphieuthuoc(site, maql):
+@app.route('/noitru/dutrull_ofBN_inHiendien/<site>/<idkhoa>', methods=['GET'])
+def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
     
+    col_names = ['id', 'idduyet', 'ngaytao', 'tenphieu', 'done', 'makhoa', 'tenduockp']
     
+    stm =f'''
+        SELECT * FROM 
+        (
+            SELECT A.ID, A.IDDUYET, TO_CHAR(B.NGAY, 'HH24:MI dd/MM/yyyy') AS NGAYTAO ,  C.TEN AS TENPHIEU, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP
+                FROM {schema()}.D_DUTRULL A
+                INNER JOIN {schema()}.D_DUYET B ON A.IDDUYET = B.ID
+                INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
+                INNER JOIN D_DUOCKP D ON B.MAKP = D.ID
+                WHERE A.IDKHOA = '{idkhoa}'
+            UNION ALL
+            SELECT A.ID, A.IDDUYET, TO_CHAR(B.NGAY, 'HH24:MI dd/MM/yyyy') AS NGAYTAO ,  C.TEN AS TENPHIEU, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP
+                FROM {schema()}.D_XTUTRUCLL A
+                INNER JOIN {schema()}.D_DUYET B ON A.IDDUYET = B.ID
+                INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
+                INNER JOIN D_DUOCKP D ON B.MAKP = D.ID
+                WHERE A.IDKHOA = '{idkhoa}'
+        )
+        ORDER BY NGAYTAO desc
+    '''
     
+    dutrull = cursor.execute(stm).fetchall()
     
+    for dutru in dutrull:
+        result.append(dict(zip(col_names, dutru)))
     return jsonify(result), 200
-
 
 
 ####################################################################

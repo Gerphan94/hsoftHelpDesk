@@ -16,11 +16,11 @@ function NoiTru({ site }) {
     const [selectedKhoa, setSelectedKhoa] = useState({ id: 0, name: '' });
     const [hiendiens, setHiendiens] = useState([]);
 
-    const [selectedPatient, setSelectedPatient] = useState({'pid':'', 'name':''});
+    const [selectedPatient, setSelectedPatient] = useState({ 'pid': '', 'name': '' });
     const [selectedMaql, setSelectedMaql] = useState('');
+    const [selectedIdKhoaOfPatinent, setSelectedIdKhoaOfPatinent] = useState('');
 
     const [isShowModalThuoc, setIsShowModalThuoc] = useState(false);
-
 
     const funcBTN = [
         { id: 'thuoc', name: 'Thuốc' },
@@ -29,7 +29,7 @@ function NoiTru({ site }) {
 
     return (
         <>
-           
+
             <div className="p-4 flex flex-row justify-between">
                 <button
                     className="border px-2 py-1 select-none"
@@ -40,7 +40,8 @@ function NoiTru({ site }) {
                 <div className="flex gap-2 items-center text-left">
                     <div>{selectedPatient.pid}</div>
                     <div>{selectedPatient.name}</div>
-                    
+                    <div>{selectedIdKhoaOfPatinent}</div>
+
                 </div>
 
                 <button
@@ -51,8 +52,18 @@ function NoiTru({ site }) {
 
             </div>
 
-            {selectedBTN === 1 && <Hiendien site={site} setSelectedPatient={setSelectedPatient} /> }
-            {isShowModalThuoc && <ThuocModal setModalShow={setIsShowModalThuoc} />}
+            {selectedBTN === 1 &&
+                <Hiendien
+                    site={site}
+                    setSelectedPatient={setSelectedPatient}
+                    setSelectedIdKhoaOfPatinent={setSelectedIdKhoaOfPatinent}
+                />}
+            {isShowModalThuoc &&
+                <ThuocModal
+                    site={site}
+                    selectedIdKhoaOfPatinent={selectedIdKhoaOfPatinent}
+                    setModalShow={setIsShowModalThuoc}
+                />}
         </>
 
     );
