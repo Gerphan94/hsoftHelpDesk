@@ -74,9 +74,8 @@ function Hiendien ({ site, setSelectedPatient, setSelectedIdKhoaOfPatinent }) {
             <div>
                 <div className="mt-2 px-4 w-full lg:h-[720px] overflow-y-auto" >
                     <table className="w-full">
-                        <thead className="sticky top-0">
+                        <thead>
                             <tr className="bg-gray-200 ">
-                                <th></th>
                                 <th className="text-center"><div className=" py-1 text-center">STT</div></th>
                                 <th className=""><div className="">PID</div></th>
                                 <th className=""><div>Họ tên</div></th>
@@ -98,12 +97,6 @@ function Hiendien ({ site, setSelectedPatient, setSelectedIdKhoaOfPatinent }) {
                                     className="even:bg-gray-100 hover:bg-blue-200"
                                     onClick={() => onClickPid(ele.mabn, ele.hoten, ele.id.toString())}
                                 >
-                                    <td>
-                                        <div className="w-6">
-                                        <ButtonMenu data={funcs}  />
-                                        </div>
-                                       
-                                    </td>
                                     <td className="text-center"><div className=" py-1 text-center">{index + 1}</div></td>
                                     <td><div className="text-left hover:underline hover:text-blue-500 cursor-pointer">{ele.mabn} - {ele.id}</div></td>
                                     <td><div className="flex gap-2 items-center">
