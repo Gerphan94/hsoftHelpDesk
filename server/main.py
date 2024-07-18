@@ -513,26 +513,25 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
     cursor = connection.cursor()
     result = []
     
-    col_names = ['id', 'idduyet', 'ngaytao', 'tenphieu', 'done', 'makhoa', 'tenduockp']
-    
+    # get all phieu 
+    col_names = ['id', 'idduyet', 'ngaytao', 'giotao', 'loai', 'tenphieu', 'xuatvien', 'done', 'makhoaduockp', 'tenduockp']
+        
     stm =f'''
-        SELECT * FROM 
-        (
-            SELECT A.ID, A.IDDUYET, TO_CHAR(B.NGAY, 'HH24:MI dd/MM/yyyy') AS NGAYTAO ,  C.TEN AS TENPHIEU, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP
-                FROM {schema()}.D_DUTRULL A
-                INNER JOIN {schema()}.D_DUYET B ON A.IDDUYET = B.ID
-                INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
-                INNER JOIN D_DUOCKP D ON B.MAKP = D.ID
-                WHERE A.IDKHOA = '{idkhoa}'
-            UNION ALL
-            SELECT A.ID, A.IDDUYET, TO_CHAR(B.NGAY, 'HH24:MI dd/MM/yyyy') AS NGAYTAO ,  C.TEN AS TENPHIEU, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP
-                FROM {schema()}.D_XTUTRUCLL A
-                INNER JOIN {schema()}.D_DUYET B ON A.IDDUYET = B.ID
-                INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
-                INNER JOIN D_DUOCKP D ON B.MAKP = D.ID
-                WHERE A.IDKHOA = '{idkhoa}'
+        WITH DSPHIEU AS (
+            SELECT A.ID, A.IDDUYET
+            FROM hsofttamanh0724.D_DUTRULL A
+            WHERE A.IDKHOA = '240717085119541142'
+            UNION ALL 
+            SELECT B.ID, B.IDDUYET
+            FROM hsofttamanh0724.D_XTUTRUCLL B
+            WHERE B.IDKHOA = '240717085119541142'
         )
-        ORDER BY NGAYTAO desc
+        SELECT DS.ID, DS.IDDUYET, TO_CHAR(B.NGAY, 'dd/MM/yyyy') AS NGAYTAO, TO_CHAR(B.NGAY, 'HH24:MI') AS GIOTAO , B.LOAI, C.TEN AS TENPHIEU, C.XUATVIEN, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP
+        FROM DSPHIEU DS
+        INNER JOIN hsofttamanh0724.D_DUYET B ON DS.IDDUYET = B.ID
+        INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
+        INNER JOIN D_DUOCKP D ON B.MAKP = D.ID
+        ORDER BY NGAYTAO DESC, GIOTAO DESC
     '''
     
     dutrull = cursor.execute(stm).fetchall()

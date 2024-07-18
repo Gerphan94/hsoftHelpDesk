@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles.module.css"
+import { RiFile3Line, RiFileTransferLine } from "react-icons/ri";
+import { RiFileChart2Line } from "react-icons/ri";
+import { FaRegSquareCheck } from "react-icons/fa6";
+import { LuFolderCheck } from "react-icons/lu";
+import { BsFillSendFill } from "react-icons/bs";
+import { RiNumbersFill } from "react-icons/ri";
+import { IoCheckbox } from "react-icons/io5";
+
 
 function ThuocModal({ site, setModalShow, selectedIdKhoaOfPatinent }) {
 
@@ -9,18 +17,25 @@ function ThuocModal({ site, setModalShow, selectedIdKhoaOfPatinent }) {
 
     const [dutrull, setDutrull] = useState([]);
 
-    useEffect(() => {
-        const fetchDutrull = async () => {
 
-            const fetchUrl = apiURL + "noitru/dutrull_ofBN_inHiendien/" + site + "/" + selectedIdKhoaOfPatinent
-            console.log(fetchUrl)
-            const response = await fetch(fetchUrl);
-            const data = await response.json();
-            console.log(data)
-            setDutrull(data);
-        }
+    const fetchDutrull = async () => {
+
+        const fetchUrl = apiURL + "noitru/dutrull_ofBN_inHiendien/" + site + "/" + selectedIdKhoaOfPatinent
+        console.log(fetchUrl)
+        const response = await fetch(fetchUrl);
+        const data = await response.json();
+        console.log(data)
+        setDutrull(data);
+    }
+
+    useEffect(() => {
         fetchDutrull();
     }, [selectedIdKhoaOfPatinent]);
+
+
+    const onClickReload = () => {
+        fetchDutrull();
+    }
 
 
 
@@ -36,26 +51,43 @@ function ThuocModal({ site, setModalShow, selectedIdKhoaOfPatinent }) {
                             </div>
 
                             {/* BODY */}
-                            <div className="flex h-full ">
-                                <div className="w-1/3 h-full  text-left">
-                                    <div className="p-4">
+                            <div className="flex h-full p-4 overflow-hidden ">
+                                <div className="w-1/3 flex-grow h-full text-left overflow-y-auto ">
+                                    <div className="p-2">
                                         {dutrull.map((item) => (
+                                            <div className="py-4">
+                                                <div className={`relative border rounded-md p-2 hover:bg-[#EEEDEB] ${item.loai}`}>
+                                                    <span className={`absolute top-[-18px] left-1 text-xs border rounded-xl px-2 py-0.5 text-[#fff] ${item.loai === 1 && item.xuatvien === 0 ? 'bg-[#667BC6]' : item.loai === 1 && item.xuatvien === 1 ? 'bg-[#379777]' : 'bg-[#E68369]'}`}>
+                                                        {item.loai === 1 && item.xuatvien === 0 ? "Phiếu lĩnh thường quy"
 
-                                            <div className={`border rounded-md p-2 mb-2 ${item.loai}`}>
-                                                <div className="flex gap-2">
-                                                    <div>
-                                                        {item.tenphieu}
+                                                            : item.loai === 1 && item.xuatvien === 1 ? "Toa thuốc ra viện" :
+                                                                "Xuất tủ trực"
 
+                                                        }
+                                                    </span>
+                                                    <div className="flex justify-between ">
+                                                        <div className="flex gap-2 items-center">
+                                                            {
+                                                                item.done === 0 ? (
+                                                                    <RiFile3Line />
+                                                                ) : item.done === 1 ? (
+                                                                    <BsFillSendFill className="text-[#4535C1]"  />
+                                                                ) : item.done === 2 ? (
+                                                                    <IoCheckbox className="text-[#379777]" />
+                                                                ) : (
+                                                                    <RiNumbersFill />
+                                                                )
+                                                            }
+                                                            <div className="text-left">{item.tenphieu}</div>
+                                                        </div>
+                                                        <div className="italic text-sm">{item.ngaytao} {item.giotao}</div>
                                                     </div>
-                                                    <div>{item.ngaytao}</div>
                                                 </div>
 
 
                                             </div>
 
-
                                         ))}
-
                                     </div>
 
                                 </div>
@@ -87,6 +119,13 @@ function ThuocModal({ site, setModalShow, selectedIdKhoaOfPatinent }) {
                             </div>
                             {/* FOOTER  */}
                             <div className="w-full flex gap-4 items-center justify-end px-4 py-3 bg-[#f5f5f5] relative">
+                                <button
+                                    className={`${styles.btn} ${styles.btnNew}`}
+                                    onClick={onClickReload}
+                                >
+                                    Xem
+                                </button>
+
                                 <button
                                     className={`${styles.btn} ${styles.btnClose}`}
                                     type="button"
