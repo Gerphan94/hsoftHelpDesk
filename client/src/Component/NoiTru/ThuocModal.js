@@ -3,9 +3,9 @@ import styles from "../styles.module.css"
 import CouponComponent from "./CouponComponent";
 
 
-function ThuocModal({ site, setModalShow, selectedIdKhoaOfPatinent }) {
+function ThuocModal({ site, pid, hoten , setModalShow, selectedIdKhoaOfPatinent }) {
 
-    const title = 'THUỐC';
+    const title = 'THUỐC - ' + pid + ' - ' + hoten;
 
     const apiURL = process.env.REACT_APP_API_URL;
 
@@ -52,7 +52,6 @@ function ThuocModal({ site, setModalShow, selectedIdKhoaOfPatinent }) {
                                         <CouponComponent item={item} selectedCoupon={selectedCoupon} setSelectedCoupon={setSelectedCoupon} />
                                     ))}
                                 </div>
-
                             </div>
                             <div className="w-2/3 h-full">
                                 <div className="mt-2 px-4 w-full lg:h-[720px] overflow-y-auto" >

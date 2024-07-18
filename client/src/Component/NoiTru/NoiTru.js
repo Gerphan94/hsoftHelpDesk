@@ -17,7 +17,6 @@ function NoiTru({ site }) {
     const [hiendiens, setHiendiens] = useState([]);
 
     const [selectedPatient, setSelectedPatient] = useState({ 'pid': '', 'name': '' });
-    const [selectedMaql, setSelectedMaql] = useState('');
     const [selectedIdKhoaOfPatinent, setSelectedIdKhoaOfPatinent] = useState('');
 
     const [isShowModalThuoc, setIsShowModalThuoc] = useState(false);
@@ -29,7 +28,6 @@ function NoiTru({ site }) {
 
     return (
         <>
-
             <div className="p-4 flex flex-row justify-between">
                 <button
                     className="border px-2 py-1 select-none"
@@ -51,7 +49,6 @@ function NoiTru({ site }) {
                 </button>
 
             </div>
-
             {selectedBTN === 1 &&
                 <Hiendien
                     site={site}
@@ -61,12 +58,12 @@ function NoiTru({ site }) {
             {isShowModalThuoc &&
                 <ThuocModal
                     site={site}
+                    pid={selectedPatient.pid}
+                    hoten={selectedPatient.name}
                     selectedIdKhoaOfPatinent={selectedIdKhoaOfPatinent}
                     setModalShow={setIsShowModalThuoc}
                 />}
         </>
-
     );
 }
-
 export default NoiTru;
