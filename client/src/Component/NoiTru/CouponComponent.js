@@ -7,7 +7,7 @@ import { BsFillSendFill } from "react-icons/bs";
 import { RiNumbersFill } from "react-icons/ri";
 import { IoCheckbox } from "react-icons/io5";
 
-function CouponComponent({ item, selectedCoupon, setSelectedCoupon }) {
+function CouponComponent({ item, selectedCoupon, setSelectedCoupon, setselectedCouponType }) {
 
     const [bgColor, setBgColor] = useState('')
     console.log('Rending Coupon Component...')
@@ -15,40 +15,44 @@ function CouponComponent({ item, selectedCoupon, setSelectedCoupon }) {
         'bg': '',
         'border': ''
     })
+
+    console.log(item.loaiphieu)
     useEffect(() => {
-        if (item.loai === 1 && item.xuatvien === 0) {
+        if (item.loaiphieu === 1) {
             setColor({
                 'bg': 'bg-[#379777]',
                 'border': 'border-[#379777]'
-
             })
-        } else if (item.loai === 1 && item.xuatvien === 1) {
+        } else if (item.loaiphieu === 3) {
             setColor({
                 'bg': 'bg-[#667BC6]',
                 'border': 'border-[#667BC6]'
-
             })
         } else {
             setColor({
                 'bg': 'bg-[#E76F51]',
                 'border': 'border-[#E76F51]'
-
             })
         }
 
     }, [item])
 
+
+    const onClick = (id, type) => {
+        console.log(id, type)
+        setselectedCouponType(type);
+        setSelectedCoupon(id)
+    }
     return (
         <>
             <div className="py-4">
                 <div
                     className={`relative border rounded-md p-2 hover:bg-[#EEEDEB] cursor-pointer ${item.id === selectedCoupon ? color.border : ''} ${item.id === selectedCoupon ? 'bg-[#EEEDEB]' : ''}`}
-                    onClick={() => setSelectedCoupon(item.id)}
+                    onClick={() => onClick(item.id, item.loaiphieu)}
                 >
                     <span className={`absolute top-[-18px] left-1 text-xs border rounded-xl px-2 py-0.5 text-[#fff] ${color.bg}`}>
-                        {item.loai === 1 && item.xuatvien === 0 ? "Phiếu lĩnh thường quy"
-
-                            : item.loai === 1 && item.xuatvien === 1 ? "Toa thuốc ra viện" :
+                        {item.loaiphieu === 1 ? "Phiếu lĩnh thường quy"
+                            : item.loaiphieu === 3 ? "Toa thuốc ra viện" :
                                 "Xuất tủ trực"
                         }
                     </span>

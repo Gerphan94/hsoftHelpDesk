@@ -514,30 +514,71 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
     result = []
     
     # get all phieu 
-    col_names = ['id', 'idduyet', 'ngaytao', 'giotao', 'loai', 'tenphieu', 'xuatvien', 'done', 'makhoaduockp', 'tenduockp']
+    col_names = ['id', 'idduyet', 'songay', 'ngaytao', 'giotao', 'tenphieu', 'done', 'makhoaduockp', 'tenduockp', 'loaiphieu']
         
     stm =f'''
         WITH DSPHIEU AS (
-            SELECT A.ID, A.IDDUYET
+            SELECT A.ID, A.IDDUYET, A.SONGAY
             FROM {schema()}.D_DUTRULL A
             WHERE A.IDKHOA = '{idkhoa}'
             UNION ALL 
-            SELECT B.ID, B.IDDUYET
+            SELECT B.ID, B.IDDUYET, B.SONGAY
             FROM {schema()}.D_XTUTRUCLL B
             WHERE B.IDKHOA = '{idkhoa}'
         )
-        SELECT DS.ID, DS.IDDUYET, TO_CHAR(B.NGAY, 'dd/MM/yyyy') AS NGAYTAO, TO_CHAR(B.NGAY, 'HH24:MI') AS GIOTAO , B.LOAI, C.TEN AS TENPHIEU, C.XUATVIEN, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP
+        SELECT DS.ID, DS.IDDUYET, DS.SONGAY, TO_CHAR(B.NGAY, 'dd/MM/yyyy') AS NGAYTAO, TO_CHAR(B.NGAY, 'HH24:MI') AS GIOTAO , C.TEN AS TENPHIEU, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP,
+        CASE
+
+            WHEN B.LOAI = 1 AND C.XUATVIEN = 0 THEN 1
+            WHEN B.LOAI = 2 THEN 2
+            ELSE 3
+        END AS LOAIPHIEU
         FROM DSPHIEU DS
         INNER JOIN {schema()}.D_DUYET B ON DS.IDDUYET = B.ID
         INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
         INNER JOIN D_DUOCKP D ON B.MAKP = D.ID
         ORDER BY NGAYTAO DESC, GIOTAO DESC
     '''
-    
     dutrull = cursor.execute(stm).fetchall()
     
     for dutru in dutrull:
         result.append(dict(zip(col_names, dutru)))
+    return jsonify(result), 200
+
+@app.route('/noitru/dutru_ct/<site>/<id>', methods=['GET'])
+def noitru_dutru_ct(site, id):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    col_names = ['stt_index', 'tt', 'doituong', 'mabd', 'ten_hamluong', 'dang', 'donvidung', 'duongdung', 'solan', 'lan', 'soluong', 'sang', 'trua', 'chieu', 'toi']
+    stm = f'''
+        SELECT A.STT AS STT_INDEX, A.TT, B.DOITUONG, A.MABD, (C.TEN || ' ' || C.HAMLUONG) AS TEN_HAMLUONG, C.DANG, C.DONVIDUNG, A.DUONGDUNG,
+        A.SOLAN , A.LAN ,  A.SLYEUCAU AS SOLUONG,
+        A.N1 AS SANG, A.N2 AS TRUA, A.N3 AS CHIEU, A.BS AS TOI
+        FROM {schema()}.D_DUTRUCT A
+        INNER JOIN D_DOITUONG B ON B.MADOITUONG = A.MADOITUONG
+        INNER JOIN D_DMBD C ON C.ID = A.MABD 
+        WHERE A.ID = '{id}'
+    '''
+    
+    dutruct = cursor.execute(stm).fetchall()
+    for dutru in dutruct:
+        result.append(dict(zip(col_names, dutru)))
+
+    return jsonify(result), 200
+
+@app.route('/noitru/toaravien_ct/<site>/<id>', methods=['GET'])
+def noitru_toaravien_ct(site, id):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    stm = f'''
+
+    
+    '''
+
     return jsonify(result), 200
 
 

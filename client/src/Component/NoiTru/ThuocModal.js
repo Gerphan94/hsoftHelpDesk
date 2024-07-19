@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import styles from "../styles.module.css"
 import CouponComponent from "./CouponComponent";
+import ThuocTable from "./ThuocTable";
+import ThuocDetail from "./ThuocModalDetail";
 
-
-function ThuocModal({ site, pid, hoten , setModalShow, selectedIdKhoaOfPatinent }) {
+function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }) {
 
     const title = 'THUỐC - ' + pid + ' - ' + hoten;
 
@@ -11,16 +12,26 @@ function ThuocModal({ site, pid, hoten , setModalShow, selectedIdKhoaOfPatinent 
 
     const [dutrull, setDutrull] = useState([]);
     const [selectedCoupon, setSelectedCoupon] = useState('');
+    const [selectedCouponType, setselectedCouponType] = useState(0);
+    const [groupedData, setGroupedData] = useState({});
 
 
     const fetchDutrull = async () => {
-
         const fetchUrl = apiURL + "noitru/dutrull_ofBN_inHiendien/" + site + "/" + selectedIdKhoaOfPatinent
-        console.log(fetchUrl)
         const response = await fetch(fetchUrl);
         const data = await response.json();
-        console.log(data)
-        setDutrull(data);
+
+        const grouped = data.reduce((acc, item) => {
+            const date = item.ngaytao;
+            if (!acc[date]) {
+                acc[date] = [];
+            }
+            acc[date].push(item);
+            return acc;
+
+        }, {});
+        console.log(grouped)
+        setDutrull(grouped);
     }
 
     useEffect(() => {
@@ -31,9 +42,6 @@ function ThuocModal({ site, pid, hoten , setModalShow, selectedIdKhoaOfPatinent 
     const onClickReload = () => {
         fetchDutrull();
     }
-
-
-
     return (
         <>
             <div className="fixed inset-0 z-50 outline-none focus:outline-none p-14 w-screen h-screen ">
@@ -48,33 +56,24 @@ function ThuocModal({ site, pid, hoten , setModalShow, selectedIdKhoaOfPatinent 
                         <div className="flex h-full p-4 overflow-hidden ">
                             <div className="w-1/3 flex-grow h-full text-left overflow-y-auto ">
                                 <div className="p-2">
-                                    {dutrull.map((item) => (
-                                        <CouponComponent item={item} selectedCoupon={selectedCoupon} setSelectedCoupon={setSelectedCoupon} />
+                                    {Object.keys(dutrull).map((date) => (
+                                        <div key={date}>
+                                            <div className="">
+                                                <div className="w-full py-1 bg-slate-200 mb-2 flex items-center justify-between">
+                                                    <div>Ngày: {date}</div>
+                                                    <span className="px-2 font-bold">{dutrull[date].length}</span>
+                                                </div>
+                                            </div>
+                                            {dutrull[date].map(item => (
+                                                <CouponComponent item={item} selectedCoupon={selectedCoupon} setSelectedCoupon={setSelectedCoupon} setselectedCouponType={setselectedCouponType} />
+                                            ))}
+                                        </div>
                                     ))}
                                 </div>
                             </div>
                             <div className="w-2/3 h-full">
                                 <div className="mt-2 px-4 w-full lg:h-[720px] overflow-y-auto" >
-                                    <table className="w-full">
-                                        <thead className="sticky top-0">
-                                            <tr className="bg-gray-200 ">
-                                                <th></th>
-                                                <th className="text-center"><div className=" py-1 text-center">STT</div></th>
-                                                <th className=""><div className="">PID</div></th>
-                                                <th className=""><div>Họ tên</div></th>
-                                                <th><div>Năm sinh</div></th>
-                                                <th><div className="text-center">Ngày VV</div></th>
-                                                <th><div className="text-center">Ngày VK</div></th>
-                                                <th><div>Đối tượng</div></th>
-                                                <th><div className="text-center">BHYT</div></th>
-                                                <th><div className="text-center">Số ngày ĐT</div></th>
-                                                <th><div className="text-center">...</div></th>
-                                            </tr>
-
-                                        </thead>
-                                        <tbody>
-                                        </tbody>
-                                    </table>
+                                    <ThuocDetail data={[]} />
                                 </div>
 
                             </div>

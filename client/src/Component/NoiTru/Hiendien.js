@@ -55,7 +55,6 @@ function Hiendien ({ site, setSelectedPatient, setSelectedIdKhoaOfPatinent }) {
         setSelectedPatient({'pid': pid, 'name': name});
         setSelectedIdKhoaOfPatinent(idkhoa);
     }
-
     return (
         <>
             <div className="flex p-2 gap-2 items-center">
@@ -98,7 +97,7 @@ function Hiendien ({ site, setSelectedPatient, setSelectedIdKhoaOfPatinent }) {
                                     onClick={() => onClickPid(ele.mabn, ele.hoten, ele.id.toString())}
                                 >
                                     <td className="text-center"><div className=" py-1 text-center">{index + 1}</div></td>
-                                    <td><div className="text-left hover:underline hover:text-blue-500 cursor-pointer">{ele.mabn} - {ele.id}</div></td>
+                                    <td><div className="text-left hover:underline hover:text-blue-500 cursor-pointer">{ele.mabn}</div></td>
                                     <td><div className="flex gap-2 items-center">
                                         {ele.phai === 0 ? <AiOutlineMan className="text-blue-500" /> : <AiOutlineWoman className="text-pink-500" />}
                                         {ele.hoten}</div></td>
