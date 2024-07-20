@@ -50,6 +50,26 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
     
 
 
+    useEffect(() => {
+        let fetchUrl = '';
+        if (selectedCouponType === 2) {
+            fetchUrl = apiURL + "/noitru/dutru_ct/" + site + "/" + selectedCouponID
+        }
+        else {
+            fetchUrl = apiURL + "/noitru/dutru_ct/" + site + "/" + selectedCouponID
+        }
+        const fetchMedicineDetail = async () => {
+            const response = await fetch(fetchUrl);
+            const data = await response.json();
+            console.log(data)
+            setMedicineDetail(data);
+        }
+        fetchMedicineDetail();
+
+    },[selectedCouponID])
+
+
+
 
 
     return (
