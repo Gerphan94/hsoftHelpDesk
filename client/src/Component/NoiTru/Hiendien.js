@@ -65,8 +65,10 @@ function Hiendien ({ site, setSelectedPatient, setSelectedIdKhoaOfPatinent }) {
                 <div className="h-full">
                     <ViewButton onClick={gethiendien} />
                 </div>
-
                 <TouchSwitch />
+                <div>
+                    <input type="text" className="border px-2 py-1 outline-none h-8 "  />
+                </div>
 
             </div>
            

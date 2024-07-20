@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { RiFile3Line, RiFileTransferLine } from "react-icons/ri";
-import { RiFileChart2Line } from "react-icons/ri";
-import { FaRegSquareCheck } from "react-icons/fa6";
-import { LuFolderCheck } from "react-icons/lu";
+
 import { BsFillSendFill } from "react-icons/bs";
 import { RiNumbersFill } from "react-icons/ri";
 import { IoCheckbox } from "react-icons/io5";
 
-function CouponComponent({ item, selectedCoupon, setSelectedCoupon, setselectedCouponType }) {
+function CouponComponent({ item, selectedCouponID, setSelectedCouponID, setSelectedCouponType, setMedicineDetail }) {
 
-    const [bgColor, setBgColor] = useState('')
-    console.log('Rending Coupon Component...')
+    const apiURL = process.env.REACT_APP_API_URL;
+
     const [color, setColor] = useState({
         'bg': '',
         'border': ''
@@ -38,16 +36,26 @@ function CouponComponent({ item, selectedCoupon, setSelectedCoupon, setselectedC
     }, [item])
 
 
+    const fetchMedidicineDetail = async (id) => {
+
+        
+
+        const response = await fetch(`${apiURL}/api/medicines/${id}`);
+        const data = await response.json();
+        setMedicineDetail(data)
+    }
+
+
     const onClick = (id, type) => {
         console.log(id, type)
-        setselectedCouponType(type);
-        setSelectedCoupon(id)
+        setSelectedCouponType(type);
+        setSelectedCouponID(id)
     }
     return (
         <>
             <div className="py-4">
                 <div
-                    className={`relative border rounded-md p-2 hover:bg-[#EEEDEB] cursor-pointer ${item.id === selectedCoupon ? color.border : ''} ${item.id === selectedCoupon ? 'bg-[#EEEDEB]' : ''}`}
+                    className={`relative border rounded-md p-2 hover:bg-[#EEEDEB] cursor-pointer ${item.id === selectedCouponID ? color.border : ''} ${item.id === selectedCouponID ? 'bg-[#EEEDEB]' : ''}`}
                     onClick={() => onClick(item.id, item.loaiphieu)}
                 >
                     <span className={`absolute top-[-18px] left-1 text-xs border rounded-xl px-2 py-0.5 text-[#fff] ${color.bg}`}>
@@ -69,7 +77,7 @@ function CouponComponent({ item, selectedCoupon, setSelectedCoupon, setselectedC
                                     <RiNumbersFill />
                                 )
                             }
-                            <div className="text-left">{item.tenphieu}</div>
+                            <div className="text-left">{item.tenphieu} - {selectedCouponID}</div>
                         </div>
                         <div className="italic text-sm">{item.ngaytao} {item.giotao}</div>
                     </div>

@@ -11,10 +11,10 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
     const apiURL = process.env.REACT_APP_API_URL;
 
     const [dutrull, setDutrull] = useState([]);
-    const [selectedCoupon, setSelectedCoupon] = useState('');
-    const [selectedCouponType, setselectedCouponType] = useState(0);
+    const [selectedCouponID, setSelectedCouponID] = useState('');
+    const [selectedCouponType, setSelectedCouponType] = useState(0);
     const [groupedData, setGroupedData] = useState({});
-
+    const [medicineDetail, setMedicineDetail] = useState([]);
 
     const fetchDutrull = async () => {
         const fetchUrl = apiURL + "noitru/dutrull_ofBN_inHiendien/" + site + "/" + selectedIdKhoaOfPatinent
@@ -42,6 +42,16 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
     const onClickReload = () => {
         fetchDutrull();
     }
+
+
+    useEffect(() => {
+        setGroupedData(dutrull);
+    }, [dutrull]);
+    
+
+
+
+
     return (
         <>
             <div className="fixed inset-0 z-50 outline-none focus:outline-none p-14 w-screen h-screen ">
@@ -65,7 +75,14 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
                                                 </div>
                                             </div>
                                             {dutrull[date].map(item => (
-                                                <CouponComponent item={item} selectedCoupon={selectedCoupon} setSelectedCoupon={setSelectedCoupon} setselectedCouponType={setselectedCouponType} />
+                                                <CouponComponent 
+                                                item={item} 
+                                                selectedCouponID={selectedCouponID} 
+                                                setSelectedCouponID={setSelectedCouponID} 
+                                                setSelectedCouponType={setSelectedCouponType}
+                                                setMedicineDetail={setMedicineDetail}
+                                                
+                                                />
                                             ))}
                                         </div>
                                     ))}
@@ -73,7 +90,7 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
                             </div>
                             <div className="w-2/3 h-full">
                                 <div className="mt-2 px-4 w-full lg:h-[720px] overflow-y-auto" >
-                                    <ThuocDetail data={[]} />
+                                    <ThuocDetail data={medicineDetail} />
                                 </div>
 
                             </div>

@@ -512,10 +512,9 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
-    
+
     # get all phieu 
-    col_names = ['id', 'idduyet', 'songay', 'ngaytao', 'giotao', 'tenphieu', 'done', 'makhoaduockp', 'tenduockp', 'loaiphieu']
-        
+    col_names = ['id', 'idduyet', 'songay', 'ngaytao', 'giotao', 'tenphieu', 'done', 'makhoaduockp', 'tenduockp', 'loaiphieu'] 
     stm =f'''
         WITH DSPHIEU AS (
             SELECT A.ID, A.IDDUYET, A.SONGAY
@@ -526,9 +525,8 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
             FROM {schema()}.D_XTUTRUCLL B
             WHERE B.IDKHOA = '{idkhoa}'
         )
-        SELECT DS.ID, DS.IDDUYET, DS.SONGAY, TO_CHAR(B.NGAY, 'dd/MM/yyyy') AS NGAYTAO, TO_CHAR(B.NGAY, 'HH24:MI') AS GIOTAO , C.TEN AS TENPHIEU, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP,
+        SELECT to_char(DS.ID) AS ID, DS.IDDUYET, DS.SONGAY, TO_CHAR(B.NGAY, 'dd/MM/yyyy') AS NGAYTAO, TO_CHAR(B.NGAY, 'HH24:MI') AS GIOTAO , C.TEN AS TENPHIEU, B.DONE, B.MAKHOA, D.TEN AS TENDUOCKP,
         CASE
-
             WHEN B.LOAI = 1 AND C.XUATVIEN = 0 THEN 1
             WHEN B.LOAI = 2 THEN 2
             ELSE 3
