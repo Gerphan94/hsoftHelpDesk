@@ -1,79 +1,21 @@
 import React, { useEffect, useState } from "react";
-import Dropdown from "../Dropdown";
-import ViewButton from "../Button/ViewButton";
+
 import { AiOutlineMan, AiOutlineWoman } from "react-icons/ai";
-import TouchSwitch from "../TouchSwitch";
-
-import ButtonMenu from "../ButtonMenu";
 
 
 
-function Hiendien ({ site, setSelectedPatient, setSelectedIdKhoaOfPatinent }) {
-    const apiURL = process.env.REACT_APP_API_URL;
 
-    const [khoas, setKhoas] = useState([]);
-    const [selectedKhoa, setSelectedKhoa] = useState({ id: 0, name: '' });
-    const [hiendiens, setHiendiens] = useState([]);
-    const [selectedFunc, setSelectedFunc] = useState({id: '', name:''});
-
-    const funcs = [
-        { id: 'thuoc', name: 'Thuốc' },
-        { id: 'dichvu', name: 'Dịch vụ' }
-    ]
-
-    useEffect(() => async () => {
-        try {
-            const fecthURL = apiURL + "/noitru/dskhoa/" + site;
-            const response = await fetch(fecthURL);
-            const data = await response.json();
-            setKhoas(data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-
-    }, []);
-
-    const gethiendien = async () => {
-        console.log("Fetching data...");
-        try {
-            const fecthURL = apiURL + "noitru/hiendien/" + site + "/" + selectedKhoa.id;
-            console.log(fecthURL)
-            const response = await fetch(fecthURL);
-            const data = await response.json();
-            setHiendiens(data);
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    }
-
-    useEffect(() => {
-        gethiendien();
-    }, [selectedKhoa]);
-
+function Hiendien ({ data, selectedPid, setSelectedPatient, setSelectedIdKhoaOfPatinent }) {
 
     const onClickPid = (pid, name, idkhoa) => {
         setSelectedPatient({'pid': pid, 'name': name});
         setSelectedIdKhoaOfPatinent(idkhoa);
-    }
+    };
+
     return (
         <>
-            <div className="flex p-2 gap-2 items-center">
-                <label className="font-bold">Khoa: </label>
-                <div className="w-[600px]">
-                    <Dropdown data={khoas} selectedOption={selectedKhoa} setSelectedOption={setSelectedKhoa} />
-                </div>
-                <div className="h-full">
-                    <ViewButton onClick={gethiendien} />
-                </div>
-                <TouchSwitch />
-                <div>
-                    <input type="text" className="border px-2 py-1 outline-none h-8 "  />
-                </div>
-
-            </div>
-           
-            <div>
-                <div className="mt-2 px-4 w-full lg:h-[720px] overflow-y-auto" >
+            <div className="h-[600px]">
+                <div className="mt-2 px-4 flex-grow w-full h-full overflow-y-auto" >
                     <table className="w-full">
                         <thead>
                             <tr className="bg-gray-200 ">
@@ -85,17 +27,18 @@ function Hiendien ({ site, setSelectedPatient, setSelectedIdKhoaOfPatinent }) {
                                 <th><div className="text-center">Ngày VK</div></th>
                                 <th><div>Đối tượng</div></th>
                                 <th><div className="text-center">BHYT</div></th>
+                                <th><div className="text-center">Nhóm máu</div></th>
                                 <th><div className="text-center">Số ngày ĐT</div></th>
                                 <th><div className="text-center">...</div></th>
                             </tr>
-
                         </thead>
                         <tbody>
-                            {hiendiens.map((ele, index) => (
-
+                            {data.map((ele, index) => (
                                 <tr
                                     key={index}
-                                    className="even:bg-gray-100 hover:bg-blue-200"
+                                    className={`${selectedPid === ele.mabn ? '!bg-[#96C9F4]' : ''}`}
+                                    
+                                    // className={` ${selectedPid === ele.mabn ? 'bg-blue-200' : ''}even:bg-gray-100 hover:bg-blue-200 `}
                                     onClick={() => onClickPid(ele.mabn, ele.hoten, ele.id.toString())}
                                 >
                                     <td className="text-center"><div className=" py-1 text-center">{index + 1}</div></td>
@@ -108,6 +51,7 @@ function Hiendien ({ site, setSelectedPatient, setSelectedIdKhoaOfPatinent }) {
                                     <td><div className="text-right">{ele.ngayvk}</div></td>
                                     <td><div className="text-left px-2">{ele.doituong}</div></td>
                                     <td><div className="">{ele.sothe}</div></td>
+                                    <td><div className="">{ele.mauabo}{ele.maurh}</div></td>
                                     <td><div className="">{ele.songaydt}</div></td>
                                     <td><div className="">{ele.ghichu}</div></td>
                                 </tr>))}

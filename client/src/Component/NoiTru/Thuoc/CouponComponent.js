@@ -77,7 +77,7 @@ function CouponComponent({ item, selectedCouponID, setSelectedCouponID, setSelec
                                     <RiNumbersFill />
                                 )
                             }
-                            <div className="text-left">{item.tenphieu} - {selectedCouponID}</div>
+                            <div className="text-left">{item.tenphieu}</div>
                         </div>
                         <div className="italic text-sm">{item.ngaytao} {item.giotao}</div>
                     </div>

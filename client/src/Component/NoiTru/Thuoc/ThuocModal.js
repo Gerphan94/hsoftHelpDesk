@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
-import styles from "../styles.module.css"
+import styles from "../../styles.module.css"
 import CouponComponent from "./CouponComponent";
-import ThuocTable from "./ThuocTable";
 import ThuocDetail from "./ThuocModalDetail";
-
+import CouponList from "./CouponList";
 function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }) {
 
     const title = 'THUỐC - ' + pid + ' - ' + hoten;
@@ -40,6 +39,9 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
 
 
     const onClickReload = () => {
+        setMedicineDetail([]);
+        setSelectedCouponID('');
+        setSelectedCouponType(0);
         fetchDutrull();
     }
 
@@ -47,13 +49,13 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
     useEffect(() => {
         setGroupedData(dutrull);
     }, [dutrull]);
-    
+
 
 
     useEffect(() => {
         let fetchUrl = '';
         if (selectedCouponType === 2) {
-            fetchUrl = apiURL + "/noitru/dutru_ct/" + site + "/" + selectedCouponID
+            fetchUrl = apiURL + "/noitru/tutruc_ct/" + site + "/" + selectedCouponID
         }
         else {
             fetchUrl = apiURL + "/noitru/dutru_ct/" + site + "/" + selectedCouponID
@@ -65,12 +67,7 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
             setMedicineDetail(data);
         }
         fetchMedicineDetail();
-
-    },[selectedCouponID])
-
-
-
-
+    }, [selectedCouponID])
 
     return (
         <>
@@ -86,10 +83,18 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
                         <div className="flex h-full p-4 overflow-hidden ">
                             <div className="w-1/3 flex-grow h-full text-left overflow-y-auto ">
                                 <div className="p-2">
-                                    {Object.keys(dutrull).map((date) => (
+
+                                    <CouponList
+                                        data={dutrull}
+                                        selectedCouponID={selectedCouponID}
+                                        setSelectedCouponID={setSelectedCouponID}
+                                        setSelectedCouponType={setSelectedCouponType}
+                                    />
+
+                                    {/* {Object.keys(dutrull).map((date) => (
                                         <div key={date}>
                                             <div className="">
-                                                <div className="w-full py-1 bg-slate-200 mb-2 flex items-center justify-between">
+                                                <div className="w-full px-2 py-1 bg-slate-200 mb-2 flex items-center justify-between">
                                                     <div>Ngày: {date}</div>
                                                     <span className="px-2 font-bold">{dutrull[date].length}</span>
                                                 </div>
@@ -101,15 +106,14 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
                                                 setSelectedCouponID={setSelectedCouponID} 
                                                 setSelectedCouponType={setSelectedCouponType}
                                                 setMedicineDetail={setMedicineDetail}
-                                                
                                                 />
                                             ))}
                                         </div>
-                                    ))}
+                                    ))} */}
                                 </div>
                             </div>
                             <div className="w-2/3 h-full">
-                                <div className="mt-2 px-4 w-full lg:h-[720px] overflow-y-auto" >
+                                <div className="mt-2 flex-grow px-4 w-full h-full overflow-y-auto my-4" >
                                     <ThuocDetail data={medicineDetail} />
                                 </div>
 

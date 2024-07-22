@@ -42,7 +42,6 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                     <thead className="sticky top-0 z-100">
                         <tr className="bg-gray-200">
                             <th></th>
-
                             <th className="text-center w-10"><div className="py-1 text-center">STT</div></th>
                             <th className="w-24"><div className="">Mã BD</div></th>
                             <th className="w-[400px]"><div>Tên BD</div></th>

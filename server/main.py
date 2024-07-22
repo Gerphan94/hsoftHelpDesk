@@ -456,7 +456,7 @@ def noitru_dskhoa(site):
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
-    stm = 'SELECT * FROM BTDKP_BV WHERE LOAI = 0'
+    stm = 'SELECT * FROM BTDKP_BV WHERE LOAI = 0 AND KHAMBENH = 0'
     khoas = cursor.execute(stm).fetchall()
     for khoa in khoas:
         result.append({
@@ -475,7 +475,7 @@ def noitru_hiendien(site, makp):
         WITH tmp_bhyt AS (
             SELECT MAQL, SOTHE FROM BHYT WHERE SUDUNG = 1 
         )
-        SELECT TO_CHAR(A.ID), A.MAVAOVIEN, A.MAQL, A.MABN, B.HOTEN, B.PHAI, B.NAMSINH, A.NGAYVV, A.NGAY AS NGAYVK, A.MAICD, D.MADOITUONG , E.DOITUONG, F.SOTHE
+        SELECT TO_CHAR(A.ID), A.MAVAOVIEN, A.MAQL, A.MABN, B.HOTEN, B.PHAI, B.NAMSINH, A.NGAYVV, A.NGAY AS NGAYVK, A.MAICD, D.MADOITUONG , E.DOITUONG, F.SOTHE, B.MAU_ABO, B.MAU_RH
         FROM HIENDIEN A
         INNER JOIN BTDBN B ON A.MABN = B.MABN
         INNER JOIN ICD10 C ON A.MAICD = C.CICD10
@@ -501,7 +501,9 @@ def noitru_hiendien(site, makp):
             'maicd': data[9],
             'madoituong': data[10],
             'doituong': data[11],
-            'sothe': data[12]
+            'sothe': data[12],
+            'mauabo': data[13],
+            'maurh': data[14]
         })
     
     return jsonify(result), 200
@@ -549,21 +551,42 @@ def noitru_dutru_ct(site, id):
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     result = []
-    col_names = ['stt_index', 'tt', 'doituong', 'mabd', 'ten_hamluong', 'dang', 'donvidung', 'duongdung', 'solan', 'lan', 'soluong', 'sang', 'trua', 'chieu', 'toi']
+    col_names = ['stt_index', 'tt', 'doituong', 'mabd', 'ten_hamluong', 'dang', 'donvidung', 'duongdung', 'solan', 'lan', 'soluong', 'sang', 'trua', 'chieu', 'toi', 'giobd', 'giodung ','lieudungthuoc', 'tocdo', 'cachdung','daliem']
     stm = f'''
         SELECT A.STT AS STT_INDEX, A.TT, B.DOITUONG, A.MABD, (C.TEN || ' ' || C.HAMLUONG) AS TEN_HAMLUONG, C.DANG, C.DONVIDUNG, A.DUONGDUNG,
         A.SOLAN , A.LAN ,  A.SLYEUCAU AS SOLUONG,
-        A.N1 AS SANG, A.N2 AS TRUA, A.N3 AS CHIEU, A.BS AS TOI
+        A.N1 AS SANG, A.N2 AS TRUA, A.N3 AS CHIEU, A.BS AS TOI, A.GIOBD, A.GIODUNG, A.LIEUDUNGTHUOC, A.TOCDO, A.CACHDUNG, A.DALIEU
         FROM {schema()}.D_DUTRUCT A
         INNER JOIN D_DOITUONG B ON B.MADOITUONG = A.MADOITUONG
         INNER JOIN D_DMBD C ON C.ID = A.MABD 
         WHERE A.ID = '{id}'
+        ORDER BY A.TT ASC
     '''
-    
     dutruct = cursor.execute(stm).fetchall()
     for dutru in dutruct:
         result.append(dict(zip(col_names, dutru)))
+    return jsonify(result), 200
 
+@app.route('/noitru/tutruc_ct/<site>/<id>', methods=['GET'])
+def noitru_tutruc_ct(site, id):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = []
+    col_names = ['stt_index', 'tt', 'doituong', 'mabd', 'ten_hamluong', 'dang', 'donvidung', 'duongdung', 'solan', 'lan', 'soluong', 'sang', 'trua', 'chieu', 'toi', 'giobd', 'giodung ','lieudungthuoc', 'tocdo', 'cachdung','daliem']
+    stm = f'''
+        SELECT A.STT AS STT_INDEX, A.TT, B.DOITUONG, A.MABD, (C.TEN || ' ' || C.HAMLUONG) AS TEN_HAMLUONG, C.DANG, C.DONVIDUNG, A.DUONGDUNG,
+        A.SOLAN , A.LAN ,  A.SLYEUCAU AS SOLUONG,
+        A.N1 AS SANG, A.N2 AS TRUA, A.N3 AS CHIEU, A.BS AS TOI, A.GIOBD, A.GIODUNG, A.LIEUDUNGTHUOC, A.TOCDO, A.CACHDUNG, A.DALIEU
+        FROM {schema()}.D_XTUTRUCCT A
+        INNER JOIN D_DOITUONG B ON B.MADOITUONG = A.MADOITUONG
+        INNER JOIN D_DMBD C ON C.ID = A.MABD 
+        WHERE A.ID = '{id}'
+        ORDER BY A.TT ASC
+    '''
+    dutruct = cursor.execute(stm).fetchall()
+    for dutru in dutruct:
+        result.append(dict(zip(col_names, dutru)))
     return jsonify(result), 200
 
 @app.route('/noitru/toaravien_ct/<site>/<id>', methods=['GET'])
