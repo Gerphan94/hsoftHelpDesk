@@ -1,8 +1,20 @@
 import React from "react";
-
+import Dausinhton from "./Dausinhton";
 function ThuocDetail({ data }) {
+    
     return (
         <>
+
+            <div className="flex  w-full">
+                <div className="flex-1">1. Thống tin phiếu</div>
+                <div>
+                    <Dausinhton />
+                </div>
+                
+            </div>
+
+
+
             {data.map((item) => (
                 <div className="pt-4">
                 <div className="relative border rounded-md p-3 mb-3">
@@ -18,7 +30,6 @@ function ThuocDetail({ data }) {
                             {item.doituong}
                             </div>
                     </div>
-
                     <div>
                         <div className="text-left italic py-0.5">Ngày <span className="font-bold">{item.solan}</span> lần, lần <span className="font-bold">{item.lan}</span> {item.donvidung}
 

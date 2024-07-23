@@ -14,6 +14,8 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
     const [selectedCouponType, setSelectedCouponType] = useState(0);
     const [groupedData, setGroupedData] = useState({});
     const [medicineDetail, setMedicineDetail] = useState([]);
+    const [dutrullDetail, setDutrullDetail] = useState({});
+
 
     const fetchDutrull = async () => {
         const fetchUrl = apiURL + "noitru/dutrull_ofBN_inHiendien/" + site + "/" + selectedIdKhoaOfPatinent
@@ -37,7 +39,6 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
         fetchDutrull();
     }, [selectedIdKhoaOfPatinent]);
 
-
     const onClickReload = () => {
         setMedicineDetail([]);
         setSelectedCouponID('');
@@ -49,7 +50,6 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
     useEffect(() => {
         setGroupedData(dutrull);
     }, [dutrull]);
-
 
 
     useEffect(() => {
@@ -81,42 +81,26 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
 
                         {/* BODY */}
                         <div className="flex h-full p-4 overflow-hidden ">
-                            <div className="w-1/3 flex-grow h-full text-left overflow-y-auto ">
+                            <div className="w-1/3 flex-grow h-full text-left overflow-y-scroll ">
                                 <div className="p-2">
+ 
+                                    {Object.keys(dutrull).map((date) => (
+                                        <CouponList
+                                            date={date}
+                                            entries={dutrull[date]}
+                                            selectedCouponID={selectedCouponID}
+                                            setSelectedCouponID={setSelectedCouponID}
+                                            setSelectedCouponType={setSelectedCouponType}
+                                            setDutrullDetail={setDutrullDetail}
+                                             />
 
-                                    <CouponList
-                                        data={dutrull}
-                                        selectedCouponID={selectedCouponID}
-                                        setSelectedCouponID={setSelectedCouponID}
-                                        setSelectedCouponType={setSelectedCouponType}
-                                    />
-
-                                    {/* {Object.keys(dutrull).map((date) => (
-                                        <div key={date}>
-                                            <div className="">
-                                                <div className="w-full px-2 py-1 bg-slate-200 mb-2 flex items-center justify-between">
-                                                    <div>Ngày: {date}</div>
-                                                    <span className="px-2 font-bold">{dutrull[date].length}</span>
-                                                </div>
-                                            </div>
-                                            {dutrull[date].map(item => (
-                                                <CouponComponent 
-                                                item={item} 
-                                                selectedCouponID={selectedCouponID} 
-                                                setSelectedCouponID={setSelectedCouponID} 
-                                                setSelectedCouponType={setSelectedCouponType}
-                                                setMedicineDetail={setMedicineDetail}
-                                                />
-                                            ))}
-                                        </div>
-                                    ))} */}
+                                    ))}
                                 </div>
                             </div>
                             <div className="w-2/3 h-full">
                                 <div className="mt-2 flex-grow px-4 w-full h-full overflow-y-auto my-4" >
-                                    <ThuocDetail data={medicineDetail} />
+                                    <ThuocDetail data={medicineDetail}  />
                                 </div>
-
                             </div>
                         </div>
                         {/* FOOTER  */}

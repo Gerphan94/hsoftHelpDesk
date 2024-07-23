@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { RiSearch2Line, RiAlignJustify } from "react-icons/ri";
 
-const ButtonMenu = ({ data, setSelectedOption }) => {
+const Dausinhton = ({ dst }) => {
 
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -12,7 +12,6 @@ const ButtonMenu = ({ data, setSelectedOption }) => {
     };
 
     const handleClick = (id, name) => {
-        setSelectedOption({ 'id': id, 'name':name });
         setIsDropdownOpen(false);
 
     };
@@ -22,7 +21,6 @@ const ButtonMenu = ({ data, setSelectedOption }) => {
             setIsDropdownOpen(false);
         }
     };
-
 
     useEffect(() => {
         if (isDropdownOpen) {
@@ -40,25 +38,25 @@ const ButtonMenu = ({ data, setSelectedOption }) => {
         <div className='w-full items-center inline-block' ref={dropdownRef}>
             <div className="relative inline-block w-full">
                 <div className='flex items-center'>
-                   <button className='w-full h-full p-1'
-                   onClick={toggleDropdown}>
-                    <RiAlignJustify className='w-full h-full' />
+                    <button className='w-full h-full p-1'
+                        onClick={toggleDropdown}>
+                        <RiAlignJustify className='size-6' />
                     </button>
                 </div>
                 {isDropdownOpen && (
-                    <div className="origin-top-right absolute left-0 mt-2 w-44 max-h-96 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
-                        <ul role="menu" aria-orientation="vertical" aria-labelledby="options-menu" className='pb-2'>
-                            {data.map((item) => (
-                                <li>
-                                    <button
-                                        className="w-full text-left block px-4 py-2 text-sm text-[#0C1844] hover:bg-gray-100 select-none"
-                                        onClick={() => handleClick(item.id, item.name)}
-                                    >
-                                        {item.name}
-                                    </button>
-                                </li>
-                            ))}
-                        </ul>
+                    <div className="origin-top-left absolute right-0 mt-2 w-44 max-h-96 shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 overflow-y-auto">
+                        <div className='border-b'>Dấu sinh tồn</div>
+                        <div className='grid grid-cols-1 p-2 text-left'>
+                            <div>Mạch: </div>
+                            <div>Nhiệt độ: </div>
+                            <div>Huyết áp </div>
+                            <div>Nhịp thở: </div>
+                            <div>Cân nặng: </div>
+                            <div>Chiều cao:</div>
+                        </div>
+
+
+
                     </div>
                 )}
             </div>
@@ -66,4 +64,4 @@ const ButtonMenu = ({ data, setSelectedOption }) => {
     )
 }
 
-export default ButtonMenu;
+export default Dausinhton;

@@ -545,6 +545,34 @@ def noitru_dutrull_ofBN_inHiendien(site, idkhoa):
         result.append(dict(zip(col_names, dutru)))
     return jsonify(result), 200
 
+@app.route('/noitru/dutrull_detail/<site>/<id>', methods=['GET'])
+def noitru_dutrull_detail(site, id):
+    cn = conn_info(site)
+    connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
+    cursor = connection.cursor()
+    result = {}
+
+    stm = f'''
+        SELECT A.ID, C.TEN, D.MAICD, D.CHANDOAN,
+        D.MACH, D.NHIETDO,D.HUYETAP, D.NHIPTHO, D.CANNANG, D.CHIEUCAO
+        FROM {schema()}.D_DUTRULL A
+        INNER JOIN {schema()}.D_DUYET B ON A.IDDUYET = B.ID
+        INNER JOIN D_LOAIPHIEU C ON C.ID = B.PHIEU
+        LEFT JOIN {schema()}.D_DAUSINHTON D ON D.IDDUTRU = A.ID 
+        WHERE A.ID = '{id}'
+    
+    '''
+    
+    detail = cursor.execute(stm).fetchone()
+    
+    result['id'] = detail[0]
+    result['ten'] = detail[1]
+    result['maicd'] = detail[2]
+    result['dst'] =  { 'mach': detail[4], 'nhietdo': detail[5], 'huyetap': detail[6], 'nhiptho': detail[7], 'cannang': detail[8], 'chieucao': detail[9] }
+    
+    return jsonify(result), 200
+
+
 @app.route('/noitru/dutru_ct/<site>/<id>', methods=['GET'])
 def noitru_dutru_ct(site, id):
     cn = conn_info(site)

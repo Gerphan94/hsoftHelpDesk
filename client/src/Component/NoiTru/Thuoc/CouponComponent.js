@@ -13,8 +13,6 @@ function CouponComponent({ item, selectedCouponID, setSelectedCouponID, setSelec
         'bg': '',
         'border': ''
     })
-
-    console.log(item.loaiphieu)
     useEffect(() => {
         if (item.loaiphieu === 1) {
             setColor({

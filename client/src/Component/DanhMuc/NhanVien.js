@@ -72,7 +72,7 @@ function NhanVien({ site }) {
                             onChange={handleSearch}
                         />
                         <div>
-                            <Dropdown data={nhomnvs} />
+                            {/* <Dropdown data={nhomnvs} /> */}
                         </div>
 
 

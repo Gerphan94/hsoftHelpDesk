@@ -24,10 +24,10 @@ const Dropdown = ({ data, selectedOption, setSelectedOption, searchable = true, 
     };
 
     const handleClick = (id, name) => {
-
         setSelectedOption({ id, name });
         setIsDropdownOpen(false);
         setSearchTerm('')
+        setViewData(data);
 
     };
 
