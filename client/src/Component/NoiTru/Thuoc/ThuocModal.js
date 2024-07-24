@@ -45,21 +45,14 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
         setSelectedCouponType(0);
         fetchDutrull();
     }
-
-
     useEffect(() => {
         setGroupedData(dutrull);
     }, [dutrull]);
 
 
     useEffect(() => {
-        let fetchUrl = '';
-        if (selectedCouponType === 2) {
-            fetchUrl = apiURL + "/noitru/tutruc_ct/" + site + "/" + selectedCouponID
-        }
-        else {
-            fetchUrl = apiURL + "/noitru/dutru_ct/" + site + "/" + selectedCouponID
-        }
+        const fetchUrl = apiURL + "/noitru/phieuct/" + site + "/" + selectedCouponType + "/" + selectedCouponID;
+       
         const fetchMedicineDetail = async () => {
             const response = await fetch(fetchUrl);
             const data = await response.json();
@@ -78,12 +71,10 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
                         <div className="text-left text-lg font-bold border-b-black w-full px-4 py-3 bg-[#9BB0C1]">
                             {title}
                         </div>
-
                         {/* BODY */}
                         <div className="flex h-full p-4 overflow-hidden ">
                             <div className="w-1/3 flex-grow h-full text-left overflow-y-scroll ">
                                 <div className="p-2">
- 
                                     {Object.keys(dutrull).map((date) => (
                                         <CouponList
                                             date={date}
@@ -92,14 +83,21 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
                                             setSelectedCouponID={setSelectedCouponID}
                                             setSelectedCouponType={setSelectedCouponType}
                                             setDutrullDetail={setDutrullDetail}
-                                             />
-
+                                        />
                                     ))}
                                 </div>
                             </div>
                             <div className="w-2/3 h-full">
                                 <div className="mt-2 flex-grow px-4 w-full h-full overflow-y-auto my-4" >
-                                    <ThuocDetail data={medicineDetail}  />
+                                    {selectedCouponID !== '' &&
+                                        <ThuocDetail 
+                                        site={site}
+                                        couponType={selectedCouponType} 
+                                        data={medicineDetail}
+                                        couponId={selectedCouponID}
+                                        
+                                        />
+                                    }
                                 </div>
                             </div>
                         </div>

@@ -35,9 +35,6 @@ function CouponComponent({ item, selectedCouponID, setSelectedCouponID, setSelec
 
 
     const fetchMedidicineDetail = async (id) => {
-
-        
-
         const response = await fetch(`${apiURL}/api/medicines/${id}`);
         const data = await response.json();
         setMedicineDetail(data)
