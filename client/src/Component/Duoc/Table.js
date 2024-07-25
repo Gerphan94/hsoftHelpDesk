@@ -2,11 +2,9 @@ import React from "react";
 import { FaBottleDroplet, FaJar } from "react-icons/fa6";
 import { CiPill } from "react-icons/ci";
 import { TbCircleLetterK } from "react-icons/tb";
-import { LiaBatteryEmptySolid, LiaBatteryFullSolid, LiaBatteryHalfSolid } from "react-icons/lia";
 import { WiMoonAltFull, WiMoonAltFirstQuarter, WiMoonAltNew } from "react-icons/wi";
 
 import ItemComponent from "./TableIconComponent";
-import Tooltip from "../Common/Tooltip";
 function Table({ data, setIsShowModal, setSelectedPharmarId }) {
 
 
@@ -48,7 +46,7 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                             <th><div className="w-36">Hoạt chất</div></th>
                             <th><div className="text-left w-20">DVD</div></th>
                             <th><div className="w-28">Đường dùng</div></th>
-                            {/* <th><div className="w-28">ATC</div></th> */}
+                            <th><div className="w-28">ATC</div></th>
                             <th><div className="text-right w-20">Tồn đầu</div></th>
                             <th><div className="text-right w-20">Nhập</div></th>
                             <th><div className="text-right w-20">Xuất</div></th>
@@ -78,8 +76,13 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                             }
                                         </span>
                                         <span>
-                                            {item.duocbvid === 3 ?
-                                                <TbCircleLetterK className="text-orange-700" /> : ''}
+                                            {
+                                            item.duocbvid === 3  && item.maatc === '' ?
+                                                <TbCircleLetterK className="text-purple-700" /> :
+                                                item.duocbvid === 3 && item.maatc !== '' ?
+                                                    <TbCircleLetterK className="text-red-700" /> :
+                                                
+                                                ''}
                                         </span>
 
                                     </div>
@@ -109,13 +112,13 @@ function Table({ data, setIsShowModal, setSelectedPharmarId }) {
                                         {item.duongdung}
                                     </div>
                                 </td>
-                                {/* <td className="text-center">{item.maatc}</td> */}
-                                <td className="text-right px-1">{Number(item.tondau).toLocaleString()}</td>
-                                <td className="text-right px-1"> {item.slnhap}</td>
-                                <td className="text-right px-1">{item.slxuat}</td>
-                                <td className={`text-right px-1 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString()}</td>
-                                <td className="text-right px-1">{item.slycau}</td>
-                                <td className="text-right px-1">{item.tonkhadung}</td>
+                                <td className="text-center">{item.maatc}</td>
+                                <td className="text-right px-1">{Number(item.tondau).toLocaleString('en-US')}</td>
+                                <td className="text-right px-1">{Number(item.slnhap).toLocaleString('en-US')}</td>
+                                <td className="text-right px-1">{Number(item.slxuat).toLocaleString('en-US')}</td>
+                                <td className={`text-right px-1 ${item.toncuoi === 0 ? 'text-red-500 font-bold' : ''}`}>{Number(item.toncuoi).toLocaleString('en-US')}</td>
+                                <td className="text-right px-1">{Number(item.slyeucau).toLocaleString('en-US')}</td>
+                                <td className="text-right px-1">{Number(item.tonkhadung).toLocaleString('en-US')}</td>
                                 {/* <td></td> */}
                             </tr>
                         ))}
