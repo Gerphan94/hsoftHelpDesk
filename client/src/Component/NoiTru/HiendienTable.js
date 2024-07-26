@@ -3,12 +3,10 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineMan, AiOutlineWoman } from "react-icons/ai";
 
 
+function Hiendien ({ data, selectedPid, setSelected, setSelectedIdKhoaOfPatinent }) {
 
-
-function Hiendien ({ data, selectedPid, setSelectedPatient, setSelectedIdKhoaOfPatinent }) {
-
-    const onClickPid = (pid, name, idkhoa) => {
-        setSelectedPatient({'pid': pid, 'name': name});
+    const onClickPid = (pid, name, idkhoa, maql) => {
+        setSelected({pid: pid, pname: name, idkhoa: idkhoa, maql: maql});
         setSelectedIdKhoaOfPatinent(idkhoa);
     };
 
@@ -21,6 +19,7 @@ function Hiendien ({ data, selectedPid, setSelectedPatient, setSelectedIdKhoaOfP
                             <tr className="bg-gray-200 ">
                                 <th className="text-center"><div className=" py-1 text-center">STT</div></th>
                                 <th className=""><div className="">PID</div></th>
+                                <th className=""><div className="">MAQL</div></th>
                                 <th className=""><div>Họ tên</div></th>
                                 <th><div>Năm sinh</div></th>
                                 <th><div className="text-center">Ngày VV</div></th>
@@ -39,10 +38,11 @@ function Hiendien ({ data, selectedPid, setSelectedPatient, setSelectedIdKhoaOfP
                                     className={`${selectedPid === ele.mabn ? '!bg-[#96C9F4]' : ''}`}
                                     
                                     // className={` ${selectedPid === ele.mabn ? 'bg-blue-200' : ''}even:bg-gray-100 hover:bg-blue-200 `}
-                                    onClick={() => onClickPid(ele.mabn, ele.hoten, ele.id.toString())}
+                                    onClick={() => onClickPid(ele.mabn, ele.hoten, ele.id.toString(), ele.maql.toString())}
                                 >
                                     <td className="text-center"><div className=" py-1 text-center">{index + 1}</div></td>
                                     <td><div className="text-left hover:underline hover:text-blue-500 cursor-pointer">{ele.mabn}</div></td>
+                                    <td>{ele.maql}</td>
                                     <td><div className="flex gap-2 items-center">
                                         {ele.phai === 0 ? <AiOutlineMan className="text-blue-500" /> : <AiOutlineWoman className="text-pink-500" />}
                                         {ele.hoten}</div></td>

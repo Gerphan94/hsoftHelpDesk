@@ -66,12 +66,12 @@
 
 .btn {
     position: relative;
-    border-radius: 5px;
+    /* border-radius: 5px; */
     background-repeat: no-repeat;
     cursor: pointer;
     box-sizing: border-box;
     width: 90px;
-    height: 32px;
+    min-height: 28px;
     color: #fff;
     border: none;
     font-size: 14px;
@@ -110,7 +110,7 @@
 /* btn close */
 .btnNew {
     background-color: rgb(90, 178, 255);
-    box-shadow: rgb(160, 222, 255) 0px 4px 0px 0px;
+    /* box-shadow: rgb(160, 222, 255) 0px 4px 0px 0px; */
 }
 
 .btnNew::before {

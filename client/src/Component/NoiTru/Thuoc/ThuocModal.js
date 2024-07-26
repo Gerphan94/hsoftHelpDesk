@@ -16,7 +16,6 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
     const [medicineDetail, setMedicineDetail] = useState([]);
     const [dutrullDetail, setDutrullDetail] = useState({});
 
-
     const fetchDutrull = async () => {
         const fetchUrl = apiURL + "noitru/dutrull_ofBN_inHiendien/" + site + "/" + selectedIdKhoaOfPatinent
         const response = await fetch(fetchUrl);
@@ -31,7 +30,7 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
             return acc;
 
         }, {});
-        console.log(grouped)
+
         setDutrull(grouped);
     }
 
@@ -72,7 +71,7 @@ function ThuocModal({ site, pid, hoten, setModalShow, selectedIdKhoaOfPatinent }
                             {title}
                         </div>
                         {/* BODY */}
-                        <div className="flex h-full p-4 overflow-hidden ">
+                        <div className="flex h-full p-4 overflow-y-auto ">
                             <div className="w-1/3 flex-grow h-full text-left overflow-y-scroll ">
                                 <div className="p-2">
                                     {Object.keys(dutrull).map((date) => (

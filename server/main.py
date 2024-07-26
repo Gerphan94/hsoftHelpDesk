@@ -473,9 +473,9 @@ def noitru_hiendien(site, makp):
     result = []
     stm = f'''
         WITH tmp_bhyt AS (
-            SELECT MAQL, SOTHE FROM BHYT WHERE SUDUNG = 1 
+            SELECT TO_CHAR(MAQL) AS MAQL , SOTHE FROM BHYT WHERE SUDUNG = 1 
         )
-        SELECT TO_CHAR(A.ID), A.MAVAOVIEN, A.MAQL, A.MABN, B.HOTEN, B.PHAI, B.NAMSINH, A.NGAYVV, A.NGAY AS NGAYVK, A.MAICD, D.MADOITUONG , E.DOITUONG, F.SOTHE, B.MAU_ABO, B.MAU_RH
+        SELECT TO_CHAR(A.ID), TO_CHAR(A.MAVAOVIEN) AS MAVAOVIEN, TO_CHAR(A.MAQL), A.MABN, B.HOTEN, B.PHAI, B.NAMSINH, A.NGAYVV, A.NGAY AS NGAYVK, A.MAICD, D.MADOITUONG , E.DOITUONG, F.SOTHE, B.MAU_ABO, B.MAU_RH
         FROM HIENDIEN A
         INNER JOIN BTDBN B ON A.MABN = B.MABN
         INNER JOIN ICD10 C ON A.MAICD = C.CICD10
@@ -506,6 +506,51 @@ def noitru_hiendien(site, makp):
             'maurh': data[14]
         })
     
+    return jsonify(result), 200
+
+@app.route('/noi-tru/get-nhap-khoa-of-bn/<site>/<string:maql>', methods=['GET'])
+def noitru_nhapkhoaofbn(site, maql):
+    cn = conn_info(site)
+    cursor = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn']).cursor()
+    result = []
+
+    stm = f'''
+        SELECT A.ID, B.TENKP FROM NHAPKHOA A
+        INNER JOIN BTDKP_BV B ON A.MAKP = B.MAKP 
+        WHERE A.MAQL = '{maql}'
+        ORDER BY A.NGAY DESC
+    '''
+    
+    nhapkhoa = cursor.execute(stm).fetchall()
+    for nhapkhoa in nhapkhoa:
+        result.append({
+            'id': nhapkhoa[0],
+            'name': nhapkhoa[1]
+        })
+    print(list(result))
+    
+    return jsonify(result), 200
+
+@app.route('/noi-tru/get-chidinh-by-idkhoa/<site>/<string:idkhoa>', methods=['GET'])
+def noitru_getchidinhbyidkhoa(site, idkhoa):
+    cn = conn_info(site)
+    cursor = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn']).cursor()
+    result = []
+    
+    col_names = ['ngay', 'doituong', 'tendichvu', 'soluong', 'dongia', 'idchidinh', 'ghichu', 'thuchien', 'ngayylenh', 'ngaythuchien']
+
+    stm = f'''
+        SELECT TO_CHAR(A.NGAY, 'dd/MM/yyyy') AS NGAY, C.DOITUONG, B.TEN, A.SOLUONG, A.DONGIA, TO_CHAR(A.IDCHIDINH) AS IDCHIDINH, A.GHICHU, A.THUCHIEN, TO_CHAR(A.NGAY, 'dd/MM/yyyy HH24:MI:SS') AS NGAYYLENH, A.NGAYTHUCHIEN 
+        FROM {schema()}.V_CHIDINH A
+        INNER JOIN V_GIAVP B ON B.ID = A.MAVP
+        INNER JOIN DOITUONG C ON C.MADOITUONG = A.MADOITUONG
+        WHERE A.IDKHOA =  '{idkhoa}'
+        AND A.MADOITUONG <> 3
+        ORDER BY NGAY DESC, NGAYYLENH ASC
+    '''
+    chidinh = cursor.execute(stm).fetchall()
+    for chidinh in chidinh:
+        result.append(dict(zip(col_names, chidinh)))
     return jsonify(result), 200
 
 @app.route('/noitru/dutrull_ofBN_inHiendien/<site>/<idkhoa>', methods=['GET'])

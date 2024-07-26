@@ -17,9 +17,19 @@ code {
   overflow-y: auto;
   display:block;
 }
+
+table {
+  width: 100%;
+}
+
+
 thead{
   position:sticky;
   top:0
+}
+
+thead tr {
+  background-color: #96C9F4;
 }
 
 tbody tr:nth-of-type(odd) {

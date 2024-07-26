@@ -4,6 +4,7 @@ import ViewButton from "../Button/ViewButton";
 import TouchSwitch from "../TouchSwitch";
 
 import ThuocModal from "./Thuoc/ThuocModal";
+import DichVuModal from "./DichVu/DichVuModal";
 import Hiendien from "./HiendienTable";
 
 
@@ -18,10 +19,13 @@ function NoiTru({ site }) {
     const [hiendiens, setHiendiens] = useState([]);
     const [viewData, setViewData] = useState([]);
 
-    const [selectedPatient, setSelectedPatient] = useState({ 'pid': '', 'name': '' });
+    const [selected, setSelected] = useState({ pid: '', pname: '', idkhoa: '', maql: '' });
+
     const [selectedIdKhoaOfPatinent, setSelectedIdKhoaOfPatinent] = useState('');
 
     const [isShowModalThuoc, setIsShowModalThuoc] = useState(false);
+    const [isShowModalDichVu, setIsShowModalDichVu] = useState(false);
+
 
     const funcBTN = [
         { id: 'thuoc', name: 'Thuốc' },
@@ -56,7 +60,7 @@ function NoiTru({ site }) {
 
     return (
         <>
-            
+
             <div className="flex p-2 gap-2 items-center">
                 <label className="font-bold">Khoa: </label>
                 <div className="w-[600px]">
@@ -67,40 +71,53 @@ function NoiTru({ site }) {
                 </div>
                 <TouchSwitch />
                 <div>
-                    <input type="text" className="border px-2 py-1 outline-none h-8 "  />
+                    <input type="text" className="border px-2 py-1 outline-none h-8 " />
                 </div>
 
             </div>
             <div className="px-4 py-1 flex flex-row justify-between">
                 <div className="flex gap-2 items-center text-left">
-                    <div className="font-bold text-xl">{selectedPatient.pid}</div>
-                    <div className="font-bold text-xl">{selectedPatient.name}</div>
+                    <div className="font-bold text-xl">{selected.pid}</div>
+                    <div className="font-bold text-xl">{selected.pname}</div>
                 </div>
 
-                <button
-                    className="w-20 border px-2 py-1 select-none"
-                    onClick={() => setIsShowModalThuoc(true)}
-                >Thuốc
-                </button>
-
+                <div className="flex">
+                    <button
+                        className="w-20 border px-2 py-1 select-none"
+                        onClick={() => setIsShowModalDichVu(true)}
+                    >Dịch vụ</button>
+                    <button
+                        className="w-20 border px-2 py-1 select-none"
+                        onClick={() => setIsShowModalThuoc(true)}
+                    >Thuốc</button>
+                </div>
             </div>
 
             {selectedBTN === 1 &&
                 <Hiendien
                     site={site}
                     data={viewData}
-                    selectedPid={selectedPatient.pid}
-                    setSelectedPatient={setSelectedPatient}
+                    selectedPid={selected.pid}
+                    setSelected={setSelected}
                     setSelectedIdKhoaOfPatinent={setSelectedIdKhoaOfPatinent}
                 />}
             {isShowModalThuoc &&
                 <ThuocModal
                     site={site}
-                    pid={selectedPatient.pid}
-                    hoten={selectedPatient.name}
+                    pid={selected.pid}
+                    hoten={selected.name}
                     selectedIdKhoaOfPatinent={selectedIdKhoaOfPatinent}
                     setModalShow={setIsShowModalThuoc}
                 />}
+
+            {isShowModalDichVu &&
+                <DichVuModal
+                    site={site}
+                    setModalShow={setIsShowModalDichVu}
+                    selected={selected}
+
+                />
+            }
         </>
     );
 }
