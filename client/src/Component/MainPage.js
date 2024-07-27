@@ -26,7 +26,7 @@ function MainPage() {
     const [pageTitle, setPageTitle] = useState('')
     const [mainIcon, setMainIcon] = useState(null);
 
-    
+
 
 
 
@@ -41,21 +41,18 @@ function MainPage() {
 
     return (
         <>
-
             <div className={styles.bodyPage}>
                 <div className="flex">
                     <div className="w-56  h-screen border-r-2 bg-[#031C30]">
                         <div className="flex justify-between">
                             <div className="text-white font-bold text-2xl p-2">{site.name}</div>
                             <div className="flex items-center">
-                            <button
-                                className="p-2  text-white"
-                                onClick={() => setIsChooseSite(true)}>
-                                <GiHospitalCross className="h-8 w-8" />
-
-                            </button>
+                                <button
+                                    className="p-2  text-white"
+                                    onClick={() => setIsChooseSite(true)}>
+                                    <GiHospitalCross className="h-8 w-8" />
+                                </button>
                             </div>
-                           
                         </div>
                         <SideMenu
                             selectedFunc={selectedFunc}
@@ -88,9 +85,9 @@ function MainPage() {
             {/* FOOTER */}
             <div className={`w-full h-5 ${site.id === 'HCM_DEV' || site.id === 'HN_DEV' || site.id === 'HCM_UAT' ? "bg-red-500" : "bg-green-500"}  `} >
                 <div className="lowercase text-white text-left text-sm">
-                { site.name}
+                    {site.name}
                 </div>
-                
+
 
 
 

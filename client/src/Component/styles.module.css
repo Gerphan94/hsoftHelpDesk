@@ -4,13 +4,11 @@
 }
 
 .MainPage {
-    /* height: 800px; */
+    height: 100%;
     width: calc(100vw - 192px);
     font-size: 11pt;
     overflow-y: hidden;
 }
-
-
 
 .SideBarHeight {
     height: 100%;

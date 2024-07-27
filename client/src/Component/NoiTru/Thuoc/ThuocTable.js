@@ -7,7 +7,7 @@ function ThuocTable(loaiphieu, data) {
         <>
             {type === 3 ? (
                 <div>
-                    <table className="w-full">
+                    <table>
                         <thead className="sticky top-0">
                             <tr className="bg-gray-200 ">
                                 <th className="text-center w-10"><div className=" py-1 text-center">STT</div></th>
@@ -29,9 +29,9 @@ function ThuocTable(loaiphieu, data) {
                 :
                 (
                     <div>
-                        <table className="w-full">
-                            <thead className="sticky top-0">
-                                <tr className="bg-gray-200 ">
+                        <table >
+                            <thead>
+                                <tr>
                                     <th className="text-center"><div className=" py-1 text-center">STT</div></th>
                                     <th className=""><div className="">Mã BD</div></th>
                                     <th className=""><div>Tên BD</div></th>

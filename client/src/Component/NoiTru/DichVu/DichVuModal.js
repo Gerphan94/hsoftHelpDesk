@@ -28,7 +28,7 @@ function DichVuModal({ site, setModalShow, selected }) {
 
     const fetchChidinh = async () => {
         try {
-            const fetchUrl = apiURL + "/noi-tru/get-chidinh-by-idkhoa/" + site + "/" + selected.idkhoa;
+            const fetchUrl = apiURL + "/noi-tru/get-chidinh-by-idkhoa/" + site + "/" + selectedKhoa.id;
             console.log(fetchUrl)
             const response = await fetch(fetchUrl);
             const data = await response.json();
@@ -52,6 +52,7 @@ function DichVuModal({ site, setModalShow, selected }) {
     }
 
     const onClickView = () => {
+        console.log('Click -----',selectedKhoa.idkhoa)
         fetchChidinh();
     }
 
@@ -90,6 +91,7 @@ function DichVuModal({ site, setModalShow, selected }) {
                             {Object.keys(chidinhs).map((date) => (
                                 <div className="p-2">
                                 <div className="text-left w-full bg-gray-200 px-2 py-1 font-bold">{date}</div>
+                                
                                 <DichvuTable data={chidinhs[date]} />
                                 </div>
                             ))}

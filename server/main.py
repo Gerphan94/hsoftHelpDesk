@@ -515,7 +515,7 @@ def noitru_nhapkhoaofbn(site, maql):
     result = []
 
     stm = f'''
-        SELECT A.ID, B.TENKP FROM NHAPKHOA A
+        SELECT TO_CHAR(A.ID) AS IDKHOA, B.TENKP FROM NHAPKHOA A
         INNER JOIN BTDKP_BV B ON A.MAKP = B.MAKP 
         WHERE A.MAQL = '{maql}'
         ORDER BY A.NGAY DESC
@@ -528,7 +528,6 @@ def noitru_nhapkhoaofbn(site, maql):
             'name': nhapkhoa[1]
         })
     print(list(result))
-    
     return jsonify(result), 200
 
 @app.route('/noi-tru/get-chidinh-by-idkhoa/<site>/<string:idkhoa>', methods=['GET'])
@@ -537,13 +536,15 @@ def noitru_getchidinhbyidkhoa(site, idkhoa):
     cursor = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn']).cursor()
     result = []
     
-    col_names = ['ngay', 'doituong', 'tendichvu', 'soluong', 'dongia', 'idchidinh', 'ghichu', 'thuchien', 'ngayylenh', 'ngaythuchien']
+    col_names = ['ngay', 'doituong', 'tendichvu', 'soluong', 'dongia', 'idchidinh', 'ghichu', 'thuchien', 'ngayylenh', 'ngaythuchien', 'maphieu', 'benhpham', 'idloai', 'idnhom']
 
     stm = f'''
-        SELECT TO_CHAR(A.NGAY, 'dd/MM/yyyy') AS NGAY, C.DOITUONG, B.TEN, A.SOLUONG, A.DONGIA, TO_CHAR(A.IDCHIDINH) AS IDCHIDINH, A.GHICHU, A.THUCHIEN, TO_CHAR(A.NGAY, 'dd/MM/yyyy HH24:MI:SS') AS NGAYYLENH, A.NGAYTHUCHIEN 
+        SELECT TO_CHAR(A.NGAY, 'dd/MM/yyyy') AS NGAY, C.DOITUONG, B.TEN, A.SOLUONG, A.DONGIA, TO_CHAR(A.IDCHIDINH) AS IDCHIDINH, A.GHICHU, A.THUCHIEN, TO_CHAR(A.NGAY, 'dd/MM/yyyy HH24:MI') AS NGAYYLENH, TO_CHAR(A.NGAYTHUCHIEN, 'dd/MM/yyyy HH24:MI') AS NGAYTHUCHIEN, A.MAPHIEU, D.TEN AS BENHPHAM, E.ID AS IDLOAI, E.ID_NHOM AS IDNHOM
         FROM {schema()}.V_CHIDINH A
         INNER JOIN V_GIAVP B ON B.ID = A.MAVP
         INNER JOIN DOITUONG C ON C.MADOITUONG = A.MADOITUONG
+        INNER JOIN DMBENHPHAM D ON D.ID = A.BENHPHAM 
+        INNER JOIN V_LOAIVP E ON B.ID_LOAI = E.ID
         WHERE A.IDKHOA =  '{idkhoa}'
         AND A.MADOITUONG <> 3
         ORDER BY NGAY DESC, NGAYYLENH ASC
@@ -1058,16 +1059,16 @@ def vienphi_treeloaivp(site):
     
     return jsonify(result), 200     
 
-@app.route('/vienphi/giavp/theonhombhyt/<site>/<bhytid>', methods=['GET'])
+@app.route('/vien-phi/gia-vp/theo-nhom-bhyt//<site>/<bhytid>', methods=['GET'])
 def vienphi_giavp_bhyt(site, bhytid):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     
     result = []
-    col_name = ['id', 'idloai', 'mavp', 'ten', 'dvt', 'bhyt', 'giath', 'giabh', 'giadv', 'trongoi']
+    col_name = ['id', 'idloai', 'mavp', 'ten', 'dvt', 'bhyt', 'giath', 'giabh', 'giadv', 'trongoi', 'benhphamrangbuoc']
     stm = f'''
-    SELECT A.ID, A.ID_LOAI, A.MA, A.TEN, A.DVT, A.BHYT, A.GIA_TH , A.GIA_BH , A.GIA_DV, A.TRONGOI
+    SELECT A.ID, A.ID_LOAI, A.MA, A.TEN, A.DVT, A.BHYT, A.GIA_TH , A.GIA_BH , A.GIA_DV, A.TRONGOI, A.BENHPHAMRANGBUOC
     FROM V_GIAVP A
     WHERE ID_LOAI IN (
         SELECT ID FROM V_LOAIVP 
@@ -1084,16 +1085,16 @@ def vienphi_giavp_bhyt(site, bhytid):
         result.append(obj)
     return jsonify(result), 200  
 
-@app.route('/vienphi/giavp/theoloaivp/<site>/<idloai>', methods=['GET'])
+@app.route('/vien-phi/gia-vp/theo-loaivp/<site>/<idloai>', methods=['GET'])
 def vienphi_giavp_loaivp(site, idloai):
     cn = conn_info(site)
     connection = oracledb.connect(user=cn['user'],password=cn['password'],dsn=cn['dsn'])
     cursor = connection.cursor()
     
     result = []
-    col_name = ['id', 'idloai', 'mavp', 'ten', 'dvt', 'bhyt', 'giath', 'giabh', 'giadv', 'trongoi']
+    col_name = ['id', 'idloai', 'mavp', 'ten', 'dvt', 'bhyt', 'giath', 'giabh', 'giadv', 'trongoi', 'benhphamrangbuoc']
     stm = f'''
-        SELECT A.ID, A.ID_LOAI, A.MA, A.TEN, A.DVT, A.BHYT, A.GIA_TH , A.GIA_BH , A.GIA_DV, A.TRONGOI
+        SELECT A.ID, A.ID_LOAI, A.MA, A.TEN, A.DVT, A.BHYT, A.GIA_TH , A.GIA_BH , A.GIA_DV, A.TRONGOI, A.BENHPHAMRANGBUOC
         FROM V_GIAVP A 
         WHERE A.ID_LOAI = {idloai}
     '''

@@ -55,57 +55,57 @@ function NoiTru({ site }) {
         }
     }
 
-
-
-
     return (
         <>
-
-            <div className="flex p-2 gap-2 items-center">
-                <label className="font-bold">Khoa: </label>
-                <div className="w-[600px]">
-                    <Dropdown data={khoas} selectedOption={selectedKhoa} setSelectedOption={setSelectedKhoa} />
-                </div>
-                <div className="h-full">
-                    <ViewButton onClick={gethiendien} />
-                </div>
-                <TouchSwitch />
+            <div className="h-full flex flex-col justify-between">
                 <div>
-                    <input type="text" className="border px-2 py-1 outline-none h-8 " />
-                </div>
+                    <div className="flex p-2 gap-2 items-center">
+                        <label className="font-bold">Khoa: </label>
+                        <div className="w-[600px]">
+                            <Dropdown data={khoas} selectedOption={selectedKhoa} setSelectedOption={setSelectedKhoa} />
+                        </div>
+                        <div className="h-full">
+                            <ViewButton onClick={gethiendien} />
+                        </div>
+                        <TouchSwitch />
+                        <div>
+                            <input type="text" className="border px-2 py-1 outline-none h-8 " />
+                        </div>
 
+                    </div>
+                    <div className="px-4 py-1 flex flex-row justify-between">
+                        <div className="flex gap-2 items-center text-left">
+                            <div className="font-bold text-xl">{selected.pid}</div>
+                            <div className="font-bold text-xl">{selected.pname}</div>
+                        </div>
+                        <div className="flex">
+                            <button
+                                className="w-20 border px-2 py-1 select-none"
+                                onClick={() => setIsShowModalDichVu(true)}
+                            >Dịch vụ</button>
+                            <button
+                                className="w-20 border px-2 py-1 select-none"
+                                onClick={() => setIsShowModalThuoc(true)}
+                            >Thuốc</button>
+                        </div>
+                    </div>
+                </div>
+                <div className="h-full flex flex-grow">
+                    <Hiendien
+                        site={site}
+                        data={viewData}
+                        selectedPid={selected.pid}
+                        setSelected={setSelected}
+                        setSelectedIdKhoaOfPatinent={setSelectedIdKhoaOfPatinent}
+                    />
+                </div>
             </div>
-            <div className="px-4 py-1 flex flex-row justify-between">
-                <div className="flex gap-2 items-center text-left">
-                    <div className="font-bold text-xl">{selected.pid}</div>
-                    <div className="font-bold text-xl">{selected.pname}</div>
-                </div>
 
-                <div className="flex">
-                    <button
-                        className="w-20 border px-2 py-1 select-none"
-                        onClick={() => setIsShowModalDichVu(true)}
-                    >Dịch vụ</button>
-                    <button
-                        className="w-20 border px-2 py-1 select-none"
-                        onClick={() => setIsShowModalThuoc(true)}
-                    >Thuốc</button>
-                </div>
-            </div>
-
-            {selectedBTN === 1 &&
-                <Hiendien
-                    site={site}
-                    data={viewData}
-                    selectedPid={selected.pid}
-                    setSelected={setSelected}
-                    setSelectedIdKhoaOfPatinent={setSelectedIdKhoaOfPatinent}
-                />}
             {isShowModalThuoc &&
                 <ThuocModal
                     site={site}
                     pid={selected.pid}
-                    hoten={selected.name}
+                    hoten={selected.pname}
                     selectedIdKhoaOfPatinent={selectedIdKhoaOfPatinent}
                     setModalShow={setIsShowModalThuoc}
                 />}

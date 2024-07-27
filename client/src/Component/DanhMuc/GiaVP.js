@@ -3,6 +3,7 @@ import Dropdown from "../Dropdown";
 import ViewButton from "../Button/ViewButton";
 import { FaPlus, FaMinus, FaDotCircle } from "react-icons/fa";
 import { FaFolderTree } from "react-icons/fa6";
+import { MdTypeSpecimen } from "react-icons/md";
 
 import { FcCurrencyExchange, FcFlowChart, FcMoneyTransfer  } from "react-icons/fc";
 
@@ -51,7 +52,7 @@ function GiaVP({ site }) {
         setSelectedLoaiVP(0);
         setSelectedNhomBHYT(id);
         try {
-            const fecthURL = apiURL + "vienphi/giavp/theonhombhyt/" + site + "/" + id;
+            const fecthURL = apiURL + "vien-phi/gia-vp/theo-nhom-bhyt/" + site + "/" + id;
             const response = await fetch(fecthURL);
             const data = await response.json();
             setGiavps(data);
@@ -66,7 +67,7 @@ function GiaVP({ site }) {
         }
         setSelectedLoaiVP(id);
         try {
-            const fecthURL = apiURL + "vienphi/giavp/theoloaivp/" + site + "/" + id;
+            const fecthURL = apiURL + "vien-phi/gia-vp/theo-loaivp/" + site + "/" + id;
             const response = await fetch(fecthURL);
             const data = await response.json();
             setGiavps(data);
@@ -142,16 +143,13 @@ function GiaVP({ site }) {
                                 </div>
 
                             ))}
-
-
                         </div>
                         <div className="px-4 w-full overflow-y-auto">
                             <table className=" w-full">
                                 <thead className="sticky top-0 z-80">
                                     <tr className="bg-gray-200 ">
-                                        <th></th>
+                                        <th>-</th>
                                         <th className="text-center w-10"><div className="py-1 text-center">STT</div></th>
-
                                         <th className=""><div>Tên VP</div></th>
                                         <th><div className="text-center">DVT</div></th>
                                         <th className="w-8"><div className="text-center">BHYT</div></th>
@@ -164,7 +162,7 @@ function GiaVP({ site }) {
                                 <tbody>
                                     {giavps.map((giavp, index) => (
                                         <tr key={index} className="even:bg-gray-200">
-                                            <td></td>
+                                            <td>{giavp.benhphamrangbuoc}</td>
                                             <td className="text-center py-1">{index + 1}</td>
                                             <td className="text-left">
                                                 <div className="inline-block">
