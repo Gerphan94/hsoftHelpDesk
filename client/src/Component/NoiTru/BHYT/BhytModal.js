@@ -2,7 +2,7 @@ import React from "react";
 
 import styles from "../../styles.module.css"
 
-function DichVuModal( {setModalShow}) {
+function BHYTModal( {setModalShow}) {
 
     return (
         <>
@@ -46,4 +46,4 @@ function DichVuModal( {setModalShow}) {
     )
 }
 
-export default DichVuModal;
+export default BHYTModal;

@@ -6,7 +6,7 @@ import TouchSwitch from "../TouchSwitch";
 import ThuocModal from "./Thuoc/ThuocModal";
 import DichVuModal from "./DichVu/DichVuModal";
 import Hiendien from "./HiendienTable";
-
+import ButtonList from "../Common/ButtonList";
 
 function NoiTru({ site }) {
 
@@ -30,7 +30,14 @@ function NoiTru({ site }) {
     const funcBTN = [
         { id: 'thuoc', name: 'Thuốc' },
         { id: 'dichvu,', name: 'Dịch vụ' }
+
     ]
+
+    const otherButtons = [
+        { id: 'bhyt', name: 'BHYT' }
+    ]
+
+
     useEffect(() => async () => {
         try {
             const fecthURL = apiURL + "/noitru/dskhoa/" + site;
@@ -80,13 +87,20 @@ function NoiTru({ site }) {
                         </div>
                         <div className="flex">
                             <button
-                                className="w-20 border px-2 py-1 select-none"
+                                className="border px-2 py-1 select-none"
                                 onClick={() => setIsShowModalDichVu(true)}
                             >Dịch vụ</button>
                             <button
-                                className="w-20 border px-2 py-1 select-none"
+                                className="border px-2 py-1 select-none"
                                 onClick={() => setIsShowModalThuoc(true)}
                             >Thuốc</button>
+                            <div className="w-28">
+                            <ButtonList textname='Chức năng' data={otherButtons}  />
+
+                            </div>
+
+
+
                         </div>
                     </div>
                 </div>
